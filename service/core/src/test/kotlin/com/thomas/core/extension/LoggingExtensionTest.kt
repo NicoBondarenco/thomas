@@ -50,6 +50,18 @@ class LoggingExtensionTest : Logging {
         )
     }
 
+    @Test
+    fun `Log Parametrized Parameters`() {
+        logger.logParameterized(
+            level = Level.INFO,
+            message = "Error message",
+            parameters = mapOf(
+                "first" to "bfbc3083-b26c-4e3a-8956-fd24fe6ce201",
+                "second" to null
+            )
+        )
+    }
+
     private class TraceTest : ServiceTest() {
 
         fun depth01(useMap: Boolean = true) {

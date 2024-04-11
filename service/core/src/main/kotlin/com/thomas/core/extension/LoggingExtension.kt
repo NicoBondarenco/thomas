@@ -38,9 +38,9 @@ fun KotlinLogger.logParameterized(
     val traceId = UUID.nameUUIDFromBytes(Thread.currentThread().id.toString().encodeToByteArray())
     val method = Thread.currentThread().stackTrace[2].methodName
     val params = "{${
-        parameters
-            .map { (key, value) -> "\"$key\": ${value?.toString()?.let { "\"$it\"" } ?: "null"}" }
-            .joinToString(", ")
+        parameters.map { (key, value) ->
+            "\"$key\": \"$value\""
+        }.joinToString(", ")
     }}"
     this.log(
         level,

@@ -1,12 +1,14 @@
 package com.thomas.core.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
+import com.thomas.core.security.SecurityRole.MASTER
 import com.thomas.core.security.SecurityRole.ROLE_GROUP_CREATE
 import com.thomas.core.security.SecurityRoleGroup.MANAGEMENT
 import com.thomas.core.security.SecurityRoleSubgroup.FINANCE_DATA
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
+import kotlin.test.assertNull
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -66,7 +68,12 @@ internal class SecurityRoleTest {
 
     @Test
     fun `Security Role by Code`() {
-        assertEquals(SecurityRole.MASTER, SecurityRole.byCode(0))
+        assertEquals(MASTER, SecurityRole.byCode(0))
+    }
+
+    @Test
+    fun `Security Role by Code not found`() {
+        assertNull(SecurityRole.byCode(987654321))
     }
 
     @Test
