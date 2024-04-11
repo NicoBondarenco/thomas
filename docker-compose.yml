@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    image: "postgres:14.1"
+    container_name: "thomas-postgresql"
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USER: thomas-service
+      POSTGRES_PASSWORD: thomas-service
+      POSTGRES_DB: thomas-service
+    volumes:
+      - thomas-postgresql-volume:/var/lib/postgresql/data
+    networks:
+      - thomas-network
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: "thomas-rabbit"
+    ports:
+      - "6600:5672"
+      - "16600:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks:
+      - thomas-network
+
+  mongo:
+    image: "mongo"
+    container_name: "thomas-mongo"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: thomas
+      MONGO_INITDB_ROOT_PASSWORD: thomas
+    ports:
+      - "26000:27017"
+    volumes:
+      - thomas-mongo-volume:/data/db
+    networks:
+      - thomas-network
+
+volumes:
+  thomas-postgresql-volume:
+  thomas-mongo-volume:
+
+networks:
+  thomas-network:
+    driver: bridge
