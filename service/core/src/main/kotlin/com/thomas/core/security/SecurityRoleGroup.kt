@@ -5,14 +5,18 @@ import com.thomas.core.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroup
 import com.thomas.core.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupName
 
 enum class SecurityRoleGroup(
-    val groupName: () -> String,
-    val groupDescription: () -> String,
     val groupOrder: Int
 ) {
 
-    MASTER({ coreRolesGroupName(MASTER.name.lowercase()) }, { coreRolesGroupDescription(MASTER.name.lowercase()) }, 0),
-    MANAGEMENT({ coreRolesGroupName(MANAGEMENT.name.lowercase()) }, { coreRolesGroupDescription(MANAGEMENT.name.lowercase()) }, 1),
-    FINANCE({ coreRolesGroupName(FINANCE.name.lowercase()) }, { coreRolesGroupDescription(FINANCE.name.lowercase()) }, 2);
+    MASTER(0),
+    MANAGEMENT(1),
+    FINANCE(2);
+
+    val groupName: String
+        get() = coreRolesGroupName(this.name.lowercase())
+
+    val groupDescription: String
+        get() = coreRolesGroupDescription(this.name.lowercase())
 
     fun subgroups(): List<SecurityRoleSubgroup> =
         SecurityRoleSubgroup.entries

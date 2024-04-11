@@ -1,6 +1,10 @@
 package com.thomas.core.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
+import com.thomas.core.security.SecurityRole.ROLE_GROUP_CREATE
+import com.thomas.core.security.SecurityRoleGroup.MANAGEMENT
+import com.thomas.core.security.SecurityRoleSubgroup.FINANCE_DATA
+import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,10 +15,16 @@ import org.junit.jupiter.api.Test
 
 internal class SecurityRoleTest {
 
-    private val properties = Properties().apply {
+    private val propertiesRoot = Properties().apply {
         this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles-groups.properties"))
         this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles-subgroups.properties"))
         this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles.properties"))
+    }
+
+    private val propertiesBr = Properties().apply {
+        this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles-groups_pt_BR.properties"))
+        this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles-subgroups_pt_BR.properties"))
+        this.load(ClassLoader.getSystemClassLoader().getResourceAsStream("strings/core-roles_pt_BR.properties"))
     }
 
     @BeforeEach
@@ -27,8 +37,8 @@ internal class SecurityRoleTest {
         SecurityRoleGroup.entries.map { it.groupOrder }.forEach { order ->
             val group = SecurityRoleGroup.entries.firstOrNull { it.groupOrder == order }
             assertNotNull(group)
-            assertEquals(properties.getProperty("core.role.group.${group!!.name.lowercase()}.name"), group.groupName())
-            assertEquals(properties.getProperty("core.role.group.${group.name.lowercase()}.description"), group.groupDescription())
+            assertEquals(propertiesRoot.getProperty("core.role.group.${group!!.name.lowercase()}.name"), group.groupName)
+            assertEquals(propertiesRoot.getProperty("core.role.group.${group.name.lowercase()}.description"), group.groupDescription)
             assertFalse(group.subgroups().isEmpty())
         }
     }
@@ -38,8 +48,8 @@ internal class SecurityRoleTest {
         SecurityRoleSubgroup.entries.map { it.subgroupOrder }.forEach { order ->
             val subgroup = SecurityRoleSubgroup.entries.firstOrNull { it.subgroupOrder == order }
             assertNotNull(subgroup)
-            assertEquals(properties.getProperty("core.role.subgroup.${subgroup!!.name.lowercase()}.name"), subgroup.subgroupName())
-            assertEquals(properties.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription())
+            assertEquals(propertiesRoot.getProperty("core.role.subgroup.${subgroup!!.name.lowercase()}.name"), subgroup.subgroupName)
+            assertEquals(propertiesRoot.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
             assertFalse(subgroup.roles().isEmpty())
         }
     }
@@ -49,14 +59,33 @@ internal class SecurityRoleTest {
         SecurityRole.entries.map { Triple(it.roleCode, it.roleOrder, it.roleDisplayable) }.forEach { order ->
             val role = SecurityRole.entries.firstOrNull { it.roleCode == order.first && it.roleOrder == order.second && it.roleDisplayable == order.third }
             assertNotNull(role)
-            assertEquals(properties.getProperty("core.roles.${role!!.name.lowercase()}.name"), role.roleName())
-            assertEquals(properties.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription())
+            assertEquals(propertiesRoot.getProperty("core.roles.${role!!.name.lowercase()}.name"), role.roleName)
+            assertEquals(propertiesRoot.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription)
         }
     }
 
     @Test
-    fun `Security Role by Code`(){
+    fun `Security Role by Code`() {
         assertEquals(SecurityRole.MASTER, SecurityRole.byCode(0))
+    }
+
+    @Test
+    fun `Names in pt-BR`() {
+        currentLocale = Locale.forLanguageTag("pt-BR")
+
+        val group = MANAGEMENT
+        val subgroup = FINANCE_DATA
+        val role = ROLE_GROUP_CREATE
+
+        assertEquals(propertiesBr.getProperty("core.role.group.${group.name.lowercase()}.name"), group.groupName)
+        assertEquals(propertiesBr.getProperty("core.role.group.${group.name.lowercase()}.description"), group.groupDescription)
+
+        assertEquals(propertiesBr.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.name"), subgroup.subgroupName)
+        assertEquals(propertiesBr.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
+
+        assertEquals(propertiesBr.getProperty("core.roles.${role.name.lowercase()}.name"), role.roleName)
+        assertEquals(propertiesBr.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription)
+
     }
 
 }

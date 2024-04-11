@@ -9,31 +9,35 @@ import com.thomas.core.security.SecurityRoleSubgroup.MANAGEMENT_USER
 import com.thomas.core.security.SecurityRoleSubgroup.MASTER_SUBGROUP
 
 enum class SecurityRole(
-    val roleName: () -> String,
-    val roleDescription: () -> String,
     val roleCode: Int,
     val roleOrder: Int,
     val roleSubgroup: SecurityRoleSubgroup,
     val roleDisplayable: Boolean
 ) {
 
-    MASTER({ coreRolesName(MASTER.name.lowercase()) }, { coreRolesDescription(MASTER.name.lowercase()) }, 0, 1, MASTER_SUBGROUP, false),
+    MASTER(0, 1, MASTER_SUBGROUP, false),
 
-    ROLE_USER_READ({ coreRolesName(ROLE_USER_READ.name.lowercase()) }, { coreRolesDescription(ROLE_USER_READ.name.lowercase()) }, 1, 1, MANAGEMENT_USER, true),
-    ROLE_USER_CREATE({ coreRolesName(ROLE_USER_CREATE.name.lowercase()) }, { coreRolesDescription(ROLE_USER_CREATE.name.lowercase()) }, 2, 2, MANAGEMENT_USER, true),
-    ROLE_USER_UPDATE({ coreRolesName(ROLE_USER_UPDATE.name.lowercase()) }, { coreRolesDescription(ROLE_USER_UPDATE.name.lowercase()) }, 3, 3, MANAGEMENT_USER, true),
+    ROLE_USER_READ(1, 1, MANAGEMENT_USER, true),
+    ROLE_USER_CREATE(2, 2, MANAGEMENT_USER, true),
+    ROLE_USER_UPDATE(3, 3, MANAGEMENT_USER, true),
 
-    ROLE_GROUP_READ({ coreRolesName(ROLE_GROUP_READ.name.lowercase()) }, { coreRolesDescription(ROLE_GROUP_READ.name.lowercase()) }, 4, 1, MANAGEMENT_GROUP, true),
-    ROLE_GROUP_CREATE({ coreRolesName(ROLE_GROUP_CREATE.name.lowercase()) }, { coreRolesDescription(ROLE_GROUP_CREATE.name.lowercase()) }, 5, 2, MANAGEMENT_GROUP, true),
-    ROLE_GROUP_UPDATE({ coreRolesName(ROLE_GROUP_UPDATE.name.lowercase()) }, { coreRolesDescription(ROLE_GROUP_UPDATE.name.lowercase()) }, 6, 3, MANAGEMENT_GROUP, true),
-    ROLE_GROUP_DELETE({ coreRolesName(ROLE_GROUP_DELETE.name.lowercase()) }, { coreRolesDescription(ROLE_GROUP_DELETE.name.lowercase()) }, 7, 4, MANAGEMENT_GROUP, true),
+    ROLE_GROUP_READ(4, 1, MANAGEMENT_GROUP, true),
+    ROLE_GROUP_CREATE(5, 2, MANAGEMENT_GROUP, true),
+    ROLE_GROUP_UPDATE(6, 3, MANAGEMENT_GROUP, true),
+    ROLE_GROUP_DELETE(7, 4, MANAGEMENT_GROUP, true),
 
-    ROLE_FINANCE_DATA({ coreRolesName(ROLE_FINANCE_DATA.name.lowercase()) }, { coreRolesDescription(ROLE_FINANCE_DATA.name.lowercase()) }, 8, 1, FINANCE_DATA, true);
+    ROLE_FINANCE_DATA(8, 1, FINANCE_DATA, true);
 
     companion object {
         fun byCode(code: Int): SecurityRole? =
             entries.firstOrNull { it.roleCode == code }
     }
+
+    val roleName: String
+        get() = coreRolesName(this.name.lowercase())
+
+    val roleDescription: String
+        get() = coreRolesDescription(this.name.lowercase())
 
     object RoleStringsI18N : BundleResolver("strings/core-roles") {
 

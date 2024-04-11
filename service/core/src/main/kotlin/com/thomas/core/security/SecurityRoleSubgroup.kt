@@ -8,22 +8,25 @@ import com.thomas.core.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSu
 import com.thomas.core.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupName
 
 enum class SecurityRoleSubgroup(
-    val subgroupName: () -> String,
-    val subgroupDescription: () -> String,
     val subgroupGroup: SecurityRoleGroup,
     val subgroupOrder: Int
 ) {
 
-    MASTER_SUBGROUP({ coreRolesSubgroupName(MASTER_SUBGROUP.name.lowercase()) }, { coreRolesSubgroupDescription(MASTER_SUBGROUP.name.lowercase()) }, MASTER, 0),
-    MANAGEMENT_USER({ coreRolesSubgroupName(MANAGEMENT_USER.name.lowercase()) }, { coreRolesSubgroupDescription(MANAGEMENT_USER.name.lowercase()) }, MANAGEMENT, 1),
-    MANAGEMENT_GROUP({ coreRolesSubgroupName(MANAGEMENT_GROUP.name.lowercase()) }, { coreRolesSubgroupDescription(MANAGEMENT_GROUP.name.lowercase()) }, MANAGEMENT, 2),
-    FINANCE_DATA({ coreRolesSubgroupName(FINANCE_DATA.name.lowercase()) }, { coreRolesSubgroupDescription(FINANCE_DATA.name.lowercase()) }, FINANCE, 3);
+    MASTER_SUBGROUP(MASTER, 0),
+    MANAGEMENT_USER(MANAGEMENT, 1),
+    MANAGEMENT_GROUP(MANAGEMENT, 2),
+    FINANCE_DATA(FINANCE, 3);
+
+    val subgroupName: String
+        get() = coreRolesSubgroupName(this.name.lowercase())
+
+    val subgroupDescription: String
+        get() = coreRolesSubgroupDescription(this.name.lowercase())
 
     fun roles(): List<SecurityRole> =
         SecurityRole.entries
             .filter { it.roleSubgroup == this }
             .sortedBy { it.roleOrder }
-
 
     object RoleStringsI18N : BundleResolver("strings/core-roles-subgroups") {
 
