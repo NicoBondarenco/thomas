@@ -16,3 +16,6 @@ dependencyResolutionManagement {
 }
 
 include("core")
+
+include("infrastructure:jwt:jwt-base")
+findProject(":infrastructure:jwt:jwt-base")?.name = "jwt-base"
