@@ -2,8 +2,11 @@ package com.thomas.core.model.entity
 
 import com.thomas.core.extension.throws
 import com.thomas.core.i18n.CoreMessageI18N.coreExceptionEntityValidationValidationError
+import java.util.UUID
 
 abstract class BaseEntity<T : BaseEntity<T>> {
+
+    abstract val id: UUID
 
     @Suppress("UNCHECKED_CAST")
     fun validate() =

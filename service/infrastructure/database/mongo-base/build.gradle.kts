@@ -9,4 +9,11 @@ dependencies {
 
     implementation(project(":core"))
 
+    implementation(libs.mongodb.driver.sync)
+
+    testImplementation("org.testcontainers:mongodb:1.19.7")
+    testImplementation("org.testcontainers:testcontainers:1.19.7")
+    testImplementation("org.awaitility:awaitility:4.2.1")
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.1")
+
 }
