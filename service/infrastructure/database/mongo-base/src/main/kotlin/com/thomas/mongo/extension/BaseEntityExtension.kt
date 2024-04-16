@@ -24,7 +24,10 @@ fun <T : BaseEntity<T>> T.toUpsertDocument(): Bson = this::class.memberPropertie
     } else {
         Updates.set(prop.name, value)
     }
-}.let { Updates.combine(it) }
+}.let {
+    val props = it + Updates.set(ENTITY_CLASS_PROPERTY, this::class.qualifiedName!!)
+    Updates.combine(props)
+}
 
 fun BaseEntity<*>.toDocument(): Document = Document().also { document ->
     document[ENTITY_CLASS_PROPERTY] = this::class.qualifiedName

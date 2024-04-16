@@ -3,11 +3,11 @@ package com.thomas.mongo.data
 import com.mongodb.client.MongoDatabase
 import com.thomas.mongo.repository.MongoRepository
 
-class TestMongoRepository(
+class TestErrorRepository(
     database: MongoDatabase,
     collection: String
-) : MongoRepository<TestMongoEntity>(
+) : MongoRepository<TestErrorEntity>(
     database,
     collection,
-    TestMongoEntity::class
+    TestErrorEntity::class
 )

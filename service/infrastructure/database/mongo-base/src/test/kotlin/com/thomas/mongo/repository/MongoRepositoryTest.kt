@@ -4,13 +4,17 @@ import com.mongodb.ServerApiVersion
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.Updates
 import com.thomas.mongo.configuration.MongoManager
+import com.thomas.mongo.configuration.parser.MongoParameterParserException
+import com.thomas.mongo.data.TestErrorRepository
 import com.thomas.mongo.data.TestMongoEntity
 import com.thomas.mongo.data.TestMongoRepository
 import com.thomas.mongo.extension.toUpsertDocument
 import com.thomas.mongo.properties.MongoDatabaseProperties
 import java.time.Duration
 import java.time.ZoneOffset.UTC
+import java.util.UUID
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -18,11 +22,11 @@ import org.bson.Document
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.assertThrows
 import org.testcontainers.containers.GenericContainer
 
 @TestInstance(PER_CLASS)
@@ -32,7 +36,8 @@ class MongoRepositoryTest {
     private val username: String = "mongo_username"
     private val password: String = "mongo_password"
     private val port: Int = 27017
-    private val collectionName: String = "test-collection"
+    private val testCollectionName: String = "test-collection"
+    private val errorCollectionName: String = "error-collection"
 
     private val container = GenericContainer("mongo:6.0.1")
         .withEnv("MONGO_INITDB_DATABASE", database)
@@ -42,8 +47,10 @@ class MongoRepositoryTest {
 
     private lateinit var properties: MongoDatabaseProperties
     private lateinit var manager: MongoManager
-    private lateinit var repository: TestMongoRepository
-    private lateinit var collection: MongoCollection<Document>
+    private lateinit var testMongoRepository: TestMongoRepository
+    private lateinit var testErrorRepository: TestErrorRepository
+    private lateinit var testCollection: MongoCollection<Document>
+    private lateinit var errorCollection: MongoCollection<Document>
 
     @BeforeAll
     fun beforeAll() {
@@ -61,9 +68,11 @@ class MongoRepositoryTest {
 
         manager = MongoManager(properties)
 
-        repository = TestMongoRepository(manager.mongoDatabase, collectionName)
+        testMongoRepository = TestMongoRepository(manager.mongoDatabase, testCollectionName)
+        testErrorRepository = TestErrorRepository(manager.mongoDatabase, errorCollectionName)
 
-        collection = manager.mongoDatabase.getCollection(collectionName)
+        testCollection = manager.mongoDatabase.getCollection(testCollectionName)
+        errorCollection = manager.mongoDatabase.getCollection(errorCollectionName)
     }
 
     @AfterAll
@@ -75,9 +84,9 @@ class MongoRepositoryTest {
     @Test
     fun `Save multilevel entity`() {
         val entity = TestMongoEntity()
-        repository.save(entity)
+        testMongoRepository.save(entity)
 
-        val document = collection.find(Filters.eq("_id", entity.id.toString())).firstOrNull()
+        val document = testCollection.find(Filters.eq("_id", entity.id.toString())).firstOrNull()
         assertNotNull(document)
 
     }
@@ -85,13 +94,13 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity`() {
         val entity = TestMongoEntity()
-        collection.updateOne(
+        testCollection.updateOne(
             Filters.eq("_id", entity.id.toString()),
             entity.toUpsertDocument(),
             UpdateOptions().upsert(true)
         )
 
-        val result = repository.findById(entity.id)
+        val result = testMongoRepository.findById(entity.id)
         assertNotNull(result)
         assertEquals(entity.stringValue, result!!.stringValue)
         assertEquals(entity.booleanValue, result.booleanValue)
@@ -149,6 +158,21 @@ class MongoRepositoryTest {
             assertEquals(child.listEmpty, childResult.listEmpty)
             assertEquals(child.listNull.filterNotNull(), childResult.listNull.filterNotNull())
         }
+    }
+
+    @Test
+    fun `Throw error when there is no parameter parser`(){
+        val id = UUID.randomUUID()
+        errorCollection.updateOne(
+            Filters.eq("_id", id),
+            Updates.combine(
+                Updates.set("id", id),
+                Updates.set("stringValue", "Test Name"),
+                Updates.set("fileValue", "Test File"),
+            ),
+            UpdateOptions().upsert(true)
+        )
+        assertThrows<MongoParameterParserException> { testErrorRepository.findById(id) }
     }
 
 }
