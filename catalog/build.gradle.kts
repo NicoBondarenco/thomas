@@ -46,6 +46,8 @@ catalog {
 
         version("stubs", "2.1.6")
 
+        version("mongodb", "5.0.1")
+
         //endregion VERSIONS
 
         //region PLUGINS
@@ -58,6 +60,8 @@ catalog {
         //endregion PLUGINS
 
         //region DEPENDENCIES
+
+        //region DEFAULTS
 
         library("kotlin-stdlib-jdk8", "org.jetbrains.kotlin", "kotlin-stdlib-jdk8").versionRef("kotlin")
         library("kotlin-stdlib-common", "org.jetbrains.kotlin", "kotlin-stdlib").versionRef("kotlin")
@@ -84,6 +88,14 @@ catalog {
 
         library("system-stubs-core", "uk.org.webcompere", "system-stubs-core").versionRef("stubs")
         library("system-stubs-jupiter", "uk.org.webcompere", "system-stubs-jupiter").versionRef("stubs")
+
+        //endregion DEFAULTS
+
+        //region DATABASES
+
+        library("mongodb-driver-sync", "org.mongodb", "mongodb-driver-sync").versionRef("mongodb")
+
+        //endregion DATABASES
 
         //endregion DEPENDENCIES
 

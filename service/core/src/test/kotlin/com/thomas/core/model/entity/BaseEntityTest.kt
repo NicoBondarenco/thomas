@@ -1,6 +1,7 @@
 package com.thomas.core.model.entity
 
 import com.thomas.core.i18n.CoreMessageI18N.coreExceptionEntityValidationValidationError
+import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -11,14 +12,14 @@ internal class BaseEntityTest {
     @Test
     fun `Given a valid entity, should not throws exception`() {
         assertDoesNotThrow {
-            TestEntity("Qwerty", "Qwerty")
+            TestEntity(UUID.randomUUID(),"Qwerty", "Qwerty")
         }
     }
 
     @Test
     fun `Given a invalid entity, should throws exception`() {
         val exception = assertThrows<EntityValidationException> {
-            TestEntity("", "Qwerty")
+            TestEntity(UUID.randomUUID(),"", "Qwerty")
         }
 
         assertEquals("TestEntity Error", exception.message)
@@ -30,7 +31,7 @@ internal class BaseEntityTest {
     @Test
     fun `Given a invalid entity with no custom message, should throws exception with default error message`() {
         val exception = assertThrows<EntityValidationException> {
-            NoMessageEntity("", "Qwerty")
+            NoMessageEntity(UUID.randomUUID(), "", "Qwerty")
         }
 
         assertEquals(coreExceptionEntityValidationValidationError(), exception.message)
@@ -42,14 +43,14 @@ internal class BaseEntityTest {
     @Test
     fun `Given an entity with no validation, should not throws exception`() {
         assertDoesNotThrow {
-            NoValidationEntity("", "")
+            NoValidationEntity(UUID.randomUUID(),"", "")
         }
     }
 
     @Test
     fun `Given a valid entity, when updated with valid values, should not throws exception`() {
         assertDoesNotThrow {
-            UpdatableEntity("Qwerty", "Qwerty").update {
+            UpdatableEntity(UUID.randomUUID(),"Qwerty", "Qwerty").update {
                 name = "Another"
             }
         }
@@ -58,7 +59,7 @@ internal class BaseEntityTest {
     @Test
     fun `Given a valid entity, when updated with invalid values, should throws exception`() {
         val exception = assertThrows<EntityValidationException> {
-            UpdatableEntity("Qwerty", "Qwerty").update {
+            UpdatableEntity(UUID.randomUUID(),"Qwerty", "Qwerty").update {
                 email = ""
             }
         }
@@ -70,6 +71,7 @@ internal class BaseEntityTest {
     }
 
     private data class TestEntity(
+        override val id: UUID = UUID.randomUUID(),
         val name: String,
         val email: String,
     ) : BaseEntity<TestEntity>() {
@@ -88,6 +90,7 @@ internal class BaseEntityTest {
     }
 
     private data class NoMessageEntity(
+        override val id: UUID = UUID.randomUUID(),
         val name: String,
         val email: String,
     ) : BaseEntity<NoMessageEntity>() {
@@ -104,6 +107,7 @@ internal class BaseEntityTest {
     }
 
     private data class NoValidationEntity(
+        override val id: UUID = UUID.randomUUID(),
         val name: String,
         val email: String,
     ) : BaseEntity<NoValidationEntity>() {
@@ -115,6 +119,7 @@ internal class BaseEntityTest {
     }
 
     private data class UpdatableEntity(
+        override val id: UUID = UUID.randomUUID(),
         var name: String,
         var email: String,
     ) : BaseEntity<UpdatableEntity>() {

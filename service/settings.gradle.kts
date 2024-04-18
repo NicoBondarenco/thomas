@@ -16,3 +16,9 @@ dependencyResolutionManagement {
 }
 
 include("core")
+
+include("infrastructure:jwt:jwt-base")
+findProject(":infrastructure:jwt:jwt-base")?.name = "jwt-base"
+
+include("infrastructure:database:mongo-base")
+findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
