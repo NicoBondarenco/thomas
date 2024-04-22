@@ -3,7 +3,7 @@ package com.thomas.core.authorization
 import com.thomas.core.HttpApplicationException.Companion.forbidden
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotAllowed
-import com.thomas.core.security.SecurityRole
+import com.thomas.core.model.security.SecurityRole
 
 fun <T> authorized(
     roles: Array<SecurityRole> = arrayOf(),

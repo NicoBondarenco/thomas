@@ -2,7 +2,7 @@ package com.thomas.jwt.util
 
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.UUID.randomUUID

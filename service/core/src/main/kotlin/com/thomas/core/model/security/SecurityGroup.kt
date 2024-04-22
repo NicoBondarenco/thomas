@@ -1,4 +1,4 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import java.util.UUID
 

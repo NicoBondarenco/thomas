@@ -1,8 +1,8 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import com.thomas.core.i18n.BundleResolver
-import com.thomas.core.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupDescription
-import com.thomas.core.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupName
+import com.thomas.core.model.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupDescription
+import com.thomas.core.model.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupName
 
 enum class SecurityRoleGroup(
     val groupOrder: Int

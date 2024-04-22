@@ -1,6 +1,6 @@
 package com.thomas.core.context
 
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityUser
 import java.util.Locale
 
 object SessionContextHolder {

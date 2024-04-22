@@ -7,9 +7,9 @@ import com.thomas.core.context.SessionContextHolder.currentLocale
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
-import com.thomas.core.security.SecurityGroup
-import com.thomas.core.security.SecurityRole.MASTER
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityGroup
+import com.thomas.core.model.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Locale.ENGLISH

@@ -1,11 +1,11 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import com.thomas.core.i18n.BundleResolver
-import com.thomas.core.security.SecurityRoleGroup.FINANCE
-import com.thomas.core.security.SecurityRoleGroup.MANAGEMENT
-import com.thomas.core.security.SecurityRoleGroup.MASTER
-import com.thomas.core.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupDescription
-import com.thomas.core.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupName
+import com.thomas.core.model.security.SecurityRoleGroup.FINANCE
+import com.thomas.core.model.security.SecurityRoleGroup.MANAGEMENT
+import com.thomas.core.model.security.SecurityRoleGroup.MASTER
+import com.thomas.core.model.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupDescription
+import com.thomas.core.model.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupName
 
 enum class SecurityRoleSubgroup(
     val subgroupGroup: SecurityRoleGroup,

@@ -2,7 +2,7 @@ package com.thomas.jwt
 
 import com.thomas.core.HttpApplicationException
 import com.thomas.core.HttpApplicationException.Companion.unauthorized
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityUser
 import com.thomas.jwt.configuration.JWTConfiguration
 import com.thomas.jwt.i18n.JWTAuthenticationMessageI18N.authenticationJWTBaseTokenInvalidToken
 import com.thomas.jwt.i18n.JWTAuthenticationMessageI18N.authenticationJWTBaseUserInactiveUser
@@ -40,16 +40,5 @@ abstract class JWTAuthenticator<K : PrivateKey, P : PublicKey, KS : EncodedKeySp
     protected abstract fun privateKeySpec(): KS
 
     protected abstract fun publicKeySpec(): PS
-
-    protected fun String.extractKey() = this
-        .replace(Char(65533).toString(), "")
-        .replace(Char(0).toString(), "")
-        .replace("\r\n".toRegex(), "")
-        .replace("\n".toRegex(), "")
-        .replace("\r".toRegex(), "")
-        .replace("-----BEGIN PRIVATE KEY-----", "")
-        .replace("-----BEGIN PUBLIC KEY-----", "")
-        .replace("-----END PRIVATE KEY-----", "")
-        .replace("-----END PUBLIC KEY-----", "")
 
 }

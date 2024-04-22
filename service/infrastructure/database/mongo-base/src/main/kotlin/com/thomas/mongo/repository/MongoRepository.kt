@@ -13,10 +13,15 @@ import org.bson.Document
 import org.bson.conversions.Bson
 
 abstract class MongoRepository<T : BaseEntity<T>>(
-    protected val mongoDatabase: MongoDatabase,
+    mongoDatabase: MongoDatabase,
     collectionName: String,
     protected val entityClass: KClass<T>
 ) {
+
+    companion object {
+        @JvmStatic
+        protected val ID_FIELD = "_id"
+    }
 
     protected val collection: MongoCollection<Document> = mongoDatabase.getCollection(collectionName)
 
@@ -30,13 +35,13 @@ abstract class MongoRepository<T : BaseEntity<T>>(
 
     protected fun upsert(id: UUID, document: Bson) = document.apply {
         collection.updateOne(
-            Filters.eq("_id", id.toString()),
+            Filters.eq(ID_FIELD, id.toString()),
             document,
             UpdateOptions().upsert(true)
         )
     }
 
     protected fun findDocumentById(id: UUID): Document? =
-        collection.find(Filters.eq("_id", id.toString())).firstOrNull()
+        collection.find(Filters.eq(ID_FIELD, id.toString())).firstOrNull()
 
 }

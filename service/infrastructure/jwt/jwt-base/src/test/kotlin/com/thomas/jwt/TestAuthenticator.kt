@@ -1,7 +1,7 @@
 package com.thomas.jwt
 
 import com.thomas.core.HttpApplicationException.Companion.unauthorized
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityUser
 import com.thomas.jwt.configuration.JWTConfiguration
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -31,16 +31,8 @@ class TestAuthenticator(
         tokens[token] ?: throw unauthorized("User unauthorized with token $token")
     }
 
-    override fun privateKeySpec(): PKCS8EncodedKeySpec {
-        var content = this.javaClass.classLoader.getResource(configuration.privateKey).readText()
-        content = content.extractKey()
-        return PKCS8EncodedKeySpec(Base64.getDecoder().decode(content))
-    }
+    override fun privateKeySpec() = PKCS8EncodedKeySpec(Base64.getDecoder().decode(configuration.privateKey))
 
-    override fun publicKeySpec(): X509EncodedKeySpec {
-        var content = this.javaClass.classLoader.getResource(configuration.publicKey).readText()
-        content = content.extractKey()
-        return X509EncodedKeySpec(Base64.getDecoder().decode(content))
-    }
+    override fun publicKeySpec() = X509EncodedKeySpec(Base64.getDecoder().decode(configuration.publicKey))
 
 }

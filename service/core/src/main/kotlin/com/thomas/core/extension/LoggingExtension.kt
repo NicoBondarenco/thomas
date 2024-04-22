@@ -35,7 +35,7 @@ fun KotlinLogger.logParameterized(
     message: String,
     parameters: Map<String, Any?> = mapOf()
 ) {
-    val traceId = UUID.nameUUIDFromBytes(Thread.currentThread().id.toString().encodeToByteArray())
+    val traceId = UUID.nameUUIDFromBytes(Thread.currentThread().threadId().toString().encodeToByteArray())
     val method = Thread.currentThread().stackTrace[2].methodName
     val params = "{${
         parameters.map { (key, value) ->

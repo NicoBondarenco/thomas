@@ -1,8 +1,8 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
-import com.thomas.core.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityRole.MASTER
 import java.time.LocalDate
 import java.util.UUID
 

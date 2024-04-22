@@ -20,5 +20,9 @@ include("core")
 include("infrastructure:jwt:jwt-base")
 findProject(":infrastructure:jwt:jwt-base")?.name = "jwt-base"
 
+include("infrastructure:jwt:jwt-auth0")
+findProject(":infrastructure:jwt:jwt-auth0")?.name = "jwt-auth0"
+
 include("infrastructure:database:mongo-base")
 findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
+

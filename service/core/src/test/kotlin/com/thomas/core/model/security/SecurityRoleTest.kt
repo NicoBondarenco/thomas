@@ -1,10 +1,13 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
-import com.thomas.core.security.SecurityRole.MASTER
-import com.thomas.core.security.SecurityRole.ROLE_GROUP_CREATE
-import com.thomas.core.security.SecurityRoleGroup.MANAGEMENT
-import com.thomas.core.security.SecurityRoleSubgroup.FINANCE_DATA
+import com.thomas.core.model.security.SecurityRole
+import com.thomas.core.model.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
+import com.thomas.core.model.security.SecurityRoleGroup
+import com.thomas.core.model.security.SecurityRoleGroup.MANAGEMENT
+import com.thomas.core.model.security.SecurityRoleSubgroup
+import com.thomas.core.model.security.SecurityRoleSubgroup.FINANCE_DATA
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties

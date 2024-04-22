@@ -48,6 +48,12 @@ catalog {
 
         version("mongodb", "5.0.1")
 
+        version("auth0", "4.4.0")
+
+        version("awaitility", "4.2.1")
+
+        version("testcontainers", "1.19.7")
+
         //endregion VERSIONS
 
         //region PLUGINS
@@ -96,6 +102,21 @@ catalog {
         library("mongodb-driver-sync", "org.mongodb", "mongodb-driver-sync").versionRef("mongodb")
 
         //endregion DATABASES
+
+        //region JWT
+
+        library("auth0-jwt", "com.auth0", "java-jwt").versionRef("auth0")
+
+        //endregion JWT
+
+        //region TESTS
+
+        library("awaitility-base", "org.awaitility", "awaitility").versionRef("awaitility")
+        library("awaitility-kotlin", "org.awaitility", "awaitility-kotlin").versionRef("awaitility")
+
+        library("testcontainers-generic", "org.testcontainers", "testcontainers").versionRef("testcontainers")
+
+        //endregion TESTS
 
         //endregion DEPENDENCIES
 

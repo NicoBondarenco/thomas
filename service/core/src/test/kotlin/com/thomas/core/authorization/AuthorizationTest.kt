@@ -7,8 +7,8 @@ import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotAllowed
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.http.HTTPStatus.FORBIDDEN
-import com.thomas.core.security.SecurityRole.MASTER
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.UUID.randomUUID

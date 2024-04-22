@@ -1,17 +1,16 @@
-package com.thomas.core.security
+package com.thomas.core.model.security
 
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
-import com.thomas.core.security.SecurityRole.ROLE_GROUP_CREATE
-import com.thomas.core.security.SecurityRole.ROLE_GROUP_DELETE
-import com.thomas.core.security.SecurityRole.ROLE_GROUP_READ
-import com.thomas.core.security.SecurityRole.ROLE_GROUP_UPDATE
-import com.thomas.core.security.SecurityRole.ROLE_USER_CREATE
-import com.thomas.core.security.SecurityRole.ROLE_USER_READ
-import com.thomas.core.security.SecurityRole.ROLE_USER_UPDATE
+import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
+import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_DELETE
+import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_READ
+import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_UPDATE
+import com.thomas.core.model.security.SecurityRole.ROLE_USER_CREATE
+import com.thomas.core.model.security.SecurityRole.ROLE_USER_READ
+import com.thomas.core.model.security.SecurityRole.ROLE_USER_UPDATE
 import java.time.LocalDate
 import java.time.ZoneOffset
-import java.util.UUID
 import java.util.UUID.randomUUID
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -112,7 +111,7 @@ class SecurityUsertTest {
     }
 
     @Test
-    fun `User current roles`(){
+    fun `User current roles`() {
         val roles = rolesUser.currentRoles()
         assertEquals(7, roles.size)
         assertTrue(roles.contains(ROLE_GROUP_READ))

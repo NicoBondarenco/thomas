@@ -2,7 +2,7 @@ package com.thomas.core.context
 
 import com.thomas.core.HttpApplicationException.Companion.unauthorized
 import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotLogged
-import com.thomas.core.security.SecurityUser
+import com.thomas.core.model.security.SecurityUser
 import java.util.Locale
 import java.util.Locale.ROOT
 
