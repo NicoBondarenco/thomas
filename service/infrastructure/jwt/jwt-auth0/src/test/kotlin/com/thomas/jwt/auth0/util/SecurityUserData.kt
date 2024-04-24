@@ -10,7 +10,6 @@ import com.thomas.core.model.security.SecurityUser
 import java.time.OffsetTime
 import java.util.Date
 import java.util.UUID
-import org.bson.Document
 
 internal val activeGroups = mutableMapOf<UUID, Boolean>()
 
@@ -44,29 +43,3 @@ internal val users: List<SecurityUser> = listOf(
     foundUser,
     validUser,
 )
-
-internal val usersDocuments: List<Document> = listOf(
-    foundUser.toTestDocument()
-)
-
-fun SecurityUser.toTestDocument(): Document = Document().apply {
-    this["id"] = this@toTestDocument.userId.toString()
-    this["firstName"] = this@toTestDocument.firstName
-    this["lastName"] = this@toTestDocument.lastName
-    this["mainEmail"] = this@toTestDocument.mainEmail
-    this["phoneNumber"] = this@toTestDocument.phoneNumber
-    this["profilePhoto"] = this@toTestDocument.profilePhoto
-    this["birthDate"] = this@toTestDocument.birthDate?.atTime(OffsetTime.MIN)?.let { Date(it.toInstant().toEpochMilli()) }
-    this["userGender"] = this@toTestDocument.userGender?.name
-    this["userProfile"] = this@toTestDocument.userProfile.name
-    this["isActive"] = this@toTestDocument.isActive
-    this["userRoles"] = this@toTestDocument.userRoles.map { it.name }
-    this["groupList"] = this@toTestDocument.userGroups.map { it.toTestDocument() }
-}
-
-fun SecurityGroup.toTestDocument(): Document = Document().apply {
-    this["id"] = this@toTestDocument.groupId.toString()
-    this["isActive"] = activeGroups[this@toTestDocument.groupId] ?: false
-    this["groupName"] = this@toTestDocument.groupName
-    this["groupRoles"] = this@toTestDocument.groupRoles.map { it.name }
-}

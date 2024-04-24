@@ -29,5 +29,5 @@ enum class Gender(val label: () -> String) {
     FEMALE_TRANSGENDER({ coreModelGeneralGenderFemaleTransgender() }),
     MALE_TRANSSEXUAL({ coreModelGeneralGenderMaleTranssexual() }),
     FEMALE_TRANSSEXUAL({ coreModelGeneralGenderFemaleTranssexual() }),
-    OTHER_GENDER({ coreModelGeneralGenderOtherGender() });
+    OTHER_GENDER({ coreModelGeneralGenderOtherGender() }),
 }

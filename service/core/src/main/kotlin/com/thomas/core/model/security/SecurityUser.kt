@@ -31,8 +31,7 @@ data class SecurityUser(
         get() = "${firstName[0]}. $lastName"
 
     val isMaster: Boolean
-        get() = userRoles.any { it == MASTER } ||
-                userGroups.any { group -> group.groupRoles.any { it == MASTER } }
+        get() = userRoles.any { it == MASTER } || groupsHasMasterRole()
 
     fun currentRoles(): List<SecurityRole> {
         val roles = mutableListOf<SecurityRole>()
@@ -42,5 +41,7 @@ data class SecurityUser(
 
         return roles.distinct()
     }
+
+    private fun groupsHasMasterRole() = userGroups.any { group -> group.groupRoles.any { it == MASTER } }
 
 }

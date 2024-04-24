@@ -33,7 +33,6 @@ import org.bson.codecs.configuration.CodecRegistries.fromRegistries
 import org.bson.codecs.jsr310.Jsr310CodecProvider
 import org.bson.codecs.pojo.PojoCodecProvider
 
-
 class MongoManager(
     properties: MongoDatabaseProperties
 ) {

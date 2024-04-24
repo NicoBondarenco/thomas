@@ -18,6 +18,7 @@ import org.junit.jupiter.api.assertThrows
 
 class JWTAuthenticatorTest {
 
+    @Suppress("MaxLineLength")
     private val jwtConfiguration = JWTConfiguration(
         encryptionType = RSA,
         algorithmType = RSA256,
@@ -49,7 +50,7 @@ class JWTAuthenticatorTest {
 
     @BeforeEach
     fun setup() {
-         authenticator = TestAuthenticator(jwtConfiguration)
+        authenticator = TestAuthenticator(jwtConfiguration)
     }
 
     @Test
@@ -79,7 +80,7 @@ class JWTAuthenticatorTest {
     }
 
     @Test
-    fun `Validate keys format`(){
+    fun `Validate keys format`() {
         assertEquals("PKCS#8", authenticator.privateKeyFormat)
         assertEquals("X.509", authenticator.publicKeyFormat)
     }

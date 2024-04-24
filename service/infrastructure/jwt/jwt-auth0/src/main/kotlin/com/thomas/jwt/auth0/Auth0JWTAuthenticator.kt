@@ -5,7 +5,8 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.auth0.jwt.interfaces.Claim
-import com.thomas.core.HttpApplicationException.Companion.unauthorized
+import com.thomas.core.HttpApplicationException
+import com.thomas.core.model.http.HTTPStatus.UNAUTHORIZED
 import com.thomas.core.model.security.SecurityUser
 import com.thomas.jwt.JWTAuthenticator
 import com.thomas.jwt.auth0.data.repository.SecurityUserMongoRepository
@@ -41,13 +42,13 @@ class Auth0JWTAuthenticator(
     ): SecurityUser = try {
         verifier.verify(token).claims.toSecurityUser()
     } catch (e: TokenExpiredException) {
-        throw unauthorized(authenticationJWTAuth0TokenExpiredToken(), cause = e)
+        throw HttpApplicationException(UNAUTHORIZED, authenticationJWTAuth0TokenExpiredToken(), cause = e)
     }
 
     private fun Map<String, Claim>.toSecurityUser(): SecurityUser =
         this.stringOrNull(SecurityUser::userId.name)?.let {
             repository.findSecurityUser(UUID.fromString(it))
-        } ?: throw unauthorized(authenticationJWTAuth0TokenNotFound())
+        } ?: throw HttpApplicationException(UNAUTHORIZED, authenticationJWTAuth0TokenNotFound())
 
     private fun Map<String, Claim>.stringOrNull(
         field: String

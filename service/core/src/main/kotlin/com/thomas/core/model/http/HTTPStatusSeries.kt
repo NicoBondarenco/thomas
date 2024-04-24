@@ -6,6 +6,6 @@ enum class HTTPStatusSeries {
     SUCCESSFUL,
     REDIRECTION,
     CLIENT_ERROR,
-    SERVER_ERROR;
+    SERVER_ERROR,
 
 }

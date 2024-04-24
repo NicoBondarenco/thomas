@@ -8,7 +8,6 @@ import com.thomas.core.model.response.ExceptionResponse
 import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
 
-
 fun HttpApplicationException.toExceptionResponse(uri: String) =
     this.toExceptionResponse(uri, this.status, this.detail)
 

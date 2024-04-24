@@ -1,6 +1,7 @@
 package com.thomas.jwt
 
-import com.thomas.core.HttpApplicationException.Companion.unauthorized
+import com.thomas.core.HttpApplicationException
+import com.thomas.core.model.http.HTTPStatus.UNAUTHORIZED
 import com.thomas.core.model.security.SecurityUser
 import com.thomas.jwt.configuration.JWTConfiguration
 import java.security.interfaces.RSAPrivateKey
@@ -28,7 +29,7 @@ class TestAuthenticator(
     ): SecurityUser = if (invalidTokens.contains(token)) {
         throw Exception("Token in invalid list")
     } else {
-        tokens[token] ?: throw unauthorized("User unauthorized with token $token")
+        tokens[token] ?: throw HttpApplicationException(UNAUTHORIZED, "User unauthorized with token $token")
     }
 
     override fun privateKeySpec() = PKCS8EncodedKeySpec(Base64.getDecoder().decode(configuration.privateKey))

@@ -59,7 +59,9 @@ internal class SecurityRoleTest {
     @Test
     fun `Security Role test`() {
         SecurityRole.entries.map { Triple(it.roleCode, it.roleOrder, it.roleDisplayable) }.forEach { order ->
-            val role = SecurityRole.entries.firstOrNull { it.roleCode == order.first && it.roleOrder == order.second && it.roleDisplayable == order.third }
+            val role = SecurityRole.entries.firstOrNull {
+                it.roleCode == order.first && it.roleOrder == order.second && it.roleDisplayable == order.third
+            }
             assertNotNull(role)
             assertEquals(propertiesRoot.getProperty("core.roles.${role!!.name.lowercase()}.name"), role.roleName)
             assertEquals(propertiesRoot.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription)

@@ -43,7 +43,8 @@ internal class SessionContextTest {
         ),
         listOf(
             SecurityGroup(
-                UUID.fromString("7115cb17-cd5d-48d0-b968-95c8cb92e54a"), "Security Group",
+                UUID.fromString("7115cb17-cd5d-48d0-b968-95c8cb92e54a"),
+                "Security Group",
                 listOf(
                     MASTER
                 ),

@@ -2,7 +2,10 @@ package com.thomas.core.extension
 
 import java.util.UUID
 
+@Suppress("MaxLineLength")
 const val ACCENTS_LOWER_REGEX_VALUE = "aàáâãäạảăắặằẳẵấậầẩẫåāącçčćĉċdđðďeèéêëẹẻẽếệềểễēĕėęěgĝğġģhĥħiìíîïịỉĩīĭį̇ıjĵkķĸlĺļľŀłnñńņňŉŋoòóôõöọỏốộồổỗơớợờởỡøōŏőŕŗřsšśŝştţťŧuùúûüụủũưứựừửữŭūůűųwŵyýÿỵỳỷỹŷzžźż"
+
+@Suppress("MaxLineLength")
 const val ACCENTS_UPPER_REGEX_VALUE = "AÀÁÂÃÄẠẢĂẮẶẰẲẴẤẬẦẨẪÅĀĄCÇČĆĈĊDĐÐĎEÈÉÊËẸẺẼẾỆỀỂỄĒĔĖĘĚGĜĞĠĢHĤĦIÌÍÎÏỊỈĨĪĬĮ̇IJĴKĶĸLĹĻĽĿŁNÑŃŅŇNŊOÒÓÔÕÖỌỎỐỘỒỔỖƠỚỢỜỞỠØŌŎŐŔŖŘSŠŚŜŞTŢŤŦUÙÚÛÜỤỦŨƯỨỰỪỬỮŬŪŮŰŲWŴYÝŸỴỲỶỸŶZŽŹŻ"
 const val LETTERS_ONLY_REGEX_VALUE = "A-Za-z$ACCENTS_LOWER_REGEX_VALUE$ACCENTS_UPPER_REGEX_VALUE"
 
@@ -13,4 +16,3 @@ fun String.onlyNumbers() = this.replace("[^0-9]".toRegex(), "")
 fun String.onlyLettersAndNumbers() = this.filter { it.isLetterOrDigit() }
 
 fun String.toUUIDOrNull(): UUID? = this.takeIf { it.matches(UUID_REGEX) }?.let { UUID.fromString(it) }
-

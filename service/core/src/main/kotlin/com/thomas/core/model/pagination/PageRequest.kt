@@ -5,4 +5,3 @@ data class PageRequest(
     val pageSize: Long = 10,
     val pageSort: List<PageSort> = listOf()
 )
-

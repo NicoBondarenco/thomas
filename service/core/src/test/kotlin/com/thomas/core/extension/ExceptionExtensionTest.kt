@@ -1,6 +1,6 @@
 package com.thomas.core.extension
 
-import com.thomas.core.HttpApplicationException.Companion.badRequest
+import com.thomas.core.HttpApplicationException
 import com.thomas.core.i18n.CoreMessageI18N.coreExceptionResponseMessageNoMessage
 import com.thomas.core.model.http.HTTPStatus.BAD_GATEWAY
 import com.thomas.core.model.http.HTTPStatus.BAD_REQUEST
@@ -24,7 +24,7 @@ internal class ExceptionExtensionTest {
 
     @Test
     fun `HttpApplicationException to ExceptionResponse`() {
-        val exceptionResponse = badRequest("HttpApplicationException BAD_REQUEST", mapOf("param" to "qwerty"))
+        val exceptionResponse = HttpApplicationException(BAD_REQUEST, "HttpApplicationException BAD_REQUEST", mapOf("param" to "qwerty"))
             .toExceptionResponse("/private/http-application-exception")
 
         assertEquals("HttpApplicationException BAD_REQUEST", exceptionResponse.message)

@@ -86,6 +86,7 @@ catalog {
         library("junit-pioneer", "org.junit-pioneer", "junit-pioneer").versionRef("junitPioneer")
         library("junit-jupiter-api", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit")
         library("junit-jupiter-engine", "org.junit.jupiter", "junit-jupiter-engine").versionRef("junit")
+        library("junit-jupiter-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
 
         library("mockito-core", "org.mockito", "mockito-core").versionRef("mockito")
         library("mockito-inline", "org.mockito", "mockito-inline").versionRef("mockito-inline")

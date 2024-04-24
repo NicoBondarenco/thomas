@@ -38,7 +38,7 @@ fun KotlinLogger.logParameterized(
     val traceId = Thread.currentThread().traceId()
     val method = Thread.currentThread().methodName()
     val params = parameters.toParametersString()
-    this.log(level, "traceId=$traceId, method=${method}, message=$message, parameters=$params", throwable)
+    this.log(level, "traceId=$traceId, method=$method, message=$message, parameters=$params", throwable)
 }
 
 private fun Thread.traceId() = UUID.nameUUIDFromBytes(this.threadId().toString().encodeToByteArray())

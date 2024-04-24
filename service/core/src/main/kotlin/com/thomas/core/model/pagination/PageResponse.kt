@@ -29,7 +29,6 @@ data class PageResponse<T>(
         }
     }
 
-
     fun <E> map(map: (T) -> E) =
         PageResponse(
             contentList.map { map(it) },
