@@ -32,5 +32,5 @@ object SessionContextHolder {
 
     fun setSessionProperty(property: String, value: String?) = context.setProperty(property, value)
 
-    fun clearContext() = context.clearContext()
+    fun clearContext() = context.clear()
 }

@@ -3,14 +3,13 @@ package com.thomas.mongo.configuration.codec
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset.UTC
-import java.util.Date
 import org.bson.BsonReader
 import org.bson.BsonWriter
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-class OffsetDatetimeCodec : Codec<OffsetDateTime> {
+class OffsetDateTimeCodec : Codec<OffsetDateTime> {
 
     override fun getEncoderClass(): Class<OffsetDateTime> = OffsetDateTime::class.java
 
@@ -18,9 +17,7 @@ class OffsetDatetimeCodec : Codec<OffsetDateTime> {
         writer: BsonWriter,
         value: OffsetDateTime,
         encoderContext: EncoderContext
-    ) {
-        writer.writeDateTime(value.toInstant().toEpochMilli())
-    }
+    ) = writer.writeDateTime(value.withOffsetSameInstant(UTC).toInstant().toEpochMilli())
 
     override fun decode(
         reader: BsonReader,

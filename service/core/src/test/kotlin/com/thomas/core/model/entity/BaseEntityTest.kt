@@ -12,14 +12,14 @@ internal class BaseEntityTest {
     @Test
     fun `Given a valid entity, should not throws exception`() {
         assertDoesNotThrow {
-            TestEntity(UUID.randomUUID(),"Qwerty", "Qwerty")
+            TestEntity(UUID.randomUUID(), "Qwerty", "Qwerty")
         }
     }
 
     @Test
     fun `Given a invalid entity, should throws exception`() {
         val exception = assertThrows<EntityValidationException> {
-            TestEntity(UUID.randomUUID(),"", "Qwerty")
+            TestEntity(UUID.randomUUID(), "", "Qwerty")
         }
 
         assertEquals("TestEntity Error", exception.message)
@@ -43,25 +43,25 @@ internal class BaseEntityTest {
     @Test
     fun `Given an entity with no validation, should not throws exception`() {
         assertDoesNotThrow {
-            NoValidationEntity(UUID.randomUUID(),"", "")
+            NoValidationEntity(UUID.randomUUID(), "", "")
         }
     }
 
     @Test
-    fun `Given a valid entity, when updated with valid values, should not throws exception`() {
+    fun `Given a valid entity, when copy with valid values, should not throws exception`() {
         assertDoesNotThrow {
-            UpdatableEntity(UUID.randomUUID(),"Qwerty", "Qwerty").update {
+            UpdatableEntity(UUID.randomUUID(), "Qwerty", "Qwerty").copy(
                 name = "Another"
-            }
+            )
         }
     }
 
     @Test
     fun `Given a valid entity, when updated with invalid values, should throws exception`() {
         val exception = assertThrows<EntityValidationException> {
-            UpdatableEntity(UUID.randomUUID(),"Qwerty", "Qwerty").update {
+            UpdatableEntity(UUID.randomUUID(), "Qwerty", "Qwerty").copy(
                 email = ""
-            }
+            )
         }
 
         assertEquals("UpdatableEntity Error", exception.message)
@@ -82,10 +82,10 @@ internal class BaseEntityTest {
 
         override fun errorMessage(): String = "TestEntity Error"
 
-        override fun validations(): List<Validation<TestEntity>> =
+        override fun validations(): List<EntityValidation<TestEntity>> =
             listOf(
-                Validation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                Validation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 
@@ -99,10 +99,10 @@ internal class BaseEntityTest {
             validate()
         }
 
-        override fun validations(): List<Validation<NoMessageEntity>> =
+        override fun validations(): List<EntityValidation<NoMessageEntity>> =
             listOf(
-                Validation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                Validation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 
@@ -120,8 +120,8 @@ internal class BaseEntityTest {
 
     private data class UpdatableEntity(
         override val id: UUID = UUID.randomUUID(),
-        var name: String,
-        var email: String,
+        val name: String,
+        val email: String,
     ) : BaseEntity<UpdatableEntity>() {
 
         init {
@@ -130,10 +130,10 @@ internal class BaseEntityTest {
 
         override fun errorMessage(): String = "UpdatableEntity Error"
 
-        override fun validations(): List<Validation<UpdatableEntity>> =
+        override fun validations(): List<EntityValidation<UpdatableEntity>> =
             listOf(
-                Validation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                Validation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 

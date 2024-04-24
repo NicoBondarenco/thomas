@@ -1,20 +1,17 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
-import com.thomas.core.model.security.SecurityRole
 import com.thomas.core.model.security.SecurityRole.MASTER
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
-import com.thomas.core.model.security.SecurityRoleGroup
 import com.thomas.core.model.security.SecurityRoleGroup.MANAGEMENT
-import com.thomas.core.model.security.SecurityRoleSubgroup
 import com.thomas.core.model.security.SecurityRoleSubgroup.FINANCE_DATA
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
-import kotlin.test.assertNull
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

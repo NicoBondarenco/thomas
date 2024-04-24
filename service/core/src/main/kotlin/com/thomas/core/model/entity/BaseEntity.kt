@@ -18,16 +18,6 @@ abstract class BaseEntity<T : BaseEntity<T>> {
 
     open fun errorMessage(): String = coreExceptionEntityValidationValidationError()
 
-    open fun validations(): List<Validation<T>> = listOf()
-
-    @Suppress("UNCHECKED_CAST")
-    open fun update(block: T.() -> Unit): T =
-        (this as T).apply(block).apply { this.validate() }
+    open fun validations(): List<EntityValidation<T>> = listOf()
 
 }
-
-data class Validation<T : BaseEntity<T>>(
-    val code: String,
-    val message: (T) -> String,
-    val validate: (T) -> Boolean
-)

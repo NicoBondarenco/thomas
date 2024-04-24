@@ -13,6 +13,6 @@ dependencies {
 
     implementation(libs.auth0.jwt)
 
-    implementation(libs.mongodb.driver.sync)
+//    implementation(libs.mongodb.driver.kotlin)
 
 }

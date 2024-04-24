@@ -8,13 +8,11 @@ import com.thomas.core.model.security.SecurityRole
 fun <T> authorized(
     roles: Array<SecurityRole> = arrayOf(),
     block: () -> T
-): T {
-
-    currentUser.apply {
-        if (roles.isNotEmpty() && !this.currentRoles().any { it in roles }) {
-            throw forbidden(coreContextSessionUserNotAllowed())
-        }
-    }
-
-    return block()
+): T = if (roles.isAuthorized()) {
+    block()
+} else {
+    throw forbidden(coreContextSessionUserNotAllowed())
 }
+
+private fun Array<SecurityRole>.isAuthorized(): Boolean =
+    this.isEmpty() || currentUser.currentRoles().intersect(this.toSet()).isNotEmpty()

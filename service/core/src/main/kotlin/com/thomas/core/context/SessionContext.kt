@@ -28,7 +28,7 @@ data class SessionContext(
         _sessionProperties[property] = value
     }
 
-    internal fun clearContext() {
+    internal fun clear() {
         _currentUser = null
         currentLocale = ROOT
     }

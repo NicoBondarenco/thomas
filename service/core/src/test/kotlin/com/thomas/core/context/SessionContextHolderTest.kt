@@ -201,12 +201,12 @@ internal class SessionContextHolderTest {
     }
 
     @Test
-    fun `When create a session, current token should be null`(){
+    fun `When create a session, current token should be null`() {
         assertNull(SessionContextHolder.currentToken)
     }
 
     @Test
-    fun `When token is set in a session, current token should be returned`(){
+    fun `When token is set in a session, current token should be returned`() {
         val uuid = randomUUID().toString()
         SessionContextHolder.currentToken = uuid
         assertEquals(uuid, SessionContextHolder.currentToken)

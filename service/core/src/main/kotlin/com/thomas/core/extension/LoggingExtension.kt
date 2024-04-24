@@ -35,16 +35,16 @@ fun KotlinLogger.logParameterized(
     message: String,
     parameters: Map<String, Any?> = mapOf()
 ) {
-    val traceId = UUID.nameUUIDFromBytes(Thread.currentThread().threadId().toString().encodeToByteArray())
-    val method = Thread.currentThread().stackTrace[2].methodName
-    val params = "{${
-        parameters.map { (key, value) ->
-            "\"$key\": \"$value\""
-        }.joinToString(", ")
-    }}"
-    this.log(
-        level,
-        "traceId= $traceId, clazz=${this.javaClass}, method=${method}, message=$message, parameters=$params",
-        throwable
-    )
+    val traceId = Thread.currentThread().traceId()
+    val method = Thread.currentThread().methodName()
+    val params = parameters.toParametersString()
+    this.log(level, "traceId=$traceId, method=${method}, message=$message, parameters=$params", throwable)
 }
+
+private fun Thread.traceId() = UUID.nameUUIDFromBytes(this.threadId().toString().encodeToByteArray())
+
+private fun Thread.methodName() = this.stackTrace[2].methodName
+
+private fun Map<String, Any?>.toParametersString() = "{${this.toParameters().joinToString(", ")}}"
+
+private fun Map<String, Any?>.toParameters() = this.map { (key, value) -> "\"$key\": \"$value\"" }

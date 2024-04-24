@@ -16,9 +16,7 @@ class BigIntegerCodec : Codec<BigInteger> {
         writer: BsonWriter,
         value: BigInteger,
         encoderContext: EncoderContext
-    ) {
-        writer.writeDecimal128(Decimal128(value.toBigDecimal()))
-    }
+    ) = writer.writeDecimal128(Decimal128(value.toBigDecimal()))
 
     override fun decode(
         reader: BsonReader,

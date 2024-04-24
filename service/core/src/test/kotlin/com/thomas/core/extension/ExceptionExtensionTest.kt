@@ -25,7 +25,7 @@ internal class ExceptionExtensionTest {
     @Test
     fun `HttpApplicationException to ExceptionResponse`() {
         val exceptionResponse = badRequest("HttpApplicationException BAD_REQUEST", mapOf("param" to "qwerty"))
-            .toExceptionResponse("/private/http-application-exception", null)
+            .toExceptionResponse("/private/http-application-exception")
 
         assertEquals("HttpApplicationException BAD_REQUEST", exceptionResponse.message)
         assertEquals("/private/http-application-exception", exceptionResponse.path)
@@ -38,7 +38,7 @@ internal class ExceptionExtensionTest {
     @Test
     fun `Exception without message to ExceptionResponse with HttpServletRequest`() {
         val exceptionResponse = UnsupportedOperationException()
-            .toExceptionResponse("/private/unsupported-operation-exception", null)
+            .toExceptionResponse("/private/unsupported-operation-exception")
 
         assertEquals(coreExceptionResponseMessageNoMessage(), exceptionResponse.message)
         assertEquals("/private/unsupported-operation-exception", exceptionResponse.path)

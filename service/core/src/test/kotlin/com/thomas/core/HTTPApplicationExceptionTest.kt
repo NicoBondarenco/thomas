@@ -80,23 +80,23 @@ import com.thomas.core.model.http.HTTPStatus.UNSUPPORTED_MEDIA_TYPE
 import com.thomas.core.model.http.HTTPStatus.UPGRADE_REQUIRED
 import com.thomas.core.model.http.HTTPStatus.URI_TOO_LONG
 import com.thomas.core.model.http.HTTPStatus.VARIANT_ALSO_NEGOTIATES
-import kotlin.test.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 class HTTPApplicationExceptionTest {
 
     @Test
-    fun `HTTPApplicationException Defaults`(){
+    fun `HTTPApplicationException Defaults`() {
         HttpApplicationException(NOT_FOUND, "Error Message").apply {
-            assertEquals("No details available", this.detail)
+            assertEquals(null, this.detail)
             assertNull(this.cause)
         }
     }
 
     @Test
-    fun `HTTPApplicationException Parameters`(){
+    fun `HTTPApplicationException Parameters`() {
         HttpApplicationException(NOT_FOUND, "Error Message", "Error Detail", Exception("Error Exception")).apply {
             assertEquals("Error Detail", this.detail)
             assertNotNull(this.cause)

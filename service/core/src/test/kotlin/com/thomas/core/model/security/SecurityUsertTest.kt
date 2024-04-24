@@ -12,9 +12,9 @@ import com.thomas.core.model.security.SecurityRole.ROLE_USER_UPDATE
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.UUID.randomUUID
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class SecurityUsertTest {

@@ -126,13 +126,13 @@ internal class SessionContextTest {
     }
 
     @Test
-    fun `When create a session, current token should be null`(){
+    fun `When create a session, current token should be null`() {
         val session = SessionContext(mutableMapOf())
         assertNull(session.currentToken)
     }
 
     @Test
-    fun `When token is set in a session, current token should be returned`(){
+    fun `When token is set in a session, current token should be returned`() {
         val uuid = randomUUID().toString()
         val session = SessionContext(mutableMapOf()).apply {
             currentToken = uuid

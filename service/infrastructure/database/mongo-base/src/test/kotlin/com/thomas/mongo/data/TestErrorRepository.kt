@@ -1,6 +1,6 @@
 package com.thomas.mongo.data
 
-import com.mongodb.client.MongoDatabase
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.mongo.repository.MongoRepository
 
 class TestErrorRepository(

@@ -1,47 +1,74 @@
 package com.thomas.mongo.repository
 
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.FindOneAndReplaceOptions
+import com.mongodb.client.model.ReturnDocument.AFTER
+import com.mongodb.client.model.Sorts
+import com.mongodb.client.model.Sorts.ascending
+import com.mongodb.client.model.Sorts.descending
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.core.model.entity.BaseEntity
-import com.thomas.mongo.extension.toEntity
-import com.thomas.mongo.extension.toUpsertDocument
+import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageResponse
+import com.thomas.core.model.pagination.PageSort
+import com.thomas.core.model.pagination.PageSortDirection.ASC
 import java.util.UUID
 import kotlin.reflect.KClass
-import org.bson.Document
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import org.bson.conversions.Bson
 
 abstract class MongoRepository<T : BaseEntity<T>>(
     mongoDatabase: MongoDatabase,
     collectionName: String,
-    protected val entityClass: KClass<T>
+    entityClass: KClass<T>
 ) {
 
-    companion object {
-        @JvmStatic
-        protected val ID_FIELD = "_id"
+    private val collection: MongoCollection<T> = mongoDatabase.getCollection(collectionName, entityClass.java)
+    private val idAttribute = BaseEntity<*>::id.name
+
+    fun one(
+        id: UUID
+    ): T? = list(Filters.eq(idAttribute, id)).firstOrNull()
+
+    protected fun list(
+        filter: Bson = Filters.empty()
+    ): List<T> = runBlocking {
+        collection.find(filter).toList()
     }
 
-    protected val collection: MongoCollection<Document> = mongoDatabase.getCollection(collectionName)
-
-    fun save(entity: T): T = entity.apply {
-        upsert(entity.id, this.toUpsertDocument())
+    protected fun paged(
+        pageable: PageRequest,
+        filter: Bson = Filters.empty(),
+    ): PageResponse<T> = runBlocking {
+        val search = collection.find(filter)
+        val total = search.count().toLong()
+        val items = search
+            .sort(pageable.orderBy())
+            .skip(((pageable.pageNumber - 1) * pageable.pageSize).toInt())
+            .limit(pageable.pageSize.toInt())
+            .toList()
+        PageResponse.of(items, pageable, total)
     }
 
-    fun findById(id: UUID): T? = findDocumentById(id)?.let {
-        it.toEntity(entityClass as KClass<BaseEntity<*>>) as T
+    fun save(entity: T): T = runBlocking {
+        collection.findOneAndReplace(
+            Filters.eq(idAttribute, entity.id),
+            entity,
+            FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+        )!!
     }
 
-    protected fun upsert(id: UUID, document: Bson) = document.apply {
-        collection.updateOne(
-            Filters.eq(ID_FIELD, id.toString()),
-            document,
-            UpdateOptions().upsert(true)
-        )
-    }
+    private fun PageRequest.orderBy() = this.pageSort.toOrderBy()
 
-    protected fun findDocumentById(id: UUID): Document? =
-        collection.find(Filters.eq(ID_FIELD, id.toString())).firstOrNull()
+    private fun List<PageSort>.toOrderBy() = Sorts.orderBy(this.map { it.toSort() })
+
+    private fun PageSort.toSort() = if (this.sortDirection == ASC) {
+        ascending(this.sortField)
+    } else {
+        descending(this.sortField)
+    }
 
 }

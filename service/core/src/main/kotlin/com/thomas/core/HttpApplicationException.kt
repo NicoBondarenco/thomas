@@ -45,7 +45,7 @@ import com.thomas.core.model.http.HTTPStatus.VARIANT_ALSO_NEGOTIATES
 class HttpApplicationException(
     val status: HTTPStatus,
     message: String,
-    val detail: Any? = "No details available",
+    val detail: Any? = null,
     cause: Throwable? = null
 ) : RuntimeException(message, cause) {
 
