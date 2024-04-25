@@ -4,7 +4,6 @@ import com.thomas.jwt.configuration.JWTAlgorithmType.RSA256
 import com.thomas.jwt.configuration.JWTConfiguration
 import com.thomas.jwt.configuration.JWTEncryptionType.RSA
 
-
 internal const val USER_COLLECTION_NAME = "user_collection"
 internal const val GROUP_COLLECTION_NAME = "group_collection"
 

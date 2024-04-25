@@ -1,9 +1,7 @@
 package com.thomas.jwt.configuration
 
-enum class JWTAlgorithmType(
-    val algorithmName: String
-) {
+enum class JWTAlgorithmType {
 
-    RSA256("RSA256")
+    RSA256
 
 }

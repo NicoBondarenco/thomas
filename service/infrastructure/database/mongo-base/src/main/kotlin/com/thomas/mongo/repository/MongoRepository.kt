@@ -15,6 +15,7 @@ import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import java.util.UUID
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -25,6 +26,11 @@ abstract class MongoRepository<T : BaseEntity<T>>(
     collectionName: String,
     entityClass: KClass<T>
 ) {
+
+    companion object {
+        @JvmStatic
+        protected val OBJECT_ID_PARAMETER_NAME = "_id"
+    }
 
     private val collection: MongoCollection<T> = mongoDatabase.getCollection(collectionName, entityClass.java)
     private val idAttribute = BaseEntity<*>::id.name
@@ -70,5 +76,11 @@ abstract class MongoRepository<T : BaseEntity<T>>(
     } else {
         descending(this.sortField)
     }
+
+    protected val <T> KProperty<T>.mongoParameter
+        get() = this.name.mongoParameter
+
+    protected val String.mongoParameter
+        get() = "\$$this"
 
 }

@@ -8,14 +8,18 @@ import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
 import com.thomas.mongo.configuration.MongoManager
-import com.thomas.mongo.data.TestErrorEntity
-import com.thomas.mongo.data.TestErrorRepository
+import com.thomas.mongo.data.ChildTestEntity
+import com.thomas.mongo.data.ParentTestEntity
+import com.thomas.mongo.data.ParentTestRepository
 import com.thomas.mongo.data.TestMongoEntity
 import com.thomas.mongo.data.TestMongoRepository
+import com.thomas.mongo.data.childTestList
 import com.thomas.mongo.data.entityListFoundData
 import com.thomas.mongo.data.entityListNotFoundData
 import com.thomas.mongo.data.foundDateMax
 import com.thomas.mongo.data.foundDateMin
+import com.thomas.mongo.data.fullTestEntity
+import com.thomas.mongo.data.parentTestEntity
 import com.thomas.mongo.properties.MongoDatabaseProperties
 import java.time.Duration
 import java.time.ZoneOffset.UTC
@@ -42,7 +46,8 @@ class MongoRepositoryTest {
     private val password: String = "mongo_password"
     private val port: Int = 27017
     private val testCollectionName: String = "test-collection"
-    private val errorCollectionName: String = "error-collection"
+    private val parentCollectionName: String = "parent-collection"
+    private val childCollectionName: String = "child-collection"
 
     private val container = GenericContainer("mongo:6.0.1")
         .withEnv("MONGO_INITDB_DATABASE", database)
@@ -53,9 +58,10 @@ class MongoRepositoryTest {
     private lateinit var properties: MongoDatabaseProperties
     private lateinit var manager: MongoManager
     private lateinit var testMongoRepository: TestMongoRepository
-    private lateinit var testErrorRepository: TestErrorRepository
+    private lateinit var parentTestRepository: ParentTestRepository
     private lateinit var testCollection: MongoCollection<TestMongoEntity>
-    private lateinit var errorCollection: MongoCollection<TestErrorEntity>
+    private lateinit var parentCollection: MongoCollection<ParentTestEntity>
+    private lateinit var childCollection: MongoCollection<ChildTestEntity>
 
     @BeforeAll
     fun beforeAll() {
@@ -74,10 +80,11 @@ class MongoRepositoryTest {
         manager = MongoManager(properties)
 
         testMongoRepository = TestMongoRepository(manager.mongoDatabase, testCollectionName)
-        testErrorRepository = TestErrorRepository(manager.mongoDatabase, errorCollectionName)
+        parentTestRepository = ParentTestRepository(manager.mongoDatabase, parentCollectionName)
 
         testCollection = manager.mongoDatabase.getCollection(testCollectionName, TestMongoEntity::class.java)
-        errorCollection = manager.mongoDatabase.getCollection(errorCollectionName, TestErrorEntity::class.java)
+        parentCollection = manager.mongoDatabase.getCollection(parentCollectionName, ParentTestEntity::class.java)
+        childCollection = manager.mongoDatabase.getCollection(childCollectionName, ChildTestEntity::class.java)
     }
 
     @AfterAll
@@ -90,7 +97,8 @@ class MongoRepositoryTest {
     fun afterEach() {
         runBlocking {
             testCollection.deleteMany(Filters.empty())
-            errorCollection.deleteMany(Filters.empty())
+            parentCollection.deleteMany(Filters.empty())
+            childCollection.deleteMany(Filters.empty())
         }
     }
 
@@ -254,6 +262,17 @@ class MongoRepositoryTest {
 
         val found = runBlocking { testCollection.find(Filters.eq("id", entity.id)).firstOrNull() }
         assertEquals(entity, found)
+    }
+
+    @Test
+    fun `Find joined entity`() {
+        runBlocking {
+            childCollection.insertMany(childTestList)
+            parentCollection.insertOne(parentTestEntity)
+        }
+
+        val result = parentTestRepository.findFullTestEntity(parentTestEntity.id)
+        assertEquals(fullTestEntity, result)
     }
 
 }

@@ -24,6 +24,7 @@ class TestAuthenticator(
     val privateKeyFormat = privateKey.format
     val publicKeyFormat = publicKey.format
 
+    @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
     override fun verifyToken(
         token: String
     ): SecurityUser = if (invalidTokens.contains(token)) {

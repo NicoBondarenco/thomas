@@ -1,6 +1,6 @@
 package com.thomas.jwt.configuration
 
-data class JWTConfiguration (
+data class JWTConfiguration(
     val encryptionType: JWTEncryptionType,
     val algorithmType: JWTAlgorithmType,
     val privateKey: String,

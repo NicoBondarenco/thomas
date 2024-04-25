@@ -8,6 +8,8 @@ import java.util.Base64
 
 private const val SECURITY_USER_COLLECTION_PROPERTY = "securityUserCollection"
 private const val GROUP_USER_COLLECTION_PROPERTY = "securityGroupCollection"
+private const val EMPTY_CHAR = 65533
+private const val BLANK_CHAR = 0
 
 fun JWTConfiguration.securityUserCollectionName() = SECURITY_USER_COLLECTION_PROPERTY.let {
     this.customProperties[it]?.toString()
@@ -34,8 +36,8 @@ private fun JWTConfiguration.publicKeyText() = keyText(this.publicKey)
 private fun keyText(key: String) = key.extractKey()
 
 private fun String.extractKey() = this
-    .replace(Char(65533).toString(), "")
-    .replace(Char(0).toString(), "")
+    .replace(Char(EMPTY_CHAR).toString(), "")
+    .replace(Char(BLANK_CHAR).toString(), "")
     .replace("\r\n".toRegex(), "")
     .replace("\n".toRegex(), "")
     .replace("\r".toRegex(), "")

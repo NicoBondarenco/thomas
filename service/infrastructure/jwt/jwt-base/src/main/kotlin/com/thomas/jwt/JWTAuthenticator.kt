@@ -24,6 +24,7 @@ abstract class JWTAuthenticator<K : PrivateKey, P : PublicKey, KS : EncodedKeySp
         publicKey = keyFactory.generatePublic(this.publicKeySpec()) as P
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun authenticate(
         token: String
     ): SecurityUser = try {

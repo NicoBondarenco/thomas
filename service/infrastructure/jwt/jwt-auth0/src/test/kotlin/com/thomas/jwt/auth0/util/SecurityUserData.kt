@@ -7,8 +7,6 @@ import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_READ
 import com.thomas.core.model.security.SecurityRole.ROLE_USER_CREATE
 import com.thomas.core.model.security.SecurityRole.ROLE_USER_READ
 import com.thomas.core.model.security.SecurityUser
-import java.time.OffsetTime
-import java.util.Date
 import java.util.UUID
 
 internal val activeGroups = mutableMapOf<UUID, Boolean>()

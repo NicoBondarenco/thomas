@@ -20,14 +20,13 @@ import java.security.interfaces.RSAPublicKey
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.UUID
-import org.apache.logging.log4j.kotlin.Logging
 
 class Auth0JWTAuthenticator(
     configuration: JWTConfiguration,
     private val repository: SecurityUserMongoRepository,
 ) : JWTAuthenticator<RSAPrivateKey, RSAPublicKey, PKCS8EncodedKeySpec, X509EncodedKeySpec>(
     configuration
-), Logging {
+) {
 
     private val algorithm: Algorithm = Algorithm.RSA256(publicKey, privateKey)
     private val verifier: JWTVerifier = JWT.require(algorithm)

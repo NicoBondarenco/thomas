@@ -18,7 +18,7 @@ import org.junit.jupiter.api.assertThrows
 
 class JWTAuthenticatorTest {
 
-    @Suppress("MaxLineLength")
+    @Suppress("MaxLineLength", "Indentation")
     private val jwtConfiguration = JWTConfiguration(
         encryptionType = RSA,
         algorithmType = RSA256,
