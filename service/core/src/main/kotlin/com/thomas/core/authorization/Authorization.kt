@@ -1,9 +1,7 @@
 package com.thomas.core.authorization
 
-import com.thomas.core.HttpApplicationException
 import com.thomas.core.context.SessionContextHolder.currentUser
-import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotAllowed
-import com.thomas.core.model.http.HTTPStatus.FORBIDDEN
+import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotAllowed
 import com.thomas.core.model.security.SecurityRole
 
 fun <T> authorized(
@@ -12,7 +10,7 @@ fun <T> authorized(
 ): T = if (roles.isAuthorized()) {
     block()
 } else {
-    throw HttpApplicationException(FORBIDDEN, coreContextSessionUserNotAllowed())
+    throw UnauthorizedUserException(contextCurrentSessionCurrentUserNotAllowed())
 }
 
 private fun Array<SecurityRole>.isAuthorized(): Boolean =

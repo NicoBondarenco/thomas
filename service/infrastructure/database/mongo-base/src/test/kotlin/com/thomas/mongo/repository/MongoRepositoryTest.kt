@@ -2,12 +2,15 @@ package com.thomas.mongo.repository
 
 import com.mongodb.ServerApiVersion
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.FindOneAndReplaceOptions
+import com.mongodb.client.model.ReturnDocument.AFTER
 import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
-import com.thomas.mongo.configuration.MongoManager
+import com.thomas.mongo.configuration.MongoDatabaseFactory
 import com.thomas.mongo.data.ChildTestEntity
 import com.thomas.mongo.data.ParentTestEntity
 import com.thomas.mongo.data.ParentTestRepository
@@ -56,7 +59,7 @@ class MongoRepositoryTest {
         .withExposedPorts(port)
 
     private lateinit var properties: MongoDatabaseProperties
-    private lateinit var manager: MongoManager
+    private lateinit var mongoDatabase: MongoDatabase
     private lateinit var testMongoRepository: TestMongoRepository
     private lateinit var parentTestRepository: ParentTestRepository
     private lateinit var testCollection: MongoCollection<TestMongoEntity>
@@ -77,14 +80,14 @@ class MongoRepositoryTest {
             apiVersion = ServerApiVersion.V1,
         )
 
-        manager = MongoManager(properties)
+        mongoDatabase = MongoDatabaseFactory.create(properties)
 
-        testMongoRepository = TestMongoRepository(manager.mongoDatabase, testCollectionName)
-        parentTestRepository = ParentTestRepository(manager.mongoDatabase, parentCollectionName)
+        testMongoRepository = TestMongoRepository(mongoDatabase, testCollectionName)
+        parentTestRepository = ParentTestRepository(mongoDatabase, parentCollectionName)
 
-        testCollection = manager.mongoDatabase.getCollection(testCollectionName, TestMongoEntity::class.java)
-        parentCollection = manager.mongoDatabase.getCollection(parentCollectionName, ParentTestEntity::class.java)
-        childCollection = manager.mongoDatabase.getCollection(childCollectionName, ChildTestEntity::class.java)
+        testCollection = mongoDatabase.getCollection(testCollectionName, TestMongoEntity::class.java)
+        parentCollection = mongoDatabase.getCollection(parentCollectionName, ParentTestEntity::class.java)
+        childCollection = mongoDatabase.getCollection(childCollectionName, ChildTestEntity::class.java)
     }
 
     @AfterAll
@@ -105,7 +108,13 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity`() {
         val entity = TestMongoEntity()
-        runBlocking { testCollection.insertOne(entity) }
+        runBlocking {
+            testCollection.findOneAndReplace(
+                Filters.eq("_id", entity.id),
+                entity,
+                FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+            )!!
+        }
 
         val result = testMongoRepository.one(entity.id)
         assertEquals(entity, result)
@@ -193,7 +202,15 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity page with filter sorted ASC`() {
         val entities = entityListFoundData + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        runBlocking {
+            entities.forEach {
+                testCollection.findOneAndReplace(
+                    Filters.eq("_id", it.id),
+                    it,
+                    FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+                )!!
+            }
+        }
 
         val first = entityListFoundData.sortedBy { it.bigInteger }[6]
 
@@ -244,10 +261,11 @@ class MongoRepositoryTest {
     @Test
     fun `Save multilevel entity`() {
         val entity = TestMongoEntity()
-        testMongoRepository.save(entity)
-        testMongoRepository.save(TestMongoEntity())
+        val another = TestMongoEntity()
+        testMongoRepository.save(entity.id, entity)
+        testMongoRepository.save(another.id, another)
 
-        val result = runBlocking { testCollection.find(Filters.eq("id", entity.id)).firstOrNull() }
+        val result = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
         assertEquals(entity, result)
     }
 
@@ -257,10 +275,10 @@ class MongoRepositoryTest {
         runBlocking { testCollection.insertMany(listOf(saved, TestMongoEntity())) }
 
         val entity = TestMongoEntity(id = saved.id)
-        val result = testMongoRepository.save(entity)
+        val result = testMongoRepository.save(saved.id, entity)
         assertEquals(entity, result)
 
-        val found = runBlocking { testCollection.find(Filters.eq("id", entity.id)).firstOrNull() }
+        val found = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
         assertEquals(entity, found)
     }
 

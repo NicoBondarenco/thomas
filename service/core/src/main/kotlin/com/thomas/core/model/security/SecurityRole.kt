@@ -39,13 +39,13 @@ enum class SecurityRole(
     val roleDescription: String
         get() = coreRolesDescription(this.name.lowercase())
 
-    object RoleStringsI18N : BundleResolver("strings/core-roles") {
+    private object RoleStringsI18N : BundleResolver("strings/core-roles") {
 
         fun coreRolesName(role: String): String = coreRolesString(role, "name")
 
         fun coreRolesDescription(role: String): String = coreRolesString(role, "description")
 
-        private fun coreRolesString(role: String, attribute: String): String = getFormattedMessage("core.roles.$role.$attribute")
+        private fun coreRolesString(role: String, attribute: String): String = getFormattedMessage("security.role.$role.$attribute")
 
     }
 

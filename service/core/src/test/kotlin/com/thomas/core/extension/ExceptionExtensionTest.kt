@@ -1,14 +1,8 @@
 package com.thomas.core.extension
 
-import com.thomas.core.HttpApplicationException
-import com.thomas.core.i18n.CoreMessageI18N.coreExceptionResponseMessageNoMessage
-import com.thomas.core.model.http.HTTPStatus.BAD_GATEWAY
-import com.thomas.core.model.http.HTTPStatus.BAD_REQUEST
-import com.thomas.core.model.http.HTTPStatus.INTERNAL_SERVER_ERROR
+import com.thomas.core.i18n.CoreMessageI18N.exceptionExceptionResponseErrorMessageDefaultMessage
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class ExceptionExtensionTest {
@@ -18,43 +12,25 @@ internal class ExceptionExtensionTest {
         val exceptionResponse = Throwable("Simple exception").toExceptionResponse("/private/exception")
         assertEquals("Simple exception", exceptionResponse.message)
         assertEquals("/private/exception", exceptionResponse.path)
-        assertEquals(INTERNAL_SERVER_ERROR, exceptionResponse.status)
+        assertEquals("SERVER_ERROR", exceptionResponse.status)
         assertNull(exceptionResponse.detail)
-    }
-
-    @Test
-    fun `HttpApplicationException to ExceptionResponse`() {
-        val exceptionResponse = HttpApplicationException(BAD_REQUEST, "HttpApplicationException BAD_REQUEST", mapOf("param" to "qwerty"))
-            .toExceptionResponse("/private/http-application-exception")
-
-        assertEquals("HttpApplicationException BAD_REQUEST", exceptionResponse.message)
-        assertEquals("/private/http-application-exception", exceptionResponse.path)
-        assertEquals(BAD_REQUEST, exceptionResponse.status)
-        assertNotNull(exceptionResponse.detail)
-        assertTrue(exceptionResponse.detail is Map<*, *>)
-        assertEquals("qwerty", (exceptionResponse.detail as Map<*, *>)["param"])
     }
 
     @Test
     fun `Exception without message to ExceptionResponse with HttpServletRequest`() {
         val exceptionResponse = UnsupportedOperationException()
-            .toExceptionResponse("/private/unsupported-operation-exception")
+            .toExceptionResponse(
+                uri = "/private/unsupported-operation-exception",
+                status = "unsupported-exception",
+                code = 555,
+                details = "UnsupportedOperationException"
+            )
 
-        assertEquals(coreExceptionResponseMessageNoMessage(), exceptionResponse.message)
+        assertEquals(exceptionExceptionResponseErrorMessageDefaultMessage(), exceptionResponse.message)
         assertEquals("/private/unsupported-operation-exception", exceptionResponse.path)
-        assertEquals(INTERNAL_SERVER_ERROR, exceptionResponse.status)
-        assertNull(exceptionResponse.detail)
-    }
-
-    @Test
-    fun `Exception without message to ExceptionResponse with HttpStatus`() {
-        val exceptionResponse = UnsupportedOperationException()
-            .toExceptionResponse("/private/unsupported-operation-exception", BAD_GATEWAY)
-
-        assertEquals(coreExceptionResponseMessageNoMessage(), exceptionResponse.message)
-        assertEquals("/private/unsupported-operation-exception", exceptionResponse.path)
-        assertEquals(BAD_GATEWAY, exceptionResponse.status)
-        assertNull(exceptionResponse.detail)
+        assertEquals("unsupported-exception", exceptionResponse.status)
+        assertEquals(555, exceptionResponse.code)
+        assertEquals("UnsupportedOperationException", exceptionResponse.detail)
     }
 
 }

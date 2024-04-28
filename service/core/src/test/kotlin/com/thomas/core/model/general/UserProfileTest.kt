@@ -12,22 +12,22 @@ internal class UserProfileTest {
     @Test
     fun `User Profile PT_BR`() {
         SessionContextHolder.context.currentLocale = Locale.forLanguageTag("pt-BR")
-        assertEquals("Comum", COMMON.label())
-        assertEquals("Administrador", ADMINISTRATOR.label())
+        assertEquals("Comum", COMMON.label)
+        assertEquals("Administrador", ADMINISTRATOR.label)
     }
 
     @Test
     fun `User Profile EN_US`() {
         SessionContextHolder.context.currentLocale = Locale.ENGLISH
-        assertEquals("Common", COMMON.label())
-        assertEquals("Administrator", ADMINISTRATOR.label())
+        assertEquals("Common", COMMON.label)
+        assertEquals("Administrator", ADMINISTRATOR.label)
     }
 
     @Test
     fun `User Profile CH`() {
         SessionContextHolder.context.currentLocale = Locale.CHINA
-        assertEquals("Common", COMMON.label())
-        assertEquals("Administrator", ADMINISTRATOR.label())
+        assertEquals("Common", COMMON.label)
+        assertEquals("Administrator", ADMINISTRATOR.label)
     }
 
 }

@@ -34,7 +34,7 @@ enum class SecurityRoleSubgroup(
 
         fun coreRolesSubgroupDescription(role: String): String = coreRoleSubgroupsString(role, "description")
 
-        private fun coreRoleSubgroupsString(role: String, attribute: String): String = getFormattedMessage("core.role.subgroup.$role.$attribute")
+        private fun coreRoleSubgroupsString(role: String, attribute: String): String = getFormattedMessage("security.role-subgroup.$role.$attribute")
 
     }
 

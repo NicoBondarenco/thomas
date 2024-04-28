@@ -39,8 +39,8 @@ internal class SecurityRoleTest {
         SecurityRoleGroup.entries.map { it.groupOrder }.forEach { order ->
             val group = SecurityRoleGroup.entries.firstOrNull { it.groupOrder == order }
             assertNotNull(group)
-            assertEquals(propertiesRoot.getProperty("core.role.group.${group!!.name.lowercase()}.name"), group.groupName)
-            assertEquals(propertiesRoot.getProperty("core.role.group.${group.name.lowercase()}.description"), group.groupDescription)
+            assertEquals(propertiesRoot.getProperty("security.role-group.${group!!.name.lowercase()}.name"), group.groupName)
+            assertEquals(propertiesRoot.getProperty("security.role-group.${group.name.lowercase()}.description"), group.groupDescription)
             assertFalse(group.subgroups().isEmpty())
         }
     }
@@ -50,8 +50,8 @@ internal class SecurityRoleTest {
         SecurityRoleSubgroup.entries.map { it.subgroupOrder }.forEach { order ->
             val subgroup = SecurityRoleSubgroup.entries.firstOrNull { it.subgroupOrder == order }
             assertNotNull(subgroup)
-            assertEquals(propertiesRoot.getProperty("core.role.subgroup.${subgroup!!.name.lowercase()}.name"), subgroup.subgroupName)
-            assertEquals(propertiesRoot.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
+            assertEquals(propertiesRoot.getProperty("security.role-subgroup.${subgroup!!.name.lowercase()}.name"), subgroup.subgroupName)
+            assertEquals(propertiesRoot.getProperty("security.role-subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
             assertFalse(subgroup.roles().isEmpty())
         }
     }
@@ -63,8 +63,8 @@ internal class SecurityRoleTest {
                 it.roleCode == order.first && it.roleOrder == order.second && it.roleDisplayable == order.third
             }
             assertNotNull(role)
-            assertEquals(propertiesRoot.getProperty("core.roles.${role!!.name.lowercase()}.name"), role.roleName)
-            assertEquals(propertiesRoot.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription)
+            assertEquals(propertiesRoot.getProperty("security.role.${role!!.name.lowercase()}.name"), role.roleName)
+            assertEquals(propertiesRoot.getProperty("security.role.${role.name.lowercase()}.description"), role.roleDescription)
         }
     }
 
@@ -86,14 +86,14 @@ internal class SecurityRoleTest {
         val subgroup = FINANCE_DATA
         val role = ROLE_GROUP_CREATE
 
-        assertEquals(propertiesBr.getProperty("core.role.group.${group.name.lowercase()}.name"), group.groupName)
-        assertEquals(propertiesBr.getProperty("core.role.group.${group.name.lowercase()}.description"), group.groupDescription)
+        assertEquals(propertiesBr.getProperty("security.role-group.${group.name.lowercase()}.name"), group.groupName)
+        assertEquals(propertiesBr.getProperty("security.role-group.${group.name.lowercase()}.description"), group.groupDescription)
 
-        assertEquals(propertiesBr.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.name"), subgroup.subgroupName)
-        assertEquals(propertiesBr.getProperty("core.role.subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
+        assertEquals(propertiesBr.getProperty("security.role-subgroup.${subgroup.name.lowercase()}.name"), subgroup.subgroupName)
+        assertEquals(propertiesBr.getProperty("security.role-subgroup.${subgroup.name.lowercase()}.description"), subgroup.subgroupDescription)
 
-        assertEquals(propertiesBr.getProperty("core.roles.${role.name.lowercase()}.name"), role.roleName)
-        assertEquals(propertiesBr.getProperty("core.roles.${role.name.lowercase()}.description"), role.roleDescription)
+        assertEquals(propertiesBr.getProperty("security.role.${role.name.lowercase()}.name"), role.roleName)
+        assertEquals(propertiesBr.getProperty("security.role.${role.name.lowercase()}.description"), role.roleDescription)
 
     }
 

@@ -8,7 +8,6 @@ import com.mongodb.client.model.Sorts.ascending
 import com.mongodb.client.model.Sorts.descending
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.pagination.PageSort
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.bson.conversions.Bson
 
-abstract class MongoRepository<T : BaseEntity<T>>(
+abstract class MongoRepository<T : Any>(
     mongoDatabase: MongoDatabase,
     collectionName: String,
     entityClass: KClass<T>
@@ -32,12 +31,11 @@ abstract class MongoRepository<T : BaseEntity<T>>(
         protected val OBJECT_ID_PARAMETER_NAME = "_id"
     }
 
-    private val collection: MongoCollection<T> = mongoDatabase.getCollection(collectionName, entityClass.java)
-    private val idAttribute = BaseEntity<*>::id.name
+    protected val collection: MongoCollection<T> = mongoDatabase.getCollection(collectionName, entityClass.java)
 
     fun one(
         id: UUID
-    ): T? = list(Filters.eq(idAttribute, id)).firstOrNull()
+    ): T? = list(Filters.eq(OBJECT_ID_PARAMETER_NAME, id)).firstOrNull()
 
     protected fun list(
         filter: Bson = Filters.empty()
@@ -59,9 +57,9 @@ abstract class MongoRepository<T : BaseEntity<T>>(
         PageResponse.of(items, pageable, total)
     }
 
-    fun save(entity: T): T = runBlocking {
+    fun save(id: UUID, entity: T): T = runBlocking {
         collection.findOneAndReplace(
-            Filters.eq(idAttribute, entity.id),
+            Filters.eq(OBJECT_ID_PARAMETER_NAME, id),
             entity,
             FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
         )!!

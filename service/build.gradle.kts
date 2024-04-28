@@ -1,13 +1,12 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 @Suppress("DSL_SCOPE_VIOLATION") // workaround for IntelliJ bug with Gradle Version Catalogs DSL in plugins
 plugins {
     alias(libs.plugins.kotlin.lang)
     alias(libs.plugins.flyway.plugin)
-    id("io.gitlab.arturbosch.detekt") version("1.23.3")
+    id("io.gitlab.arturbosch.detekt") version ("1.23.3")
 }
 
 detekt {
@@ -22,21 +21,17 @@ dependencies {
 
 val projectSource = file(projectDir)
 val configFile = files("$rootDir/config/detekt/detekt.yml")
-//val baselineFile = file("$rootDir/config/detekt/baseline.xml")
 val kotlinFiles = "**/*.kt"
 val resourceFiles = "**/resources/**"
 val buildFiles = "**/build/**"
 
 val detektAll by tasks.registering(Detekt::class) {
-    val autoFix = project.hasProperty("detektAutoFix")
-
     description = "Custom DETEKT build for all modules"
     parallel = true
     ignoreFailures = false
-    autoCorrect = autoFix
+    autoCorrect = true
     buildUponDefaultConfig = true
     setSource(projectSource)
-//    baseline.set(baselineFile)
     config.setFrom(configFile)
     include(kotlinFiles)
     exclude(resourceFiles, buildFiles)
@@ -53,7 +48,6 @@ val detektGenerateBaseline = tasks.registering(DetektCreateBaselineTask::class) 
     ignoreFailures = false
     buildUponDefaultConfig = true
     setSource(projectSource)
-//    baseline.set(baselineFile)
     config.setFrom(configFile)
     include(kotlinFiles)
     exclude(resourceFiles, buildFiles)

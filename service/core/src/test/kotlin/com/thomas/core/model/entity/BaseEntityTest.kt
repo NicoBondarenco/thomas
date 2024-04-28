@@ -1,6 +1,6 @@
 package com.thomas.core.model.entity
 
-import com.thomas.core.i18n.CoreMessageI18N.coreExceptionEntityValidationValidationError
+import com.thomas.core.i18n.CoreMessageI18N.validationEntityValidationInvalidErrorMessage
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -34,7 +34,7 @@ internal class BaseEntityTest {
             NoMessageEntity(UUID.randomUUID(), "", "Qwerty")
         }
 
-        assertEquals(coreExceptionEntityValidationValidationError(), exception.message)
+        assertEquals(validationEntityValidationInvalidErrorMessage(), exception.message)
         assertEquals(1, exception.errors.size)
         assertEquals("001", exception.errors[0].code)
         assertEquals("Name is invalid", exception.errors[0].message)

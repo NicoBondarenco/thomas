@@ -1,6 +1,5 @@
 package com.thomas.core.context
 
-import com.thomas.core.HttpApplicationException
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.security.SecurityUser
@@ -108,7 +107,7 @@ internal class SessionContextHolderTest {
 
     @Test
     fun `When there is no user logged in, should throws exception`() {
-        assertThrows<HttpApplicationException> { SessionContextHolder.currentUser }
+        assertThrows<UnauthenticatedUserException> { SessionContextHolder.currentUser }
     }
 
     @Test

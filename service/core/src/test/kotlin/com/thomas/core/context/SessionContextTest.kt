@@ -1,6 +1,5 @@
 package com.thomas.core.context
 
-import com.thomas.core.HttpApplicationException
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.context
 import com.thomas.core.context.SessionContextHolder.currentLocale
@@ -67,7 +66,7 @@ internal class SessionContextTest {
 
         clearContext()
 
-        assertThrows<HttpApplicationException> { currentUser }
+        assertThrows<UnauthenticatedUserException> { currentUser }
         assertEquals(ROOT, currentLocale)
     }
 
@@ -86,7 +85,7 @@ internal class SessionContextTest {
 
     @Test
     fun `When no user is set, should throws exception`() {
-        assertThrows(HttpApplicationException::class.java) {
+        assertThrows(UnauthenticatedUserException::class.java) {
             SessionContext().currentUser
         }
     }

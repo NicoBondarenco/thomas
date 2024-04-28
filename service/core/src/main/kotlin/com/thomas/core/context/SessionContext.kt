@@ -1,8 +1,6 @@
 package com.thomas.core.context
 
-import com.thomas.core.HttpApplicationException
-import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotLogged
-import com.thomas.core.model.http.HTTPStatus.UNAUTHORIZED
+import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotLogged
 import com.thomas.core.model.security.SecurityUser
 import java.util.Locale
 import java.util.Locale.ROOT
@@ -18,7 +16,7 @@ data class SessionContext(
     internal var currentLocale: Locale = ROOT
 
     internal var currentUser: SecurityUser
-        get() = _currentUser ?: throw HttpApplicationException(UNAUTHORIZED, coreContextSessionUserNotLogged())
+        get() = _currentUser ?: throw UnauthenticatedUserException(contextCurrentSessionCurrentUserNotLogged())
         set(value) {
             _currentUser = value
         }
