@@ -10,7 +10,7 @@ import java.util.UUID
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 
-class UserAuthenticationRepository(
+internal class UserAuthenticationRepository(
     database: MongoDatabase,
     configuration: JWTAuth0Configuration
 ) : MongoRepository<UserAuthentication>(

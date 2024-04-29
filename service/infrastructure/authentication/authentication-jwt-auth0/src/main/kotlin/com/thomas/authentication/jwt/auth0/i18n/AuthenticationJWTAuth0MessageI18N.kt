@@ -2,7 +2,7 @@ package com.thomas.authentication.jwt.auth0.i18n
 
 import com.thomas.core.i18n.BundleResolver
 
-object AuthenticationJWTAuth0MessageI18N : BundleResolver("strings/authentication-jwt-auth0") {
+internal object AuthenticationJWTAuth0MessageI18N : BundleResolver("strings/authentication-jwt-auth0") {
 
     fun authenticationTokenRetrieveClaimMissingId() = getFormattedMessage("authentication.token.retrieve-claim.missing-id")
 

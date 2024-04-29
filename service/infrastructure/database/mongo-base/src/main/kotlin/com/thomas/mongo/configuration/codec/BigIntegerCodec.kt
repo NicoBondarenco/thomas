@@ -8,7 +8,7 @@ import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 import org.bson.types.Decimal128
 
-class BigIntegerCodec : Codec<BigInteger> {
+internal class BigIntegerCodec : Codec<BigInteger> {
 
     override fun getEncoderClass(): Class<BigInteger> = BigInteger::class.java
 

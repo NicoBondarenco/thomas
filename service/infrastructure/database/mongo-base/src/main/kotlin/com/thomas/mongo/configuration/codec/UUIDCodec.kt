@@ -7,7 +7,7 @@ import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-class UUIDCodec : Codec<UUID> {
+internal class UUIDCodec : Codec<UUID> {
 
     override fun getEncoderClass(): Class<UUID> = UUID::class.java
 

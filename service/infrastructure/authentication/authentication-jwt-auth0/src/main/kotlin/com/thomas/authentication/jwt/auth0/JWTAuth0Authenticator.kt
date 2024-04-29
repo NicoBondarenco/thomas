@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.auth0.jwt.interfaces.Claim
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.authentication.Authenticator
 import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0Configuration
 import com.thomas.authentication.jwt.auth0.exception.JWTAuth0TokenException
@@ -25,10 +26,15 @@ import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.core.model.security.SecurityUser
 import java.util.UUID
 
-class JWTAuth0Authenticator(
+class JWTAuth0Authenticator internal constructor(
     configuration: JWTAuth0Configuration,
-    private val repository: UserAuthenticationRepository
+    private val repository: UserAuthenticationRepository,
 ) : Authenticator {
+
+    constructor(
+        configuration: JWTAuth0Configuration,
+        mongoDatabase: MongoDatabase,
+    ) : this(configuration, UserAuthenticationRepository(mongoDatabase, configuration))
 
     private val verifier = configuration.verifier()
     private val decoder = JWT()

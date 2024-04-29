@@ -9,7 +9,7 @@ import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-class OffsetDateTimeCodec : Codec<OffsetDateTime> {
+internal class OffsetDateTimeCodec : Codec<OffsetDateTime> {
 
     override fun getEncoderClass(): Class<OffsetDateTime> = OffsetDateTime::class.java
 

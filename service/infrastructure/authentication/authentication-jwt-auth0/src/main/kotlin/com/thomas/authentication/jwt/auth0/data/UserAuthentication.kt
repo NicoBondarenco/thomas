@@ -6,7 +6,7 @@ import com.thomas.core.model.security.SecurityRole
 import java.time.LocalDate
 import java.util.UUID
 
-data class UserAuthentication(
+internal data class UserAuthentication(
     val id: UUID,
     val firstName: String,
     val lastName: String,

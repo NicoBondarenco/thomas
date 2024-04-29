@@ -1,6 +1,6 @@
 package com.thomas.core.i18n
 
-object CoreMessageI18N : BundleResolver("strings/core-strings") {
+internal object CoreMessageI18N : BundleResolver("strings/core-strings") {
 
     fun contextCurrentSessionCurrentUserNotLogged(): String = getFormattedMessage("context.current-session.current-user.not-logged")
 
