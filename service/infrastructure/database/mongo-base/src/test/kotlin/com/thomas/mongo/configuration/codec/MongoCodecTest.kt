@@ -3,7 +3,6 @@ package com.thomas.mongo.configuration.codec
 import java.math.BigInteger
 import java.time.OffsetDateTime
 import java.time.ZoneOffset.UTC
-import java.util.Date
 import java.util.UUID
 import org.bson.BsonReader
 import org.bson.BsonWriter
@@ -20,7 +19,7 @@ import org.mockito.Mockito.`when`
 class MongoCodecTest {
 
     private val bigIntegerCodec = BigIntegerCodec()
-    private val offsetDatetimeCodec = OffsetDatetimeCodec()
+    private val offsetDatetimeCodec = OffsetDateTimeCodec()
     private val uuidCodec = UUIDCodec()
     private val decimal128Captor = ArgumentCaptor.forClass(Decimal128::class.java)
     private val dateCaptor = ArgumentCaptor.forClass(Long::class.java)

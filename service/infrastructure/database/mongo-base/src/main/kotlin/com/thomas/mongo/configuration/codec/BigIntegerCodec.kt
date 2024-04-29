@@ -8,7 +8,7 @@ import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 import org.bson.types.Decimal128
 
-class BigIntegerCodec : Codec<BigInteger> {
+internal class BigIntegerCodec : Codec<BigInteger> {
 
     override fun getEncoderClass(): Class<BigInteger> = BigInteger::class.java
 
@@ -16,9 +16,7 @@ class BigIntegerCodec : Codec<BigInteger> {
         writer: BsonWriter,
         value: BigInteger,
         encoderContext: EncoderContext
-    ) {
-        writer.writeDecimal128(Decimal128(value.toBigDecimal()))
-    }
+    ) = writer.writeDecimal128(Decimal128(value.toBigDecimal()))
 
     override fun decode(
         reader: BsonReader,

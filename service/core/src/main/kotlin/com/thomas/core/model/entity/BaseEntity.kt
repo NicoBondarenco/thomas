@@ -1,7 +1,7 @@
 package com.thomas.core.model.entity
 
 import com.thomas.core.extension.throws
-import com.thomas.core.i18n.CoreMessageI18N.coreExceptionEntityValidationValidationError
+import com.thomas.core.i18n.CoreMessageI18N.validationEntityValidationInvalidErrorMessage
 import java.util.UUID
 
 abstract class BaseEntity<T : BaseEntity<T>> {
@@ -16,18 +16,8 @@ abstract class BaseEntity<T : BaseEntity<T>> {
             ?.map { EntityValidationErrorDetail(it.code, it.message(this as T)) }
             ?.throws { EntityValidationException(errorMessage(), it) }
 
-    open fun errorMessage(): String = coreExceptionEntityValidationValidationError()
+    open fun errorMessage(): String = validationEntityValidationInvalidErrorMessage()
 
-    open fun validations(): List<Validation<T>> = listOf()
-
-    @Suppress("UNCHECKED_CAST")
-    open fun update(block: T.() -> Unit): T =
-        (this as T).apply(block).apply { this.validate() }
+    open fun validations(): List<EntityValidation<T>> = listOf()
 
 }
-
-data class Validation<T : BaseEntity<T>>(
-    val code: String,
-    val message: (T) -> String,
-    val validate: (T) -> Boolean
-)

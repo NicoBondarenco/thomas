@@ -1,0 +1,8 @@
+Always follow the pattern:
+<context>.<reference>.<action>.<message-description>
+
+Examples:
+authentication.token.validate.token-expired=The token is expired
+model.gender.name.cis-male=Male
+session.security-user.current-user.not-logged=User is not logged
+session.security-user.current-user.not-allowed=User does not have permission

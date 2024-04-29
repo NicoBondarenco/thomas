@@ -1,12 +1,10 @@
 package com.thomas.core.authorization
 
-import com.thomas.core.HttpApplicationException
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
-import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotAllowed
+import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotAllowed
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
-import com.thomas.core.model.http.HTTPStatus.FORBIDDEN
 import com.thomas.core.model.security.SecurityRole.MASTER
 import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
@@ -46,9 +44,8 @@ internal class AuthorizationTest {
             currentUser = user()
             authorized(roles = arrayOf(MASTER)) {}
             fail("Should have thrown HttpApplicationException")
-        } catch (e: HttpApplicationException) {
-            assertEquals(FORBIDDEN, e.status)
-            assertEquals(coreContextSessionUserNotAllowed(), e.message)
+        } catch (e: UnauthorizedUserException) {
+            assertEquals(contextCurrentSessionCurrentUserNotAllowed(), e.message)
         } catch (e: Exception) {
             fail("Should have thrown HttpApplicationException -> ${e::class.java} - ${e.message}")
         }

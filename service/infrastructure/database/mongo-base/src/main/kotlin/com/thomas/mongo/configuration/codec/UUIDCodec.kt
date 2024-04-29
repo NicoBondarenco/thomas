@@ -7,7 +7,7 @@ import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-class UUIDCodec : Codec<UUID> {
+internal class UUIDCodec : Codec<UUID> {
 
     override fun getEncoderClass(): Class<UUID> = UUID::class.java
 
@@ -15,15 +15,11 @@ class UUIDCodec : Codec<UUID> {
         writer: BsonWriter,
         value: UUID,
         encoderContext: EncoderContext
-    ) {
-        writer.writeString(value.toString())
-    }
+    ) = writer.writeString(value.toString())
 
     override fun decode(
         reader: BsonReader,
         decoderContext: DecoderContext
-    ): UUID {
-        return UUID.fromString(reader.readString())
-    }
+    ): UUID = UUID.fromString(reader.readString())
 
 }

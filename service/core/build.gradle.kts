@@ -8,6 +8,4 @@ plugins {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.reactive)
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
 }

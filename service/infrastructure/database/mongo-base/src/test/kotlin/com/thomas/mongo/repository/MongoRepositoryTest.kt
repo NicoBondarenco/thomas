@@ -1,32 +1,44 @@
 package com.thomas.mongo.repository
 
 import com.mongodb.ServerApiVersion
-import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.UpdateOptions
-import com.mongodb.client.model.Updates
-import com.thomas.mongo.configuration.MongoManager
-import com.thomas.mongo.configuration.parser.MongoParameterParserException
-import com.thomas.mongo.data.TestErrorRepository
+import com.mongodb.client.model.FindOneAndReplaceOptions
+import com.mongodb.client.model.ReturnDocument.AFTER
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageSort
+import com.thomas.core.model.pagination.PageSortDirection.ASC
+import com.thomas.core.model.pagination.PageSortDirection.DESC
+import com.thomas.mongo.configuration.MongoDatabaseFactory
+import com.thomas.mongo.data.ChildTestEntity
+import com.thomas.mongo.data.ParentTestEntity
+import com.thomas.mongo.data.ParentTestRepository
 import com.thomas.mongo.data.TestMongoEntity
 import com.thomas.mongo.data.TestMongoRepository
-import com.thomas.mongo.extension.toUpsertDocument
+import com.thomas.mongo.data.childTestList
+import com.thomas.mongo.data.entityListFoundData
+import com.thomas.mongo.data.entityListNotFoundData
+import com.thomas.mongo.data.foundDateMax
+import com.thomas.mongo.data.foundDateMin
+import com.thomas.mongo.data.fullTestEntity
+import com.thomas.mongo.data.parentTestEntity
 import com.thomas.mongo.properties.MongoDatabaseProperties
 import java.time.Duration
 import java.time.ZoneOffset.UTC
-import java.util.UUID
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
-import org.bson.Document
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import org.junit.jupiter.api.assertThrows
 import org.testcontainers.containers.GenericContainer
 
 @TestInstance(PER_CLASS)
@@ -37,7 +49,8 @@ class MongoRepositoryTest {
     private val password: String = "mongo_password"
     private val port: Int = 27017
     private val testCollectionName: String = "test-collection"
-    private val errorCollectionName: String = "error-collection"
+    private val parentCollectionName: String = "parent-collection"
+    private val childCollectionName: String = "child-collection"
 
     private val container = GenericContainer("mongo:6.0.1")
         .withEnv("MONGO_INITDB_DATABASE", database)
@@ -46,11 +59,12 @@ class MongoRepositoryTest {
         .withExposedPorts(port)
 
     private lateinit var properties: MongoDatabaseProperties
-    private lateinit var manager: MongoManager
+    private lateinit var mongoDatabase: MongoDatabase
     private lateinit var testMongoRepository: TestMongoRepository
-    private lateinit var testErrorRepository: TestErrorRepository
-    private lateinit var testCollection: MongoCollection<Document>
-    private lateinit var errorCollection: MongoCollection<Document>
+    private lateinit var parentTestRepository: ParentTestRepository
+    private lateinit var testCollection: MongoCollection<TestMongoEntity>
+    private lateinit var parentCollection: MongoCollection<ParentTestEntity>
+    private lateinit var childCollection: MongoCollection<ChildTestEntity>
 
     @BeforeAll
     fun beforeAll() {
@@ -66,13 +80,14 @@ class MongoRepositoryTest {
             apiVersion = ServerApiVersion.V1,
         )
 
-        manager = MongoManager(properties)
+        mongoDatabase = MongoDatabaseFactory.create(properties)
 
-        testMongoRepository = TestMongoRepository(manager.mongoDatabase, testCollectionName)
-        testErrorRepository = TestErrorRepository(manager.mongoDatabase, errorCollectionName)
+        testMongoRepository = TestMongoRepository(mongoDatabase, testCollectionName)
+        parentTestRepository = ParentTestRepository(mongoDatabase, parentCollectionName)
 
-        testCollection = manager.mongoDatabase.getCollection(testCollectionName)
-        errorCollection = manager.mongoDatabase.getCollection(errorCollectionName)
+        testCollection = mongoDatabase.getCollection(testCollectionName, TestMongoEntity::class.java)
+        parentCollection = mongoDatabase.getCollection(parentCollectionName, ParentTestEntity::class.java)
+        childCollection = mongoDatabase.getCollection(childCollectionName, ChildTestEntity::class.java)
     }
 
     @AfterAll
@@ -81,98 +96,201 @@ class MongoRepositoryTest {
         await atMost Duration.ofSeconds(30) until { !container.isRunning }
     }
 
-    @Test
-    fun `Save multilevel entity`() {
-        val entity = TestMongoEntity()
-        testMongoRepository.save(entity)
-
-        val document = testCollection.find(Filters.eq("_id", entity.id.toString())).firstOrNull()
-        assertNotNull(document)
-
+    @AfterEach
+    fun afterEach() {
+        runBlocking {
+            testCollection.deleteMany(Filters.empty())
+            parentCollection.deleteMany(Filters.empty())
+            childCollection.deleteMany(Filters.empty())
+        }
     }
 
     @Test
     fun `Retrieve multilevel entity`() {
         val entity = TestMongoEntity()
-        testCollection.updateOne(
-            Filters.eq("_id", entity.id.toString()),
-            entity.toUpsertDocument(),
-            UpdateOptions().upsert(true)
-        )
-
-        val result = testMongoRepository.findById(entity.id)
-        assertNotNull(result)
-        assertEquals(entity.stringValue, result!!.stringValue)
-        assertEquals(entity.booleanValue, result.booleanValue)
-        assertEquals(entity.intValue, result.intValue)
-        assertEquals(entity.longValue, result.longValue)
-        assertEquals(entity.doubleValue, result.doubleValue)
-        assertEquals(entity.bigDecimal, result.bigDecimal)
-        assertEquals(entity.bigInteger, result.bigInteger)
-        assertEquals(entity.dateValue, result.dateValue)
-        assertEquals(
-            entity.timeValue.withNano(0),
-            result.timeValue.withNano(0)
-        )
-        assertEquals(
-            entity.datetimeValue.withNano(0),
-            result.datetimeValue.withNano(0)
-        )
-        assertEquals(
-            entity.datetimeOffset.withNano(0).withOffsetSameInstant(UTC),
-            result.datetimeOffset.withNano(0).withOffsetSameInstant(UTC)
-        )
-        assertEquals(entity.enumValue, result.enumValue)
-        assertEquals(entity.stringList, result.stringList)
-        assertEquals(entity.uuidEmpty, result.uuidEmpty)
-        assertEquals(entity.stringEmpty, result.stringEmpty)
-        assertEquals(entity.booleanEmpty, result.booleanEmpty)
-        assertEquals(entity.intEmpty, result.intEmpty)
-        assertEquals(entity.longEmpty, result.longEmpty)
-        assertEquals(entity.doubleEmpty, result.doubleEmpty)
-        assertEquals(entity.bigdecimalEmpty, result.bigdecimalEmpty)
-        assertEquals(entity.bigintegerEmpty, result.bigintegerEmpty)
-        assertEquals(entity.dateEmpty, result.dateEmpty)
-        assertEquals(entity.timeEmpty, result.timeEmpty)
-        assertEquals(entity.datetimeEmpty, result.datetimeEmpty)
-        assertEquals(entity.offsetEmpty, result.offsetEmpty)
-        assertEquals(entity.enumNull, result.enumNull)
-        assertEquals(entity.childValue, result.childValue)
-        assertEquals(entity.stringsNull, result.stringsNull)
-        assertEquals(entity.childrenNull, result.childrenNull)
-
-        assertEquals(entity.childEntity.childName, result.childEntity.childName)
-        assertEquals(entity.childEntity.anotherEntity, result.childEntity.anotherEntity)
-        assertEquals(entity.childEntity.anotherEmpty, result.childEntity.anotherEmpty)
-        assertEquals(entity.childEntity.anotherList, result.childEntity.anotherList)
-        assertEquals(entity.childEntity.listEmpty, result.childEntity.listEmpty)
-        assertEquals(entity.childEntity.listNull.filterNotNull(), result.childEntity.listNull.filterNotNull())
-
-        entity.childList.forEach { child ->
-            val childResult = result.childList.firstOrNull { it.id == child.id }
-            assertNotNull(childResult)
-            assertEquals(child.childName, childResult!!.childName)
-            assertEquals(child.anotherEntity, childResult.anotherEntity)
-            assertEquals(child.anotherEmpty, childResult.anotherEmpty)
-            assertEquals(child.anotherList, childResult.anotherList)
-            assertEquals(child.listEmpty, childResult.listEmpty)
-            assertEquals(child.listNull.filterNotNull(), childResult.listNull.filterNotNull())
+        runBlocking {
+            testCollection.findOneAndReplace(
+                Filters.eq("_id", entity.id),
+                entity,
+                FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+            )!!
         }
+
+        val result = testMongoRepository.one(entity.id)
+        assertEquals(entity, result)
     }
 
     @Test
-    fun `Throw error when there is no parameter parser`(){
-        val id = UUID.randomUUID()
-        errorCollection.updateOne(
-            Filters.eq("_id", id),
-            Updates.combine(
-                Updates.set("id", id),
-                Updates.set("stringValue", "Test Name"),
-                Updates.set("fileValue", "Test File"),
-            ),
-            UpdateOptions().upsert(true)
+    fun `Retrieve multilevel entity list without filter`() {
+        val entities = (1..10).map { TestMongoEntity() }
+        runBlocking { testCollection.insertMany(entities) }
+
+        val result = testMongoRepository.all()
+        assertEquals(10, result.size)
+    }
+
+    @Test
+    fun `Retrieve multilevel entity list with filter`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val result = testMongoRepository.all(
+            entityListFoundData.map { it.stringValue },
+            foundDateMin.atOffset(UTC),
+            foundDateMax.atOffset(UTC),
         )
-        assertThrows<MongoParameterParserException> { testErrorRepository.findById(id) }
+        assertEquals(entityListFoundData, result)
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page without filter and sort`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val result = testMongoRepository.page(
+            PageRequest(2, 7)
+        )
+        assertEquals(7, result.contentList.size)
+        assertEquals(entities.size.toLong(), result.totalItems)
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page without filter sorted ASC`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val first = entities.sortedBy { it.datetimeOffset }[10]
+
+        val result = testMongoRepository.page(
+            PageRequest(3, 5, listOf(PageSort("datetimeOffset", ASC))),
+        )
+        assertEquals(5, result.contentList.size)
+        assertEquals(entities.size.toLong(), result.totalItems)
+        assertEquals(first, result.contentList.first())
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page without filter sorted DESC`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val first = entities.sortedByDescending { it.stringValue }[0]
+
+        val result = testMongoRepository.page(
+            PageRequest(1, 3, listOf(PageSort("stringValue", DESC))),
+        )
+        assertEquals(3, result.contentList.size)
+        assertEquals(entities.size.toLong(), result.totalItems)
+        assertEquals(first, result.contentList.first())
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page with filter and without sort`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val result = testMongoRepository.page(
+            entityListFoundData.map { it.stringValue },
+            foundDateMin.atOffset(UTC),
+            foundDateMax.atOffset(UTC),
+            PageRequest(4, 6),
+        )
+        assertEquals(2, result.contentList.size)
+        assertEquals(entityListFoundData.size.toLong(), result.totalItems)
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page with filter sorted ASC`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking {
+            entities.forEach {
+                testCollection.findOneAndReplace(
+                    Filters.eq("_id", it.id),
+                    it,
+                    FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+                )!!
+            }
+        }
+
+        val first = entityListFoundData.sortedBy { it.bigInteger }[6]
+
+        val result = testMongoRepository.page(
+            entityListFoundData.map { it.stringValue },
+            foundDateMin.atOffset(UTC),
+            foundDateMax.atOffset(UTC),
+            PageRequest(2, 6, listOf(PageSort("bigInteger", ASC))),
+        )
+        assertEquals(6, result.contentList.size)
+        assertEquals(entityListFoundData.size.toLong(), result.totalItems)
+        assertEquals(first, result.contentList.first())
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page with filter sorted DESC`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val first = entityListFoundData.sortedBy { it.bigDecimal }[12]
+
+        val result = testMongoRepository.page(
+            entityListFoundData.map { it.stringValue },
+            foundDateMin.atOffset(UTC),
+            foundDateMax.atOffset(UTC),
+            PageRequest(4, 4, listOf(PageSort("bigDecimal", ASC))),
+        )
+        assertEquals(4, result.contentList.size)
+        assertEquals(entityListFoundData.size.toLong(), result.totalItems)
+        assertEquals(first, result.contentList.first())
+    }
+
+    @Test
+    fun `Retrieve multilevel entity page empty`() {
+        val entities = entityListFoundData + entityListNotFoundData
+        runBlocking { testCollection.insertMany(entities) }
+
+        val result = testMongoRepository.page(
+            entityListFoundData.map { it.stringValue },
+            foundDateMin.atOffset(UTC).plusDays(20),
+            foundDateMax.atOffset(UTC).plusDays(20),
+            PageRequest(),
+        )
+        assertTrue(result.contentList.isEmpty())
+        assertEquals(0, result.totalItems)
+    }
+
+    @Test
+    fun `Save multilevel entity`() {
+        val entity = TestMongoEntity()
+        val another = TestMongoEntity()
+        testMongoRepository.save(entity.id, entity)
+        testMongoRepository.save(another.id, another)
+
+        val result = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
+        assertEquals(entity, result)
+    }
+
+    @Test
+    fun `Update multilevel entity`() {
+        val saved = TestMongoEntity()
+        runBlocking { testCollection.insertMany(listOf(saved, TestMongoEntity())) }
+
+        val entity = TestMongoEntity(id = saved.id)
+        val result = testMongoRepository.save(saved.id, entity)
+        assertEquals(entity, result)
+
+        val found = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
+        assertEquals(entity, found)
+    }
+
+    @Test
+    fun `Find joined entity`() {
+        runBlocking {
+            childCollection.insertMany(childTestList)
+            parentCollection.insertOne(parentTestEntity)
+        }
+
+        val result = parentTestRepository.findFullTestEntity(parentTestEntity.id)
+        assertEquals(fullTestEntity, result)
     }
 
 }

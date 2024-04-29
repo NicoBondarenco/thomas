@@ -50,6 +50,8 @@ catalog {
 
         version("auth0", "4.4.0")
 
+        version("jackson", "2.17.0")
+
         version("awaitility", "4.2.1")
 
         version("testcontainers", "1.19.7")
@@ -84,6 +86,7 @@ catalog {
         library("junit-pioneer", "org.junit-pioneer", "junit-pioneer").versionRef("junitPioneer")
         library("junit-jupiter-api", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit")
         library("junit-jupiter-engine", "org.junit.jupiter", "junit-jupiter-engine").versionRef("junit")
+        library("junit-jupiter-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
 
         library("mockito-core", "org.mockito", "mockito-core").versionRef("mockito")
         library("mockito-inline", "org.mockito", "mockito-inline").versionRef("mockito-inline")
@@ -99,7 +102,9 @@ catalog {
 
         //region DATABASES
 
-        library("mongodb-driver-sync", "org.mongodb", "mongodb-driver-sync").versionRef("mongodb")
+        library("mongodb-driver-kotlin", "org.mongodb", "mongodb-driver-kotlin-coroutine").versionRef("mongodb")
+        library("mongodb-bson-kotlinx", "org.mongodb", "bson-kotlinx").versionRef("mongodb")
+        library("mongodb-bson-kotlin", "org.mongodb", "bson-kotlin").versionRef("mongodb")
 
         //endregion DATABASES
 
@@ -108,6 +113,21 @@ catalog {
         library("auth0-jwt", "com.auth0", "java-jwt").versionRef("auth0")
 
         //endregion JWT
+
+        //region SERIALIZATION
+
+        library("jackson-core", "com.fasterxml.jackson.core", "jackson-core").versionRef("jackson")
+        library("jackson-annotations", "com.fasterxml.jackson.core", "jackson-annotations").versionRef("jackson")
+        library("jackson-databind", "com.fasterxml.jackson.core", "jackson-databind").versionRef("jackson")
+        library("jackson-module-parameter", "com.fasterxml.jackson.module", "jackson-module-parameter-names").versionRef("jackson")
+        library("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin").versionRef("jackson")
+        library("jackson-module-jaxb", "com.fasterxml.jackson.module", "jackson-module-jaxb-annotations").versionRef("jackson")
+        library("jackson-datatype-jdk8", "com.fasterxml.jackson.datatype", "jackson-datatype-jdk8").versionRef("jackson")
+        library("jackson-datatype-jsr310", "com.fasterxml.jackson.datatype", "jackson-datatype-jsr310").versionRef("jackson")
+        library("jackson-dataformat-yaml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml").versionRef("jackson")
+        library("jackson-dataformat-xml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-xml").versionRef("jackson")
+
+        //endregion SERIALIZATION
 
         //region TESTS
 

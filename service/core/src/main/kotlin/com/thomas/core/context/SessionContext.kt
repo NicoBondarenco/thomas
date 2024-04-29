@@ -1,13 +1,12 @@
 package com.thomas.core.context
 
-import com.thomas.core.HttpApplicationException.Companion.unauthorized
-import com.thomas.core.i18n.CoreMessageI18N.coreContextSessionUserNotLogged
+import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotLogged
 import com.thomas.core.model.security.SecurityUser
 import java.util.Locale
 import java.util.Locale.ROOT
 
 data class SessionContext(
-    private val _sessionProperties: MutableMap<String, String?> = mutableMapOf(),
+    private val sessionProperties: MutableMap<String, String?> = mutableMapOf(),
 ) {
 
     private var _currentUser: SecurityUser? = null
@@ -17,18 +16,18 @@ data class SessionContext(
     internal var currentLocale: Locale = ROOT
 
     internal var currentUser: SecurityUser
-        get() = _currentUser ?: throw unauthorized(coreContextSessionUserNotLogged())
+        get() = _currentUser ?: throw UnauthenticatedUserException(contextCurrentSessionCurrentUserNotLogged())
         set(value) {
             _currentUser = value
         }
 
-    internal fun getProperty(property: String): String? = _sessionProperties[property]
+    internal fun getProperty(property: String): String? = sessionProperties[property]
 
     internal fun setProperty(property: String, value: String?) {
-        _sessionProperties[property] = value
+        sessionProperties[property] = value
     }
 
-    internal fun clearContext() {
+    internal fun clear() {
         _currentUser = null
         currentLocale = ROOT
     }

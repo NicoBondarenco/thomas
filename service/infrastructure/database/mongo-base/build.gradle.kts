@@ -9,7 +9,9 @@ dependencies {
 
     implementation(project(":core"))
 
-    implementation(libs.mongodb.driver.sync)
+    implementation(libs.mongodb.driver.kotlin)
+    implementation(libs.mongodb.bson.kotlin)
+    implementation(libs.mongodb.bson.kotlinx)
 
     testImplementation(libs.testcontainers.generic)
 
