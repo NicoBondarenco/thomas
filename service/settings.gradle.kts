@@ -25,3 +25,6 @@ findProject(":infrastructure:authentication:authentication-jwt-auth0")?.name = "
 
 include("infrastructure:database:mongo-base")
 findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
+
+include("infrastructure:database:exposed-base")
+findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"

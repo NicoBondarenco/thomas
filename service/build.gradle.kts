@@ -97,6 +97,8 @@ allprojects {
         testImplementation(libs.mockito.junit)
         testImplementation(libs.mockito.kotlin)
 
+        testImplementation(libs.skyscreamer.jsonassert)
+
     }
 
     tasks.test {

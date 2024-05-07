@@ -46,7 +46,19 @@ catalog {
 
         version("stubs", "2.1.6")
 
+        version("jsonassert", "1.5.1")
+
+        version("reflections", "0.10.2")
+
+        version("postgresql", "42.7.3")
+
+        version("h2", "2.2.224")
+
+        version("hikari", "5.1.0")
+
         version("mongodb", "5.0.1")
+
+        version("exposed", "0.49.0")
 
         version("auth0", "4.4.0")
 
@@ -98,13 +110,34 @@ catalog {
         library("system-stubs-core", "uk.org.webcompere", "system-stubs-core").versionRef("stubs")
         library("system-stubs-jupiter", "uk.org.webcompere", "system-stubs-jupiter").versionRef("stubs")
 
+        library("skyscreamer-jsonassert", "org.skyscreamer", "jsonassert").versionRef("jsonassert")
+
         //endregion DEFAULTS
+
+        //region UTILS
+
+        library("reflections", "org.reflections", "reflections").versionRef("reflections")
+
+        //endregion UTILS
 
         //region DATABASES
 
         library("mongodb-driver-kotlin", "org.mongodb", "mongodb-driver-kotlin-coroutine").versionRef("mongodb")
         library("mongodb-bson-kotlinx", "org.mongodb", "bson-kotlinx").versionRef("mongodb")
         library("mongodb-bson-kotlin", "org.mongodb", "bson-kotlin").versionRef("mongodb")
+
+        library("exposed-core", "org.jetbrains.exposed", "exposed-core").versionRef("exposed")
+        library("exposed-crypt", "org.jetbrains.exposed", "exposed-crypt").versionRef("exposed")
+        library("exposed-dao", "org.jetbrains.exposed", "exposed-dao").versionRef("exposed")
+        library("exposed-jdbc", "org.jetbrains.exposed", "exposed-jdbc").versionRef("exposed")
+        library("exposed-javatime", "org.jetbrains.exposed", "exposed-java-time").versionRef("exposed")
+        library("exposed-json", "org.jetbrains.exposed", "exposed-json").versionRef("exposed")
+
+        library("postgresql", "org.postgresql", "postgresql").versionRef("postgresql")
+
+        library("h2", "com.h2database", "h2").versionRef("h2")
+
+        library("hikaricp", "com.zaxxer", "HikariCP").versionRef("hikari")
 
         //endregion DATABASES
 
