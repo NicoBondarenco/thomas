@@ -31,11 +31,6 @@ class JWTAuth0Authenticator internal constructor(
     private val repository: UserAuthenticationRepository,
 ) : Authenticator {
 
-    constructor(
-        configuration: JWTAuth0Configuration,
-        mongoDatabase: MongoDatabase,
-    ) : this(configuration, UserAuthenticationRepository(mongoDatabase, configuration))
-
     private val verifier = configuration.verifier()
     private val decoder = JWT()
 

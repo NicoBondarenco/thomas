@@ -1,3 +1,11 @@
 package com.thomas.core.context
 
-class UnauthenticatedUserException(message: String) : RuntimeException(message)
+import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ErrorType.UNAUTHENTICATED_USER
+
+class UnauthenticatedUserException(
+    message: String
+) : DetailedException(
+    message = message,
+    type = UNAUTHENTICATED_USER,
+)
