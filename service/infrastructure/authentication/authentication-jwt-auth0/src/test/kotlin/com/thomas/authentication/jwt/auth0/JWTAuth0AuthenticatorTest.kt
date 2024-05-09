@@ -1,6 +1,10 @@
 package com.thomas.authentication.jwt.auth0
 
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.authentication.Authenticator
+import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0AuthenticatorFactory
+import com.thomas.authentication.jwt.auth0.data.UserAuthentication
 import com.thomas.authentication.jwt.auth0.exception.JWTAuth0TokenException
 import com.thomas.authentication.jwt.auth0.i18n.AuthenticationJWTAuth0MessageI18N.authenticationTokenRetrieveClaimInvalidId
 import com.thomas.authentication.jwt.auth0.i18n.AuthenticationJWTAuth0MessageI18N.authenticationTokenRetrieveClaimMissingId
@@ -23,6 +27,7 @@ import java.util.UUID
 import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class JWTAuth0AuthenticatorTest {
@@ -38,6 +43,17 @@ class JWTAuth0AuthenticatorTest {
         defaultConfiguration,
         repository
     )
+
+    @Test
+    fun `Factory creates a new instance`() {
+        val database = mockk<MongoDatabase> {
+            every {
+                getCollection(defaultConfiguration.userCollection, UserAuthentication::class.java)
+            } returns mockk<MongoCollection<UserAuthentication>>()
+
+        }
+        assertDoesNotThrow { JWTAuth0AuthenticatorFactory.create(database, defaultConfiguration) }
+    }
 
     @Test
     fun `Decode token without user id claim throws JWTAuth0TokenException`() {

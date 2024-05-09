@@ -2,8 +2,8 @@ package com.thomas.spring.filter
 
 import com.thomas.authentication.Authenticator
 import com.thomas.core.context.SessionContextHolder.currentLocale
-import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.context.SessionContextHolder.currentToken
+import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.security.SecurityUser
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -15,10 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
-import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-@Component
 class AuthenticationFilter(
     private val authenticator: Authenticator
 ) : OncePerRequestFilter() {
