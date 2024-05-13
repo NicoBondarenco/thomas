@@ -3,7 +3,7 @@ package com.thomas.authentication.jwt.auth0.repository
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0Configuration
+import com.thomas.authentication.jwt.auth0.properties.JWTAuth0Properties
 import com.thomas.authentication.jwt.auth0.data.UserAuthentication
 import com.thomas.mongo.repository.MongoRepository
 import java.util.UUID
@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 
 internal class UserAuthenticationRepository(
     database: MongoDatabase,
-    configuration: JWTAuth0Configuration
+    configuration: JWTAuth0Properties
 ) : MongoRepository<UserAuthentication>(
     database,
     configuration.userCollection,

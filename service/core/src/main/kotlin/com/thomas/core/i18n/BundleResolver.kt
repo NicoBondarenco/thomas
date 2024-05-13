@@ -20,7 +20,7 @@ abstract class BundleResolver(
         }
     }
 
-    protected fun bundle(): ResourceBundle = resources
+    private fun bundle(): ResourceBundle = resources
         .getOrDefault(
             currentLocale.toLanguageTag(),
             resources[Locale.ROOT.toLanguageTag()]!!

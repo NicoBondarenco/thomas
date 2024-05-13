@@ -1,11 +1,12 @@
 package com.thomas.mongo.properties
 
 import com.mongodb.ServerApiVersion
+import com.mongodb.ServerApiVersion.V1
 
 data class MongoDatabaseProperties(
-    val connectionUrl: String,
-    val databaseName: String,
-    val connectionUsername: String,
-    val connectionPassword: String,
-    val apiVersion: ServerApiVersion
+    val connectionUrl: String = "",
+    val databaseName: String = "",
+    val connectionUsername: String = "",
+    val connectionPassword: String = "",
+    val apiVersion: ServerApiVersion = V1
 )

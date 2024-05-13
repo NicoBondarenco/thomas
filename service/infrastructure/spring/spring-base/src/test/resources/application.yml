@@ -1,0 +1,34 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ} %-5p %c:%M{1}:%L - %m%n"
+  level:
+    root: INFO
+    com.thomas: DEBUG
+
+security:
+  jwt:
+    privateKey: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJMiW6O3XOwALyk+DsYRop+zp0HeNgbMpfKuJx4A5Hqcqdz0pmIAEyZMZCnwmG2GDE5D3oVQoST52V9BtENZxX+yGnzd+FsKWND8/azDOPGtCC25GXHeppy1Swpd5Vsbe5w4itEsKABJY068zZmLtaGZA0jsSWnOZFFWqGxDSVVAa8fukr8cpKNIFf5psGgWG3LyIPcjrU2R9nkx5mZ+DOJ/rlwX6Fg8+h2NJA7j7QDLjbzjzBAIe7nU3b5hn2rFdJfdPBbdgz+rLgeeSWqFH0IYKhAFdfVCrwcX1TcmeL+Y6yIzlHp9dnwsYwXHj/+FunAeuIqP84TnXodrHMM00zAgMBAAECggEACS5DH3TgIs+LMuOBk3e42GqQ18SXYAqGz4Hm9FhLfoSmbL4NQIy8UT7c9yRHrIIKJGHf206qF3zPjYymg93IZRFeD0irJvARFdc/XlYMEj8gfaAkTBd+31X6ZtcixplF73GXNoKRIoNTEVYjMliwT+Ozu1o6aT7+mO9pvX2NgrTOm9+1ZRpb4dZ2tGT2hqeni/HJE3yS4KlwMPVIssHnjJ1JdugrVGb19GYgsTO/LMHSdmzlGYlsTuYg35X6dMI0uk4pj2zJ35bqWASQywuLCJMNwYEsrJkkXwyJRa5rFDIKOZo6CcxTkQ+19nJbF3qn8QNs1Y3K8II8ykufXdsBnQKBgQDxHXJ+I2QCke1T6nPXxrYHZdBkPTccNi43gbottPcxixHyPF11rF48ImrpAqodTvv+IzdPb9mo47UQ0ZyUyorIw8eYvyIjSpfi07FNjgyYqZQFF/oRq3ArHZWjLtdXWE5L6DHqa39YXvS504SMDdKd9vLfx/1kVoszvOkAyTmmdwKBgQDVndKnqFAPhm05oHM9hmcMy2neSOiby8wBKPahrTycYnle+iWmyEICUx87m/cj5peqelMVV8jC/pAg0LAoA7ZAtPmR49VgN263qIxtHuwZgCIzI9iWRqHfXP1Lw6R1HqSXLr716jV6FDWVs5OGPBajenBkJBbIROuYaex8Bj0yJQKBgG0aTQ+ExiFflMtvAII3+XA5guWIyaIrZhhZzDwYce5qJnG9HPE9UNrXHBdZzE48ykwB9Woti4kfmHQG1VqCl/Amnu+gNTtQ6o+KCOW2DD8cJM11PwO11qi711UiwfBVFgDFDaksgVAkj4pyiryxGIfAEcBvB1raylxb8/cWFs8bAoGBALRGeNzdApPXkp4rdpXZs2Xs1O+u//9bQlNISruvA5PG1z78RII4RtzHYXhg63T0ydIpYayFZPyK8P+AnulmGI0LLgOdDxogLeP47mm4yu/KXxJhkgtgmIN0ap9iAIyGy8h6vtWyTmc0XvRzlHCYjVJxpiAdBM0GvPznh5gze7mxAoGAcCBUEmCaRRxEuMaU/jJ3IgX0q7R90uk4+sQUjgKoT2j2cBdTSq8hRRiZ/TJ6nj4SkqgxkoAf8d3tfwf3ED/8e10oM02zEYQvT8b2R7fjIyIEOutizbedtiwWs9PgTu9lzey0kBpqTSlJp0ADpTQVfZLVTjzCYlwq897R98GWlKs="
+    publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyTIlujt1zsAC8pPg7GEaKfs6dB3jYGzKXyriceAOR6nKnc9KZiABMmTGQp8JhthgxOQ96FUKEk+dlfQbRDWcV/shp83fhbCljQ/P2swzjxrQgtuRlx3qactUsKXeVbG3ucOIrRLCgASWNOvM2Zi7WhmQNI7ElpzmRRVqhsQ0lVQGvH7pK/HKSjSBX+abBoFhty8iD3I61NkfZ5MeZmfgzif65cF+hYPPodjSQO4+0Ay42848wQCHu51N2+YZ9qxXSX3TwW3YM/qy4HnklqhR9CGCoQBXX1Qq8HF9U3Jni/mOsiM5R6fXZ8LGMFx4//hbpwHriKj/OE516HaxzDNNMwIDAQAB"
+    issuerName: test-application
+    jwtAudience: test-audience
+    jwtRealm: test-realm
+    jwtAlgorithm: RSA
+    userCollection: authentication-user
+    groupCollection: authentication-group
+
+pageable:
+  default:
+    pageNumber: 1
+    pageSize: 20

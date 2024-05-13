@@ -1,9 +1,12 @@
 package com.thomas.authentication.jwt.auth0.exception
 
-class JWTAuth0TokenException : RuntimeException {
+import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ErrorType.UNAUTHORIZED_ACTION
 
-    constructor(message: String) : super(message)
+class JWTAuth0TokenException : DetailedException {
 
-    constructor(message: String, cause: Throwable) : super(message, cause)
+    constructor(message: String) : super(message, UNAUTHORIZED_ACTION)
+
+    constructor(message: String, cause: Throwable) : super(message, UNAUTHORIZED_ACTION, null, cause)
 
 }

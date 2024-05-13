@@ -1,8 +1,8 @@
 package com.thomas.authentication.jwt.auth0.util
 
-import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0Configuration
+import com.thomas.authentication.jwt.auth0.properties.JWTAuth0Properties
 
-val defaultConfiguration = JWTAuth0Configuration(
+val defaultConfiguration = JWTAuth0Properties(
     issuerName = "test-application",
     jwtAudience = "test-audience",
     jwtRealm = "test-realm",

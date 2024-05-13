@@ -28,3 +28,6 @@ findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
 
 include("infrastructure:database:exposed-base")
 findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
+
+include("infrastructure:spring:spring-base")
+findProject(":infrastructure:spring:spring-base")?.name = "spring-base"

@@ -2,6 +2,7 @@ package com.thomas.core.authorization
 
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.exception.ErrorType.UNAUTHORIZED_ACTION
 import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotAllowed
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.UserProfile
@@ -13,8 +14,9 @@ import java.util.UUID.randomUUID
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 internal class AuthorizationTest {
 
@@ -39,39 +41,32 @@ internal class AuthorizationTest {
     }
 
     @Test
-    fun `When role is required and user does not have it, should throws exception`() {
-        try {
+    fun `When role is required and user does not have it, should throws UnauthorizedUserException`() {
+        val exception = assertThrows<UnauthorizedUserException> {
             currentUser = user()
             authorized(roles = arrayOf(MASTER)) {}
-            fail("Should have thrown HttpApplicationException")
-        } catch (e: UnauthorizedUserException) {
-            assertEquals(contextCurrentSessionCurrentUserNotAllowed(), e.message)
-        } catch (e: Exception) {
-            fail("Should have thrown HttpApplicationException -> ${e::class.java} - ${e.message}")
         }
+        assertEquals(contextCurrentSessionCurrentUserNotAllowed(), exception.message)
+        assertEquals(UNAUTHORIZED_ACTION, exception.type)
     }
 
     @Test
     fun `When role is required and user have it, should return the block`() {
-        try {
+        assertDoesNotThrow {
             currentUser = user().copy(
                 userRoles = listOf(MASTER)
             )
             assertTrue(authorized(roles = arrayOf(MASTER)) { true })
-        } catch (e: Exception) {
-            fail("Should not have thrown Exception -> ${e::class.java} - ${e.message}")
         }
     }
 
     @Test
     fun `When roles are not specified, should return the block`() {
-        try {
+        assertDoesNotThrow {
             currentUser = user().copy(
                 userRoles = listOf(MASTER)
             )
             assertTrue(authorized { true })
-        } catch (e: Exception) {
-            fail("Should not have thrown Exception -> ${e::class.java} - ${e.message}")
         }
     }
 

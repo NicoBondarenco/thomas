@@ -23,6 +23,8 @@ catalog {
     versionCatalog {
         //region VERSIONS
 
+        //region PLUGINS
+
         version("kotlin", "1.9.23")
         version("kotlinx-coroutines", "1.8.0")
         version("jvm", "21")
@@ -31,6 +33,13 @@ catalog {
         version("ksp", "1.9.23-1.0.19")
 
         version("flywayPlugin", "10.11.0")
+
+        version("springFrameworkBoot", "3.2.5")
+        version("springDependencyManagement", "1.1.4")
+
+        //endregion PLUGINS
+
+        //region DEPENDENCIES
 
         version("log4j", "2.23.1")
         version("log4jKotlin", "1.4.0")
@@ -48,6 +57,10 @@ catalog {
 
         version("jsonassert", "1.5.1")
 
+        version("awaitility", "4.2.1")
+
+        version("testcontainers", "1.19.7")
+
         version("reflections", "0.10.2")
 
         version("postgresql", "42.7.3")
@@ -64,18 +77,25 @@ catalog {
 
         version("jackson", "2.17.0")
 
-        version("awaitility", "4.2.1")
+        version("springCloud", "2023.0.1")
 
-        version("testcontainers", "1.19.7")
+        //endregion DEPENDENCIES
 
         //endregion VERSIONS
 
         //region PLUGINS
 
         plugin("kotlin-lang", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
+        plugin("kotlin-spring", "org.jetbrains.kotlin.plugin.spring").versionRef("kotlin")
+
         plugin("kotlinx-serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
+
         plugin("ksp-plugin", "com.google.devtools.ksp").versionRef("ksp")
+
         plugin("flyway-plugin", "org.flywaydb.flyway").versionRef("flywayPlugin")
+
+        plugin("spring-framework-boot", "org.springframework.boot").versionRef("springFrameworkBoot")
+        plugin("spring-dependency-management", "io.spring.dependency-management").versionRef("springDependencyManagement")
 
         //endregion PLUGINS
 
@@ -170,6 +190,12 @@ catalog {
         library("testcontainers-generic", "org.testcontainers", "testcontainers").versionRef("testcontainers")
 
         //endregion TESTS
+
+        //region SPRING
+
+        library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
+
+        //endregion SPRING
 
         //endregion DEPENDENCIES
 
