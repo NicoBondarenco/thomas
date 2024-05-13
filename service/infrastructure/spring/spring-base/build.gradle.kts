@@ -23,6 +23,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
     implementation(libs.mongodb.driver.kotlin)
 
@@ -34,4 +36,14 @@ dependencies {
     implementation(libs.jackson.module.jaxb)
     implementation(libs.jackson.datatype.jdk8)
     implementation(libs.jackson.datatype.jsr310)
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+
+    testImplementation(libs.auth0.jwt)
+
+    testImplementation(libs.testcontainers.generic)
+
+    testImplementation(libs.awaitility.base)
+    testImplementation(libs.awaitility.kotlin)
 }

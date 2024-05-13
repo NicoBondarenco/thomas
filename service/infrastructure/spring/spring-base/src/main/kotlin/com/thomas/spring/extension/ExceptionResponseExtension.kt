@@ -1,4 +1,4 @@
-package com.thomas.spring.data.extension
+package com.thomas.spring.extension
 
 import com.thomas.core.exception.DetailedException
 import com.thomas.core.exception.ErrorType
@@ -28,7 +28,7 @@ internal fun Throwable.toExceptionResponse(
         code = it.value(),
         path = uri,
         message = this.message ?: exceptionThrowableMessageDefault(),
-        detail = null
+        detail = this.details()
     )
 }
 
@@ -37,7 +37,12 @@ private fun Throwable.httpStatus() = when (this) {
     else -> INTERNAL_SERVER_ERROR
 }
 
-private fun ErrorType.toHttpStatus() = when (this) {
+private fun Throwable.details() = when (this) {
+    is DetailedException -> this.detail
+    else -> null
+}
+
+internal fun ErrorType.toHttpStatus() = when (this) {
     UNAUTHENTICATED_USER -> UNAUTHORIZED
     UNAUTHORIZED_ACTION -> UNAUTHORIZED
     INVALID_ENTITY -> UNPROCESSABLE_ENTITY
@@ -45,3 +50,4 @@ private fun ErrorType.toHttpStatus() = when (this) {
     NOT_FOUND -> HTTP_NOT_FOUND
     APPLICATION_ERROR -> INTERNAL_SERVER_ERROR
 }
+

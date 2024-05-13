@@ -3,7 +3,7 @@ package com.thomas.spring.configuration
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.thomas.authentication.Authenticator
 import com.thomas.core.authorization.UnauthorizedUserException
-import com.thomas.spring.data.extension.toExceptionResponse
+import com.thomas.spring.extension.toExceptionResponse
 import com.thomas.spring.filter.AuthenticationFilter
 import com.thomas.spring.i18n.SpringMessageI18N.requestFilterChainAuthenticationEntrypointAccessDenied
 import org.springframework.context.annotation.Bean

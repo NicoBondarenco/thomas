@@ -1,11 +1,13 @@
 package com.thomas.spring.configuration
 
-import com.thomas.spring.data.extension.toExceptionResponse
 import com.thomas.spring.exception.RequestException
-import com.thomas.spring.i18n.SpringMessageI18N.exceptionInvalidArgumentParameterErrorsMessage
+import com.thomas.spring.extension.logByStatus
+import com.thomas.spring.extension.toExceptionResponse
+import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.context.request.WebRequest
@@ -19,13 +21,21 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
         headers: HttpHeaders,
         status: HttpStatusCode,
         request: WebRequest
-    ): ResponseEntity<Any>? = handleExceptionInternal(
-        RequestException(exceptionInvalidArgumentParameterErrorsMessage(), ex),
-        null,
-        headers,
-        status,
-        request
-    )
+    ): ResponseEntity<Any>? = handleExceptionInternal(RequestException(ex), null, headers, status, request)
+
+    override fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? = handleExceptionInternal(RequestException(ex), null, headers, status, request)
+
+    override fun handleTypeMismatch(
+        ex: TypeMismatchException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? = handleExceptionInternal(RequestException(ex), null, headers, status, request)
 
     override fun handleExceptionInternal(
         exception: Exception,
@@ -34,22 +44,8 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? = exception.let {
-        it.logByStatus(status)
-        super.handleExceptionInternal(
-            it,
-            body ?: it.toExceptionResponse(request.contextPath),
-            headers,
-            status,
-            request
-        )
-    }
-
-    private fun Exception.logByStatus(code: HttpStatusCode) {
-        if (code.is5xxServerError) {
-            logger.error(this.message, this)
-        } else {
-            logger.debug(this.message, this)
-        }
+        logger.logByStatus(it, status)
+        super.handleExceptionInternal(it, it.toExceptionResponse(request.contextPath), headers, status, request)
     }
 
 }

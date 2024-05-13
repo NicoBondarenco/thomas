@@ -46,8 +46,10 @@ class AuthenticationFilter(
         this.currentRoles().map { SimpleGrantedAuthority(it.name) }
 
     private fun HttpServletRequest.requestLocale() =
-        this.getHeader(ACCEPT_LANGUAGE)?.let {
-            Locale.forLanguageTag(it)
+        this.getHeader(ACCEPT_LANGUAGE)?.let { tag ->
+            Locale.forLanguageTag(tag).takeIf {
+                it.isO3Country.isNotEmpty()
+            }
         } ?: Locale.ROOT
 
     private fun HttpServletRequest.bearerToken() =

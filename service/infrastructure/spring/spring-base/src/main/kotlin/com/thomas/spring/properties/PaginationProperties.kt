@@ -1,7 +1,11 @@
 package com.thomas.spring.properties
 
-data class PaginationProperties(
-    val default : PaginationDefaultProperties = PaginationDefaultProperties()
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.bind.ConstructorBinding
+
+@ConfigurationProperties(prefix = "pageable")
+data class PaginationProperties @ConstructorBinding constructor(
+    val default: PaginationDefaultProperties
 )
 
 data class PaginationDefaultProperties(
