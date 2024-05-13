@@ -195,6 +195,10 @@ catalog {
 
         library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
 
+        library("spring-boot-starter-web", "org.springframework.boot", "spring-boot-starter-web").withoutVersion()
+        library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
+        library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
+
         //endregion SPRING
 
         //endregion DEPENDENCIES

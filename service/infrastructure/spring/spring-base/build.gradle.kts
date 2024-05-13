@@ -21,10 +21,9 @@ dependencies {
     implementation(project(":infrastructure:authentication:authentication-jwt-auth0"))
     implementation(project(":infrastructure:database:mongo-base"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.security)
+    implementation(libs.spring.boot.starter.validation)
 
     implementation(libs.mongodb.driver.kotlin)
 
