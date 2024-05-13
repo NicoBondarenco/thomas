@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
 import org.springframework.http.HttpStatus.NOT_FOUND as HTTP_NOT_FOUND
 
-
 internal fun Throwable.toExceptionResponse(
     uri: String
 ) = this.httpStatus().let {
@@ -50,4 +49,3 @@ internal fun ErrorType.toHttpStatus() = when (this) {
     NOT_FOUND -> HTTP_NOT_FOUND
     APPLICATION_ERROR -> INTERNAL_SERVER_ERROR
 }
-

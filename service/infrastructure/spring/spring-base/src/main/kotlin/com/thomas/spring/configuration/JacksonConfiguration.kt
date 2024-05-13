@@ -24,11 +24,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 @Configuration
 class JacksonConfiguration {
 
+    companion object {
+        private const val REFLECTION_CACHE_SIZE = 512
+    }
+
     @Bean
     fun objectMapper(): ObjectMapper = ObjectMapper()
         .registerModule(
             KotlinModule.Builder()
-                .withReflectionCacheSize(512)
+                .withReflectionCacheSize(REFLECTION_CACHE_SIZE)
                 .configure(NullToEmptyCollection, false)
                 .configure(NullToEmptyMap, false)
                 .configure(NullIsSameAsDefault, false)

@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit.MINUTES
 import org.springframework.stereotype.Component
 
-
 @Component
 class TokenBuilder(
     private val securityProperties: SecurityProperties
@@ -47,5 +46,3 @@ class TokenBuilder(
         .withClaim(SecurityUser::userProfile.name, user.userProfile.name)
         .sign(securityProperties.jwt.algorithm())
 }
-
-

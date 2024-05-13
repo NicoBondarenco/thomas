@@ -29,6 +29,7 @@ class PageRequestResolverTest {
 
     companion object {
 
+        @Suppress("UnusedPrivateMember")
         @JvmStatic
         private fun classList() = listOf(
             Arguments.of(String::class.java),

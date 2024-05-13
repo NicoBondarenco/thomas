@@ -59,7 +59,6 @@ class DetailedExceptionTest {
         assertEquals(cause, exception.cause)
     }
 
-
     private data class ErrorDetail(
         val message: String = "Error detail",
     )

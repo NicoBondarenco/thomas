@@ -2,9 +2,12 @@ package com.thomas.spring.configuration
 
 import com.thomas.spring.properties.PaginationProperties
 import com.thomas.spring.resolver.PageRequestResolver
+import com.thomas.spring.resolver.RequestLocaleResolver
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -28,5 +31,8 @@ class ResolverConfiguration {
         }
 
     }
+
+    @Bean
+    fun localeResolver(): LocaleResolver = RequestLocaleResolver()
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@Suppress("UnusedParameter")
 @RestController
 @RequestMapping("/test")
 class SpringTestController(
@@ -35,6 +36,7 @@ class SpringTestController(
         noContent().build()
     }
 
+    @Suppress("TooGenericExceptionThrown")
     @GetMapping("/common")
     fun common(): ResponseEntity<Any> = throw Exception()
 

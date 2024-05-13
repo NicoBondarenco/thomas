@@ -8,4 +8,4 @@ abstract class DetailedException(
     val type: ErrorType = APPLICATION_ERROR,
     val detail: Any? = null,
     cause: Throwable? = null
-): RuntimeException(message, cause)
+) : RuntimeException(message, cause)

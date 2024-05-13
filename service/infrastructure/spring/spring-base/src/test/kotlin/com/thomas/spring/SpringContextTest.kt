@@ -177,7 +177,8 @@ class SpringContextTest {
 
         assertEquals(BAD_REQUEST, response.statusCode)
         assertEquals(exceptionInvalidArgumentParameterErrorsMessage(), response.body?.message)
-
+        assertEquals(2, (response.body?.detail as? Map<String, List<String>>)?.get("email")?.size)
+        assertEquals(1, (response.body?.detail as? Map<String, List<String>>)?.get("quantity")?.size)
     }
 
     @Test

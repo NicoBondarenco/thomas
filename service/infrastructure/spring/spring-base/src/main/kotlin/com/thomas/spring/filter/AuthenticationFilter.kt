@@ -5,11 +5,11 @@ import com.thomas.core.context.SessionContextHolder.currentLocale
 import com.thomas.core.context.SessionContextHolder.currentToken
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.security.SecurityUser
+import com.thomas.spring.extension.requestLocale
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import java.util.Locale
-import org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -26,7 +26,10 @@ class AuthenticationFilter(
         response: HttpServletResponse,
         chain: FilterChain
     ) {
-        currentLocale = request.requestLocale()
+        request.requestLocale().apply {
+            currentLocale = this
+            LocaleContextHolder.setLocale(this)
+        }
         request.bearerToken()?.apply {
             val user = authenticator.authenticate(this)
             user.applySpringAuthentication(request)
@@ -44,13 +47,6 @@ class AuthenticationFilter(
 
     private fun SecurityUser.grantedAuthorities() =
         this.currentRoles().map { SimpleGrantedAuthority(it.name) }
-
-    private fun HttpServletRequest.requestLocale() =
-        this.getHeader(ACCEPT_LANGUAGE)?.let { tag ->
-            Locale.forLanguageTag(tag).takeIf {
-                it.isO3Country.isNotEmpty()
-            }
-        } ?: Locale.ROOT
 
     private fun HttpServletRequest.bearerToken() =
         this.getHeader(AUTHORIZATION)?.takeIf {
