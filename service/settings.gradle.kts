@@ -31,3 +31,9 @@ findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
 
 include("infrastructure:spring:spring-base")
 findProject(":infrastructure:spring:spring-base")?.name = "spring-base"
+
+include("infrastructure:storage:storage-base")
+findProject(":infrastructure:storage:storage-base")?.name = "storage-base"
+
+include("infrastructure:storage:storage-local")
+findProject(":infrastructure:storage:storage-local")?.name = "storage-local"
