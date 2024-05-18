@@ -13,7 +13,7 @@ abstract class BaseEntity<T : BaseEntity<T>> {
         validations()
             .filter { !it.validate(this as T) }
             .takeIf { it.isNotEmpty() }
-            ?.map { EntityValidationErrorDetail(it.code, it.message(this as T)) }
+            ?.groupBy( { it.field }, { it.message(this as T) })
             ?.throws { EntityValidationException(errorMessage(), it) }
 
     open fun errorMessage(): String = validationEntityValidationInvalidErrorMessage()

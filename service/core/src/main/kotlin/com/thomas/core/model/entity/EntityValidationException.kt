@@ -5,7 +5,7 @@ import com.thomas.core.exception.ErrorType.INVALID_ENTITY
 
 data class EntityValidationException(
     override val message: String,
-    val errors: List<EntityValidationErrorDetail>
+    val errors: Map<String, List<String>>
 ) : DetailedException(
     message = message,
     type = INVALID_ENTITY,

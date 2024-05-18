@@ -37,3 +37,15 @@ findProject(":infrastructure:storage:storage-base")?.name = "storage-base"
 
 include("infrastructure:storage:storage-local")
 findProject(":infrastructure:storage:storage-local")?.name = "storage-local"
+
+include("module:management:data")
+findProject(":module:management:data")?.name = "data"
+
+include("module:management:data-exposed")
+findProject(":module:management:data-exposed")?.name = "data-exposed"
+
+include("module:management:domain")
+findProject(":module:management:domain")?.name = "domain"
+
+include("module:management:spring")
+findProject(":module:management:spring")?.name = "spring"

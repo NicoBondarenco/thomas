@@ -36,8 +36,7 @@ dependencies {
     implementation(libs.jackson.datatype.jdk8)
     implementation(libs.jackson.datatype.jsr310)
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation(libs.spring.boot.starter.test)
 
     testImplementation(libs.auth0.jwt)
 

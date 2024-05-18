@@ -4,8 +4,25 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 internal class StringExtensionTest {
+
+    companion object {
+
+        @JvmStatic
+        fun strings() = listOf(
+            Arguments.of("test", "test"),
+            Arguments.of("testCamel", "test_camel"),
+            Arguments.of("testCamelCase", "test_camel_case"),
+            Arguments.of("testCamelCase", "test_camel_case"),
+            Arguments.of("test_camel_case", "test_camel_case"),
+            Arguments.of("test_camelCase", "test_camel_case"),
+        )
+
+    }
 
     @Test
     fun `Remove letters from string should leave only numbers`() {
@@ -39,6 +56,12 @@ internal class StringExtensionTest {
         assertNull("01FXTPFJCJFGSRVPHCMKZWCPTG".toUUIDOrNull())
         assertNull("cl0levgka00005440rr0vruzf".toUUIDOrNull())
         assertNull("94f0dd72-71dx-4bea-809d-d1e7ef839a96".toUUIDOrNull())
+    }
+
+    @ParameterizedTest
+    @MethodSource("strings")
+    fun `Given a string it should returns in snake case`(value: String, expected: String) {
+        assertEquals(expected, value.toSnakeCase())
     }
 
 }

@@ -199,6 +199,8 @@ catalog {
         library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
         library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
 
+        library("spring-boot-starter-test", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
+
         //endregion SPRING
 
         //endregion DEPENDENCIES

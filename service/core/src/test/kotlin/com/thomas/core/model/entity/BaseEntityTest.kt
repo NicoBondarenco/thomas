@@ -4,6 +4,7 @@ import com.thomas.core.exception.ErrorType.INVALID_ENTITY
 import com.thomas.core.i18n.CoreMessageI18N.validationEntityValidationInvalidErrorMessage
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -26,8 +27,8 @@ internal class BaseEntityTest {
         assertEquals("TestEntity Error", exception.message)
         assertEquals(INVALID_ENTITY, exception.type)
         assertEquals(1, exception.errors.size)
-        assertEquals("001", exception.errors[0].code)
-        assertEquals("Name is invalid", exception.errors[0].message)
+        assertTrue(exception.errors.containsKey("name"))
+        assertEquals("Name is invalid", exception.errors["name"]!!.first())
     }
 
     @Test
@@ -39,8 +40,8 @@ internal class BaseEntityTest {
         assertEquals(validationEntityValidationInvalidErrorMessage(), exception.message)
         assertEquals(INVALID_ENTITY, exception.type)
         assertEquals(1, exception.errors.size)
-        assertEquals("001", exception.errors[0].code)
-        assertEquals("Name is invalid", exception.errors[0].message)
+        assertTrue(exception.errors.containsKey("name"))
+        assertEquals("Name is invalid", exception.errors["name"]!!.first())
     }
 
     @Test
@@ -69,8 +70,8 @@ internal class BaseEntityTest {
 
         assertEquals("UpdatableEntity Error", exception.message)
         assertEquals(1, exception.errors.size)
-        assertEquals("002", exception.errors[0].code)
-        assertEquals("Email is invalid", exception.errors[0].message)
+        assertTrue(exception.errors.containsKey("email"))
+        assertEquals("Email is invalid", exception.errors["email"]!!.first())
     }
 
     private data class TestEntity(
@@ -87,8 +88,8 @@ internal class BaseEntityTest {
 
         override fun validations(): List<EntityValidation<TestEntity>> =
             listOf(
-                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation(TestEntity::name.name, { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation(TestEntity::email.name, { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 
@@ -104,8 +105,8 @@ internal class BaseEntityTest {
 
         override fun validations(): List<EntityValidation<NoMessageEntity>> =
             listOf(
-                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation(NoMessageEntity::name.name, { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation(NoMessageEntity::email.name, { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 
@@ -135,8 +136,8 @@ internal class BaseEntityTest {
 
         override fun validations(): List<EntityValidation<UpdatableEntity>> =
             listOf(
-                EntityValidation("001", { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
-                EntityValidation("002", { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
+                EntityValidation(UpdatableEntity::name.name, { "Name is invalid" }, { it.name.trim().isNotEmpty() }),
+                EntityValidation(UpdatableEntity::email.name, { "Email is invalid" }, { it.email.trim().isNotEmpty() }),
             )
     }
 

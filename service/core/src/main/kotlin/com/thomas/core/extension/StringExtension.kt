@@ -16,3 +16,5 @@ fun String.onlyNumbers() = this.replace("[^0-9]".toRegex(), "")
 fun String.onlyLettersAndNumbers() = this.filter { it.isLetterOrDigit() }
 
 fun String.toUUIDOrNull(): UUID? = this.takeIf { it.matches(UUID_REGEX) }?.let { UUID.fromString(it) }
+
+fun String.toSnakeCase(): String = this.replace("(?<=.)[A-Z]".toRegex(), "_$0").lowercase()
