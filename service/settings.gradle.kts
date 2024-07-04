@@ -29,6 +29,9 @@ findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
 include("infrastructure:database:exposed-base")
 findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
 
+include("infrastructure:message:management-message")
+findProject(":infrastructure:message:management-message")?.name = "management-message"
+
 include("infrastructure:spring:spring-base")
 findProject(":infrastructure:spring:spring-base")?.name = "spring-base"
 
@@ -49,3 +52,4 @@ findProject(":module:management:domain")?.name = "domain"
 
 include("module:management:spring")
 findProject(":module:management:spring")?.name = "spring"
+

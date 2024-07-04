@@ -2,7 +2,6 @@ package com.thomas.management.data.i18n
 
 import com.thomas.core.i18n.BundleResolver
 
-
 object ManagementDataMessageI18N : BundleResolver("strings/management-data") {
 
     //region USER

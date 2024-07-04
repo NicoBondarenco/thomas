@@ -1,7 +1,6 @@
 package com.thomas.spring.util
 
 import com.thomas.core.model.general.Gender.CIS_MALE
-import com.thomas.core.model.general.UserProfile.COMMON
 import com.thomas.core.model.security.SecurityGroup
 import com.thomas.core.model.security.SecurityRole.ROLE_FINANCE_DATA
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
@@ -42,7 +41,6 @@ val activeUser = SecurityUser(
     profilePhoto = null,
     birthDate = LocalDate.now(),
     userGender = CIS_MALE,
-    userProfile = COMMON,
     isActive = true,
     userRoles = listOf(ROLE_USER_CREATE, ROLE_USER_UPDATE, ROLE_USER_READ),
     userGroups = listOf(activeGroupOne, activeGroupTwo),

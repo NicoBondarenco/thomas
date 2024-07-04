@@ -64,4 +64,12 @@ internal class StringExtensionTest {
         assertEquals(expected, value.toSnakeCase())
     }
 
+    @Test
+    fun `Convert string to unaccented lower case`() {
+        assertEquals("", "".unaccentedLower())
+        assertEquals(" ", " ".unaccentedLower())
+        assertEquals("qwerty", "Qwerty".unaccentedLower())
+        assertEquals("aaaaaaaa cc eeeeee iiiiii nn oooooooo uuuuuu", "ÂâÃãÀàÁá Çç ÊêÈèÉé ÎîÌìÍí Ññ ÔôÕõÒòÓó ÛûÙùÚú".unaccentedLower())
+    }
+
 }

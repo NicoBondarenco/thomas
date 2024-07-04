@@ -5,7 +5,6 @@ import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.general.Gender.CIS_MALE
-import com.thomas.core.model.general.UserProfile.COMMON
 import com.thomas.management.data.entity.UserEntity.Companion.MAX_NAME_SIZE
 import com.thomas.management.data.entity.UserEntity.Companion.MIN_NAME_SIZE
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationDocumentNumberInvalidValue
@@ -89,11 +88,9 @@ class UserEntityTest {
         mainEmail = "tony.stark@email.com",
         documentNumber = "58370027075",
         phoneNumber = "5516988776655",
-        profileType = COMMON,
         profilePhoto = null,
         birthDate = LocalDate.of(1990, 4, 28),
         userGender = CIS_MALE,
-        addressId = null,
         isActive = true,
         creatorId = currentUser.userId,
         createdAt = now(UTC),

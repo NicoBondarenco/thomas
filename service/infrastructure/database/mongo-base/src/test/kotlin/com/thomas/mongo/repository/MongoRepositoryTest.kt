@@ -131,20 +131,22 @@ class MongoRepositoryTest {
 
     @Test
     fun `Retrieve multilevel entity list with filter`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking { testCollection.insertMany(entities) }
 
         val result = testMongoRepository.all(
-            entityListFoundData.map { it.stringValue },
+            found.map { it.stringValue },
             foundDateMin.atOffset(UTC),
             foundDateMax.atOffset(UTC),
         )
-        assertEquals(entityListFoundData, result)
+        assertEquals(found, result)
     }
 
     @Test
     fun `Retrieve multilevel entity page without filter and sort`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking { testCollection.insertMany(entities) }
 
         val result = testMongoRepository.page(
@@ -156,7 +158,8 @@ class MongoRepositoryTest {
 
     @Test
     fun `Retrieve multilevel entity page without filter sorted ASC`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking { testCollection.insertMany(entities) }
 
         val first = entities.sortedBy { it.datetimeOffset }[10]
@@ -186,11 +189,12 @@ class MongoRepositoryTest {
 
     @Test
     fun `Retrieve multilevel entity page with filter and without sort`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking { testCollection.insertMany(entities) }
 
         val result = testMongoRepository.page(
-            entityListFoundData.map { it.stringValue },
+            found.map { it.stringValue },
             foundDateMin.atOffset(UTC),
             foundDateMax.atOffset(UTC),
             PageRequest(4, 6),
@@ -201,45 +205,41 @@ class MongoRepositoryTest {
 
     @Test
     fun `Retrieve multilevel entity page with filter sorted ASC`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking {
-            entities.forEach {
-                testCollection.findOneAndReplace(
-                    Filters.eq("_id", it.id),
-                    it,
-                    FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
-                )!!
-            }
+            testCollection.insertMany(entities)
         }
 
-        val first = entityListFoundData.sortedBy { it.bigInteger }[6]
+        val first = found.sortedBy { it.bigInteger }[6]
 
         val result = testMongoRepository.page(
-            entityListFoundData.map { it.stringValue },
+            found.map { it.stringValue },
             foundDateMin.atOffset(UTC),
             foundDateMax.atOffset(UTC),
             PageRequest(2, 6, listOf(PageSort("bigInteger", ASC))),
         )
         assertEquals(6, result.contentList.size)
-        assertEquals(entityListFoundData.size.toLong(), result.totalItems)
+        assertEquals(found.size.toLong(), result.totalItems)
         assertEquals(first, result.contentList.first())
     }
 
     @Test
     fun `Retrieve multilevel entity page with filter sorted DESC`() {
-        val entities = entityListFoundData + entityListNotFoundData
+        val found = entityListFoundData
+        val entities = found + entityListNotFoundData
         runBlocking { testCollection.insertMany(entities) }
 
-        val first = entityListFoundData.sortedBy { it.bigDecimal }[12]
+        val first = found.sortedBy { it.bigDecimal }[12]
 
         val result = testMongoRepository.page(
-            entityListFoundData.map { it.stringValue },
+            found.map { it.stringValue },
             foundDateMin.atOffset(UTC),
             foundDateMax.atOffset(UTC),
             PageRequest(4, 4, listOf(PageSort("bigDecimal", ASC))),
         )
         assertEquals(4, result.contentList.size)
-        assertEquals(entityListFoundData.size.toLong(), result.totalItems)
+        assertEquals(found.size.toLong(), result.totalItems)
         assertEquals(first, result.contentList.first())
     }
 

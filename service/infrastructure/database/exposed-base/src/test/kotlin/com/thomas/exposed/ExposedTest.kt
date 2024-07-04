@@ -1,7 +1,6 @@
 package com.thomas.exposed
 
 import com.thomas.core.context.SessionContextHolder.currentUser
-import com.thomas.core.model.general.UserProfile.ADMINISTRATOR
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
@@ -114,7 +113,6 @@ abstract class ExposedTest {
         firstName = "User",
         lastName = "Security",
         mainEmail = "user@example.com",
-        userProfile = ADMINISTRATOR,
         isActive = true,
     ).apply { currentUser = this }
 

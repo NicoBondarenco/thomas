@@ -5,7 +5,6 @@ import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.exception.ErrorType.UNAUTHORIZED_ACTION
 import com.thomas.core.i18n.CoreMessageI18N.contextCurrentSessionCurrentUserNotAllowed
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.security.SecurityRole.MASTER
 import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
@@ -29,7 +28,6 @@ internal class AuthorizationTest {
         null,
         LocalDate.now(ZoneOffset.UTC),
         Gender.CIS_MALE,
-        UserProfile.ADMINISTRATOR,
         true,
         listOf(),
         listOf(),

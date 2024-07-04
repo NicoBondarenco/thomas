@@ -5,18 +5,17 @@ import com.thomas.core.extension.onlyNumbers
 
 internal val PERSON_NAME_REGEX = "[$LETTERS_ONLY_REGEX_VALUE\\- ]+".toRegex()
 internal val EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$".toRegex()
-internal val GROUP_NAME_REGEX = "[${LETTERS_ONLY_REGEX_VALUE}0-9\\-. ]+".toRegex()
-
+internal val GROUP_NAME_REGEX = "[${LETTERS_ONLY_REGEX_VALUE}0-9\\-._ ]+".toRegex()
 
 //region VALIDATION DOCUMENT NUMBER
-
+@Suppress("MagicNumber")
 internal fun String.isValidDocumentNumber(): Boolean = this.onlyNumbers().let {
-    it.length == 11
-            && it.toCharArray().distinct().size != 1
-            && it.hasValidVerificationDigits()
+    it.length == 11 &&
+        it.toCharArray().distinct().size != 1 &&
+        it.hasValidVerificationDigits()
 }
 
-
+@Suppress("MagicNumber")
 private fun String.hasValidVerificationDigits(): Boolean {
     val firstNineDigits = substring(0..8)
     val digits = substring(9..10)
@@ -32,6 +31,7 @@ private fun String.calculateDigits(): String {
     return "$firstDigit$secondDigit"
 }
 
+@Suppress("MagicNumber")
 private fun List<Int>.digits(): Int {
     val firstNineDigits = this
     val weights = ((this.size + 1) downTo 2).toList()

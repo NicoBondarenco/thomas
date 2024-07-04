@@ -1,7 +1,6 @@
 package com.thomas.core.context
 
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.security.SecurityUser
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -61,7 +60,6 @@ internal class SessionContextHolderTest {
             null,
             LocalDate.now(ZoneOffset.UTC),
             Gender.CIS_MALE,
-            UserProfile.COMMON,
             true,
             listOf(),
             listOf()

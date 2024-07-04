@@ -43,6 +43,5 @@ class TokenBuilder(
         .withClaim(SecurityUser::profilePhoto.name, user.profilePhoto)
         .withClaim(SecurityUser::birthDate.name, user.birthDate?.let { formatter.format(it) })
         .withClaim(SecurityUser::userGender.name, user.userGender?.name)
-        .withClaim(SecurityUser::userProfile.name, user.userProfile.name)
         .sign(securityProperties.jwt.algorithm())
 }

@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 val libs = rootProject.libs
 
 @Suppress("DSL_SCOPE_VIOLATION") // workaround for IntelliJ bug with Gradle Version Catalogs DSL in plugins
@@ -13,6 +15,12 @@ configurations {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
     }
 }
+
+val jar: Jar by tasks
+val bootJar: BootJar by tasks
+
+bootJar.enabled = false
+jar.enabled = true
 
 dependencies {
 

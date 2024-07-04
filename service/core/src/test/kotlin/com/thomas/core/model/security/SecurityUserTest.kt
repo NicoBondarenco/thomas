@@ -1,7 +1,6 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_DELETE
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_READ
@@ -28,7 +27,6 @@ class SecurityUserTest {
         null,
         LocalDate.now(ZoneOffset.UTC),
         Gender.CIS_MALE,
-        UserProfile.ADMINISTRATOR,
         true,
         listOf(),
         listOf(),

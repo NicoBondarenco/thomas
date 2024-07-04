@@ -1,6 +1,5 @@
 package com.thomas.management.data.entity
 
-
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.onlyNumbers
@@ -8,8 +7,6 @@ import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.general.UserProfile
-import com.thomas.core.model.general.UserProfile.COMMON
 import com.thomas.core.model.security.SecurityRole
 import com.thomas.management.data.extension.EMAIL_REGEX
 import com.thomas.management.data.extension.PERSON_NAME_REGEX
@@ -36,16 +33,14 @@ data class UserEntity(
     val mainEmail: String,
     val documentNumber: String,
     val phoneNumber: String? = null,
-    val profileType: UserProfile = COMMON,
     val profilePhoto: String? = null,
     val birthDate: LocalDate? = null,
     val userGender: Gender? = null,
     val isActive: Boolean = true,
     val creatorId: UUID = currentUser.userId,
-    val addressId: UUID? = null,
     val createdAt: OffsetDateTime = now(UTC),
     val updatedAt: OffsetDateTime = now(UTC),
-    val userRoles: MutableList<SecurityRole>,
+    val userRoles: List<SecurityRole>,
 ) : BaseEntity<UserEntity>() {
 
     companion object {

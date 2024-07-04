@@ -1,5 +1,6 @@
 package com.thomas.core.extension
 
+import java.text.Normalizer
 import java.util.UUID
 
 @Suppress("MaxLineLength")
@@ -18,3 +19,8 @@ fun String.onlyLettersAndNumbers() = this.filter { it.isLetterOrDigit() }
 fun String.toUUIDOrNull(): UUID? = this.takeIf { it.matches(UUID_REGEX) }?.let { UUID.fromString(it) }
 
 fun String.toSnakeCase(): String = this.replace("(?<=.)[A-Z]".toRegex(), "_$0").lowercase()
+
+fun String.unaccented() = Normalizer.normalize(this, Normalizer.Form.NFD)
+    .replace("[\\p{InCombiningDiacriticalMarks}]".toRegex(), "")
+
+fun String.unaccentedLower() = this.unaccented().lowercase()

@@ -93,7 +93,6 @@ class UserAuthenticationRepositoryTest {
         assertEquals(activeUserAuthentication.profilePhoto, user.profilePhoto)
         assertEquals(activeUserAuthentication.birthDate, user.birthDate)
         assertEquals(activeUserAuthentication.userGender, user.userGender)
-        assertEquals(activeUserAuthentication.userProfile, user.userProfile)
         assertEquals(activeUserAuthentication.isActive, user.isActive)
         assertEquals(activeUserAuthentication.userRoles, user.userRoles)
         assertTrue(user.userGroups.contains(activeGroupAuthenticationOne))

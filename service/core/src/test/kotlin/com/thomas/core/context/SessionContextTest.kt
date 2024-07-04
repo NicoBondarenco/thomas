@@ -5,7 +5,6 @@ import com.thomas.core.context.SessionContextHolder.context
 import com.thomas.core.context.SessionContextHolder.currentLocale
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.general.UserProfile
 import com.thomas.core.model.security.SecurityGroup
 import com.thomas.core.model.security.SecurityRole.MASTER
 import com.thomas.core.model.security.SecurityUser
@@ -35,7 +34,6 @@ internal class SessionContextTest {
         null,
         LocalDate.now(ZoneOffset.UTC),
         Gender.CIS_MALE,
-        UserProfile.COMMON,
         true,
         listOf(
             MASTER,

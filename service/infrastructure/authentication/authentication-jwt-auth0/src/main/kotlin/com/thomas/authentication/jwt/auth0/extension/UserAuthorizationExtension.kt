@@ -14,7 +14,6 @@ internal fun UserAuthentication.toSecurityUser() = SecurityUser(
     profilePhoto = this.profilePhoto,
     birthDate = this.birthDate,
     userGender = this.userGender,
-    userProfile = this.userProfile,
     isActive = this.isActive,
     userRoles = this.userRoles,
     userGroups = this.userGroups.toSecurityGroups(),
