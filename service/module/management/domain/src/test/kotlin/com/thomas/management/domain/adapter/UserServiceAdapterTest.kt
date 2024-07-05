@@ -21,6 +21,7 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementU
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationPhoneNumberAlreadyUsed
 import com.thomas.management.requests.activeUserRequest
 import com.thomas.management.requests.createUserRequest
+import com.thomas.management.requests.toUserUpdateRequest
 import com.thomas.management.requests.updateUserRequest
 import io.mockk.spyk
 import io.mockk.verify
@@ -218,7 +219,7 @@ class UserServiceAdapterTest {
     }
 
     @Test
-    fun `WHEN update user with ROLE_UPDATE_CREATE permission SHOULD update and return the user`() {
+    fun `WHEN update user with ROLE_USER_UPDATE permission SHOULD update and return the user`() {
         currentUser = userWithUserUpdateRole
         val users = userRepository.generateUsers(10)
         service.update(users.random().id, updateUserRequest)
@@ -238,6 +239,20 @@ class UserServiceAdapterTest {
                 userGender = null,
             )
         )
+        verify(exactly = 1) { userRepository.update(any(), any()) }
+        verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
+    }
+
+    @Test
+    fun `WHEN update user without updating data SHOULD update and return the user`() {
+        currentUser = userWithUserUpdateRole
+        val users = userRepository.generateUsers(10)
+        users.random().apply {
+            service.update(
+                this.id,
+                this.toUserUpdateRequest()
+            )
+        }
         verify(exactly = 1) { userRepository.update(any(), any()) }
         verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
     }
@@ -341,7 +356,7 @@ class UserServiceAdapterTest {
     }
 
     @Test
-    fun `WHEN set active user with ROLE_UPDATE_CREATE permission SHOULD update and return the user`() {
+    fun `WHEN set active user with ROLE_GROUP_UPDATE permission SHOULD update and return the user`() {
         currentUser = userWithUserUpdateRole
         val users = userRepository.generateUsers(10)
         service.active(users.random().id, activeUserRequest)

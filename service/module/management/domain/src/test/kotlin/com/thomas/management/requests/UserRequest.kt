@@ -1,6 +1,7 @@
 package com.thomas.management.requests
 
 import com.thomas.core.generator.PersonGenerator
+import com.thomas.management.data.entity.UserEntity
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
@@ -40,3 +41,15 @@ val activeUserRequest: UserActiveRequest
     get() = UserActiveRequest(
         isActive = listOf(true, false).random(),
     )
+
+fun UserEntity.toUserUpdateRequest() = UserUpdateRequest(
+    firstName = this.firstName,
+    lastName = this.lastName,
+    documentNumber = this.documentNumber,
+    phoneNumber = this.phoneNumber,
+    birthDate = this.birthDate,
+    userGender = this.userGender,
+    isActive = this.isActive,
+    userRoles = this.userRoles,
+    userGroups = listOf(),
+)

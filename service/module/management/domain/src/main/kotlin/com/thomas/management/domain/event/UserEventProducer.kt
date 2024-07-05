@@ -1,4 +1,4 @@
-package com.thomas.management.domain
+package com.thomas.management.domain.event
 
 import com.thomas.management.message.event.UserUpsertedEvent
 

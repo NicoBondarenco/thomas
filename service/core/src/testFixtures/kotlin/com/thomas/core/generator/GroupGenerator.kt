@@ -1,6 +1,7 @@
 package com.thomas.core.generator
 
 import com.thomas.core.data.GroupTestData
+import kotlin.random.Random
 
 object GroupGenerator {
 
@@ -24,7 +25,7 @@ object GroupGenerator {
 
     fun generate() = groupNamesDescriptions.entries.random().let {
         GroupTestData(
-            groupName = it.key,
+            groupName = "${it.key} - ${Random.nextInt(1000, 9999)}",
             groupDescription = it.value.random(),
             isActive = listOf(true, false).random(),
         )

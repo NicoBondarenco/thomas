@@ -12,7 +12,7 @@ import com.thomas.management.data.entity.UserEntity
 import com.thomas.management.data.entity.UserGroupsEntity
 import com.thomas.management.data.repository.GroupRepository
 import com.thomas.management.data.repository.UserRepository
-import com.thomas.management.domain.UserEventProducer
+import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.UserService
 import com.thomas.management.domain.exception.GroupListNotFoundException
 import com.thomas.management.domain.exception.UserNotFoundException
@@ -31,7 +31,7 @@ import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 import com.thomas.management.domain.model.response.UserDetailResponse
 import com.thomas.management.domain.model.response.UserPageResponse
-import com.thomas.management.domain.userAllRoles
+import com.thomas.management.domain.userReadRoles
 import com.thomas.management.domain.userCreateRoles
 import com.thomas.management.domain.userUpdateRoles
 import com.thomas.management.message.event.UserUpsertedEvent
@@ -52,7 +52,7 @@ class UserServiceAdapter(
         updatedStart: OffsetDateTime?,
         updatedEnd: OffsetDateTime?,
         pageable: PageRequest
-    ): PageResponse<UserPageResponse> = authorized(roles = userAllRoles) {
+    ): PageResponse<UserPageResponse> = authorized(roles = userReadRoles) {
         userRepository.page(
             keywordText,
             isActive,
@@ -66,7 +66,7 @@ class UserServiceAdapter(
 
     override fun one(
         id: UUID
-    ): UserDetailResponse = authorized(roles = userAllRoles) {
+    ): UserDetailResponse = authorized(roles = userReadRoles) {
         findByIdWithGroupsOrThrows(id).toUserDetailResponse()
     }
 

@@ -23,4 +23,13 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
     fun managementUserValidationUserGroupsNotFound(ids: String) =
         getFormattedMessage("management.user-validation.user-groups.not-found", ids)
 
+    fun managementGroupSearchNotFoundErrorMessage(id: UUID) =
+        getFormattedMessage("management.group-search.not-found.error-message", id)
+
+    fun managementGroupValidationGroupNameAlreadyUsed() =
+        getFormattedMessage("management.group-validation.group-name.already-used")
+
+    fun managementGroupValidationGroupDataInvalidData() =
+        getFormattedMessage("management.group-validation.group-data.invalid-data")
+
 }

@@ -1,6 +1,6 @@
 package com.thomas.management.domain.adapter
 
-import com.thomas.management.domain.UserEventProducer
+import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.message.event.UserUpsertedEvent
 import java.util.UUID
 
