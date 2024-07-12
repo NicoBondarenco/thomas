@@ -211,8 +211,6 @@ class MongoRepositoryTest {
             testCollection.insertMany(entities)
         }
 
-        val list = found.sortedBy { it.bigInteger }.subList(6,12)
-
         val result = testMongoRepository.page(
             found.map { it.stringValue },
             foundDateMin.atOffset(UTC),
@@ -221,7 +219,7 @@ class MongoRepositoryTest {
         )
         assertEquals(6, result.contentList.size)
         assertEquals(found.size.toLong(), result.totalItems)
-        assertTrue(result.contentList.map { it.stringValue }.containsAll(list.map { it.stringValue }))
+        assertTrue(found.map { it.stringValue }.containsAll(result.contentList.map { it.stringValue }))
     }
 
     @Test

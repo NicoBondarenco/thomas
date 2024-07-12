@@ -8,7 +8,7 @@ plugins {
 dependencies {
 
     implementation(project(":core"))
-    implementation(project(":module:management:data"))
+    implementation(project(":module:management:management-data"))
     implementation(project(":infrastructure:database:exposed-base"))
 
     implementation(libs.exposed.core)

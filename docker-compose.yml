@@ -15,6 +15,11 @@ services:
       - thomas-postgresql-volume:/var/lib/postgresql/data
     networks:
       - thomas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d thomas-service -U thomas-service"]
+      interval: 5s
+      timeout: 40s
+      retries: 5
 
   rabbit:
     image: "rabbitmq:3-management"
@@ -43,9 +48,36 @@ services:
     networks:
       - thomas-network
 
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: "thomas-sonarqube"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/thomas-service
+      SONAR_JDBC_USERNAME: thomas-service
+      SONAR_JDBC_PASSWORD: thomas-service
+      SONAR_SEARCH_JAVAOPTS: -Xms2048m -Xmx2048m
+    ports:
+      - "9500:9000"
+    volumes:
+      - thomas-sonarqube-conf:/opt/sonarqube/conf
+      - thomas-sonarqube-data:/opt/sonarqube/data
+      - thomas-sonarqube-extensions:/opt/sonarqube/extensions
+      - thomas-sonarqube-logs:/opt/sonarqube/logs
+      - thomas-sonarqube-temp:/opt/sonarqube/temp
+    networks:
+      - thomas-network
+
 volumes:
   thomas-postgresql-volume:
   thomas-mongo-volume:
+  thomas-sonarqube-conf:
+  thomas-sonarqube-data:
+  thomas-sonarqube-extensions:
+  thomas-sonarqube-logs:
+  thomas-sonarqube-temp:
 
 networks:
   thomas-network:

@@ -2,13 +2,13 @@ package com.thomas.exposed.configuration
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY
 import com.fasterxml.jackson.annotation.PropertyAccessor.ALL
+import com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_INVALID_SUBTYPE
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
 import com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
-import com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDecimals
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
@@ -34,8 +34,8 @@ internal object ExposedObjectMapperFactory {
         )
         .registerModule(JavaTimeModule())
         .registerModule(exposedModule)
-        .setNodeFactory(withExactBigDecimals(true))
         .setPropertyNamingStrategy(SNAKE_CASE)
+        .enable(WRITE_BIGDECIMAL_AS_PLAIN)
         .disable(FAIL_ON_UNKNOWN_PROPERTIES)
         .disable(FAIL_ON_INVALID_SUBTYPE)
         .disable(WRITE_DATES_AS_TIMESTAMPS)

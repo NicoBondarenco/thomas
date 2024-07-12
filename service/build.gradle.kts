@@ -1,22 +1,42 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.parsing.parseBoolean
+
+val definitions = libs.versions.definition
 
 @Suppress("DSL_SCOPE_VIOLATION") // workaround for IntelliJ bug with Gradle Version Catalogs DSL in plugins
 plugins {
     alias(libs.plugins.kotlin.lang)
     alias(libs.plugins.flyway.plugin)
-    id("io.gitlab.arturbosch.detekt") version ("1.23.3")
+    alias(libs.plugins.detekt.plugin)
+    alias(libs.plugins.sonarqube.plugin)
+    id(libs.plugins.jacoco.plugin.get().pluginId)
 }
 
 detekt {
-    toolVersion = "1.23.3"
-    config.setFrom(file("config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
+    toolVersion = libs.versions.detekt.get()
+    config.setFrom(file(definitions.detekt.configuration.configurationFilePath))
+    buildUponDefaultConfig = parseBoolean(definitions.detekt.configuration.buildUponDefault.get())
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "thomas-service")
+        property("sonar.projectName", "T.H.O.M.A.S. Service")
+        property("sonar.host.url", "http://localhost:9500")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.coverage.jacoco.xmlReportPath", "${rootProject.layout.buildDirectory}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml")
+        property("sonar.verbose", true)
+    }
+}
+
+tasks.named("sonarqube").configure {
+    dependsOn("jacocoTestReport")
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
+    detektPlugins(libs.detekt.formatting)
 }
 
 val projectSource = file(projectDir)
@@ -59,6 +79,8 @@ allprojects {
 
     apply {
         plugin(libs.plugins.kotlin.lang.get().pluginId)
+        plugin(libs.plugins.jacoco.plugin.get().pluginId)
+        plugin(libs.plugins.sonarqube.plugin.get().pluginId)
     }
 
     group = "com.thomas"
@@ -101,8 +123,20 @@ allprojects {
 
     }
 
+    jacoco {
+        toolVersion = "0.8.11"
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+
     tasks.test {
         useJUnitPlatform()
+        finalizedBy("jacocoTestReport")
     }
 
     tasks.withType<KotlinCompile> {

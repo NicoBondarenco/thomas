@@ -1,7 +1,8 @@
+rootProject.name = "service"
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
-rootProject.name = "service"
 
 dependencyResolutionManagement {
     repositories {
@@ -42,14 +43,13 @@ include("infrastructure:storage:storage-local")
 findProject(":infrastructure:storage:storage-local")?.name = "storage-local"
 
 include("module:management:data")
-findProject(":module:management:data")?.name = "data"
+findProject(":module:management:data")?.name = "management-data"
 
 include("module:management:data-exposed")
-findProject(":module:management:data-exposed")?.name = "data-exposed"
+findProject(":module:management:data-exposed")?.name = "management-data-exposed"
 
 include("module:management:domain")
-findProject(":module:management:domain")?.name = "domain"
+findProject(":module:management:domain")?.name = "management-domain"
 
 include("module:management:spring")
-findProject(":module:management:spring")?.name = "spring"
-
+findProject(":module:management:spring")?.name = "management-spring"

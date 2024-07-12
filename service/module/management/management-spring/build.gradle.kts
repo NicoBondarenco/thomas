@@ -18,9 +18,9 @@ dependencies {
 
     implementation(project(":core"))
 
-    implementation(project(":module:management:data"))
-    implementation(project(":module:management:data-exposed"))
-    implementation(project(":module:management:domain"))
+    implementation(project(":module:management:management-data"))
+    implementation(project(":module:management:management-data-exposed"))
+    implementation(project(":module:management:management-domain"))
 
     implementation(project(":infrastructure:database:exposed-base"))
 

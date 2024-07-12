@@ -20,7 +20,15 @@ publishing {
 }
 
 catalog {
+
     versionCatalog {
+        //region DEFINITIONS
+
+        version("definition-detekt-configuration-configurationFilePath", "config/detekt/detekt.yml")
+        version("definition-detekt-configuration-buildUponDefault", "true")
+
+        //endregion DEFINITIONS
+
         //region VERSIONS
 
         //region PLUGINS
@@ -36,6 +44,12 @@ catalog {
 
         version("springFrameworkBoot", "3.2.5")
         version("springDependencyManagement", "1.1.4")
+
+        version("detekt", "1.23.3")
+
+        version("jacoco", "0.8.12")
+
+        version("sonarqube", "5.1.0.4882")
 
         //endregion PLUGINS
 
@@ -79,6 +93,8 @@ catalog {
 
         version("springCloud", "2023.0.1")
 
+        version("detektFormat", "1.23.3")
+
         //endregion DEPENDENCIES
 
         //endregion VERSIONS
@@ -96,6 +112,12 @@ catalog {
 
         plugin("spring-framework-boot", "org.springframework.boot").versionRef("springFrameworkBoot")
         plugin("spring-dependency-management", "io.spring.dependency-management").versionRef("springDependencyManagement")
+
+        plugin("detekt-plugin", "io.gitlab.arturbosch.detekt").versionRef("detekt")
+
+        plugin("jacoco-plugin", "jacoco").versionRef("jacoco")
+
+        plugin("sonarqube-plugin", "org.sonarqube").versionRef("sonarqube")
 
         //endregion PLUGINS
 
@@ -200,6 +222,8 @@ catalog {
         library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
 
         library("spring-boot-starter-test", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
+
+        library("detekt-formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detektFormat")
 
         //endregion SPRING
 
