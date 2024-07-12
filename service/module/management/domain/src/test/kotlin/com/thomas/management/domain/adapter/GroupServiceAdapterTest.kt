@@ -15,7 +15,6 @@ import com.thomas.management.data.entity.GroupEntity
 import com.thomas.management.data.repository.GroupRepositoryMock
 import com.thomas.management.domain.GroupService
 import com.thomas.management.domain.exception.GroupNotFoundException
-import com.thomas.management.domain.exception.UserNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementGroupValidationGroupNameAlreadyUsed
 import com.thomas.management.requests.activeGroupRequest
 import com.thomas.management.requests.createGroupRequest
@@ -73,7 +72,7 @@ class GroupServiceAdapterTest {
         assertThrows<UnauthorizedUserException> {
             service.one(UUID.randomUUID())
         }
-        verify(exactly = 0) { groupRepository.findById(anyOrNull()) }
+        verify(exactly = 0) { groupRepository.one(anyOrNull()) }
     }
 
     @Test
@@ -83,7 +82,7 @@ class GroupServiceAdapterTest {
         assertThrows<GroupNotFoundException> {
             service.one(UUID.randomUUID())
         }
-        verify(exactly = 1) { groupRepository.findById(any()) }
+        verify(exactly = 1) { groupRepository.one(any()) }
     }
 
     @Test
@@ -91,7 +90,7 @@ class GroupServiceAdapterTest {
         val groups = groupRepository.generateGroups(10)
         currentUser = userWithGroupReadRole
         service.one(groups.random().id)
-        verify(exactly = 1) { groupRepository.findById(any()) }
+        verify(exactly = 1) { groupRepository.one(any()) }
     }
 
     @Test

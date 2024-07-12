@@ -1,7 +1,7 @@
 package com.thomas.management.requests
 
 import com.thomas.core.generator.PersonGenerator
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
@@ -17,8 +17,8 @@ val createUserRequest: UserCreateRequest
             birthDate = it.birthDate,
             userGender = it.userGender,
             isActive = listOf(true, false).random(),
-            userRoles = listOf(),
-            userGroups = listOf(),
+            userRoles = setOf(),
+            userGroups = setOf(),
         )
     }
 
@@ -32,8 +32,8 @@ val updateUserRequest: UserUpdateRequest
             birthDate = it.birthDate,
             userGender = it.userGender,
             isActive = listOf(true, false).random(),
-            userRoles = listOf(),
-            userGroups = listOf(),
+            userRoles = setOf(),
+            userGroups = setOf(),
         )
     }
 
@@ -42,7 +42,7 @@ val activeUserRequest: UserActiveRequest
         isActive = listOf(true, false).random(),
     )
 
-fun UserEntity.toUserUpdateRequest() = UserUpdateRequest(
+fun UserCompleteEntity.toUserUpdateRequest() = UserUpdateRequest(
     firstName = this.firstName,
     lastName = this.lastName,
     documentNumber = this.documentNumber,
@@ -51,5 +51,5 @@ fun UserEntity.toUserUpdateRequest() = UserUpdateRequest(
     userGender = this.userGender,
     isActive = this.isActive,
     userRoles = this.userRoles,
-    userGroups = listOf(),
+    userGroups = setOf(),
 )

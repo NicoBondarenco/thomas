@@ -8,12 +8,12 @@ import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.GroupEntity
-import com.thomas.management.data.entity.UserEntity
-import com.thomas.management.data.entity.UserGroupsEntity
+import com.thomas.management.data.entity.UserBaseEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.repository.GroupRepository
 import com.thomas.management.data.repository.UserRepository
-import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.UserService
+import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.exception.GroupListNotFoundException
 import com.thomas.management.domain.exception.UserNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationDocumentNumberAlreadyUsed
@@ -27,12 +27,13 @@ import com.thomas.management.domain.model.extension.toUserUpsertedEvent
 import com.thomas.management.domain.model.extension.updateActive
 import com.thomas.management.domain.model.extension.updateFromRequest
 import com.thomas.management.domain.model.request.UserActiveRequest
+import com.thomas.management.domain.model.request.UserBaseRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 import com.thomas.management.domain.model.response.UserDetailResponse
 import com.thomas.management.domain.model.response.UserPageResponse
-import com.thomas.management.domain.userReadRoles
 import com.thomas.management.domain.userCreateRoles
+import com.thomas.management.domain.userReadRoles
 import com.thomas.management.domain.userUpdateRoles
 import com.thomas.management.message.event.UserUpsertedEvent
 import java.time.OffsetDateTime
@@ -73,9 +74,9 @@ class UserServiceAdapter(
     override fun create(
         request: UserCreateRequest,
     ): UserDetailResponse = authorized(roles = userCreateRoles) {
-        request.toUserEntity().process(
-            request.userGroups,
-            { user, groups -> userRepository.create(user, groups) },
+        request.process(
+            { req, groups -> req.toUserEntity(groups) },
+            { user -> userRepository.create(user) },
             { eventProducer.sendCreatedEvent(it) },
         )
     }
@@ -84,75 +85,76 @@ class UserServiceAdapter(
         id: UUID,
         request: UserUpdateRequest,
     ): UserDetailResponse = authorized(roles = userUpdateRoles) {
-        findByIdOrThrows(id).updateFromRequest(request).process(
-            request.userGroups,
-            { user, groups -> userRepository.update(user, groups) },
+        request.process(
+            { req, groups -> findByIdWithGroupsOrThrows(id).updateFromRequest(req, groups) },
+            { userRepository.update(it) },
             { eventProducer.sendUpdatedEvent(it) },
         )
     }
 
-    private fun UserEntity.process(
-        groupsIds: List<UUID>,
-        save: (UserEntity, List<GroupEntity>) -> UserGroupsEntity,
+    private fun <T : UserBaseRequest> T.process(
+        entity: (T, Set<GroupEntity>) -> UserCompleteEntity,
+        save: (UserCompleteEntity) -> UserCompleteEntity,
         produce: (UserUpsertedEvent) -> Unit,
     ): UserDetailResponse = this.let {
-        it.validateData()
-        val groups = findGroups(groupsIds)
-        save(it, groups)
+        val groups = this.userGroups.findGroupsByIds()
+        entity(this, groups).apply {
+            validateData()
+            save(this)
+        }
     }.apply {
         produce(this.toUserUpsertedEvent())
     }.toUserDetailResponse()
+
+    private fun Set<UUID>.findGroupsByIds() = this.takeIf {
+        it.isNotEmpty()
+    }?.let {
+        findGroups(this)
+    } ?: setOf()
 
     override fun active(
         id: UUID,
         request: UserActiveRequest,
     ): UserPageResponse = authorized(roles = userUpdateRoles) {
         findByIdWithGroupsOrThrows(id).updateActive(request).apply {
-            userRepository.update(this.user)
+            userRepository.update(this)
             eventProducer.sendUpdatedEvent(this.toUserUpsertedEvent())
-        }.user.toUserPageResponse()
+        }.toUserPageResponse()
     }
-
-    private fun findByIdOrThrows(
-        id: UUID,
-    ): UserEntity = userRepository.findById(id)
-        ?: throw UserNotFoundException(id)
 
     private fun findByIdWithGroupsOrThrows(
         id: UUID,
-    ): UserGroupsEntity = userRepository.findByIdWithGroups(id)
+    ): UserCompleteEntity = userRepository.one(id)
         ?: throw UserNotFoundException(id)
 
-    private fun UserEntity.validateData() = listOf<EntityValidation<UserEntity>>(
+    private fun UserCompleteEntity.validateData() = listOf<EntityValidation<UserBaseEntity>>(
         EntityValidation(
-            UserEntity::mainEmail.name.toSnakeCase(),
+            UserBaseEntity::mainEmail.name.toSnakeCase(),
             { managementUserValidationMainEmailAlreadyUsed() },
             { !userRepository.hasAnotherWithSameMainEmail(this.id, this.mainEmail) }
         ),
         EntityValidation(
-            UserEntity::documentNumber.name.toSnakeCase(),
+            UserBaseEntity::documentNumber.name.toSnakeCase(),
             { managementUserValidationDocumentNumberAlreadyUsed() },
             { !userRepository.hasAnotherWithSameDocumentNumber(this.id, this.documentNumber) }
         ),
         EntityValidation(
-            UserEntity::phoneNumber.name.toSnakeCase(),
+            UserBaseEntity::phoneNumber.name.toSnakeCase(),
             { managementUserValidationPhoneNumberAlreadyUsed() },
             { !(this.phoneNumber?.let { userRepository.hasAnotherWithSamePhoneNumber(this.id, it) } ?: false) }
         ),
     ).validate(this, managementUserValidationUserDataInvalidData())
 
     private fun findGroups(
-        ids: List<UUID>,
-    ): List<GroupEntity> = ids.takeIf { it.isNotEmpty() }?.let {
-        groupRepository.findByIds(ids).apply {
-            ids.filterNot {
-                this.any { group -> group.id == it }
-            }.takeIf {
+        ids: Set<UUID>,
+    ): Set<GroupEntity> = ids.let {
+        groupRepository.allByIds(ids).apply {
+            (ids subtract this.map { it.id }.toSet()).takeIf {
                 it.isNotEmpty()
             }?.throws {
                 GroupListNotFoundException(it)
             }
         }
-    } ?: listOf()
+    }
 
 }

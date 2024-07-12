@@ -1,8 +1,9 @@
 package com.thomas.management.domain.model.extension
 
 import com.thomas.core.context.SessionContextHolder.currentUser
-import com.thomas.management.data.entity.UserEntity
-import com.thomas.management.data.entity.UserGroupsEntity
+import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.UserBaseEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
@@ -12,7 +13,7 @@ import com.thomas.management.message.event.UserUpsertedEvent
 import java.time.OffsetDateTime
 import java.time.ZoneOffset.UTC
 
-fun UserEntity.toUserPageResponse() = UserPageResponse(
+fun UserBaseEntity.toUserPageResponse() = UserPageResponse(
     id = this.id,
     firstName = this.firstName,
     lastName = this.lastName,
@@ -27,24 +28,24 @@ fun UserEntity.toUserPageResponse() = UserPageResponse(
     updatedAt = this.updatedAt,
 )
 
-fun UserGroupsEntity.toUserDetailResponse() = UserDetailResponse(
-    id = this.user.id,
-    firstName = this.user.firstName,
-    lastName = this.user.lastName,
-    mainEmail = this.user.mainEmail,
-    documentNumber = this.user.documentNumber,
-    phoneNumber = this.user.phoneNumber,
-    profilePhoto = this.user.profilePhoto,
-    birthDate = this.user.birthDate,
-    userGender = this.user.userGender,
-    isActive = this.user.isActive,
-    createdAt = this.user.createdAt,
-    updatedAt = this.user.updatedAt,
-    userRoles = this.user.userRoles,
-    userGroups = this.groups.map { it.id },
+fun UserCompleteEntity.toUserDetailResponse() = UserDetailResponse(
+    id = this.id,
+    firstName = this.firstName,
+    lastName = this.lastName,
+    mainEmail = this.mainEmail,
+    documentNumber = this.documentNumber,
+    phoneNumber = this.phoneNumber,
+    profilePhoto = this.profilePhoto,
+    birthDate = this.birthDate,
+    userGender = this.userGender,
+    isActive = this.isActive,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt,
+    userRoles = this.userRoles,
+    userGroups = this.userGroups.map { it.id }.toSet(),
 )
 
-fun UserCreateRequest.toUserEntity() = UserEntity(
+fun UserCreateRequest.toUserEntity(userGroups: Set<GroupEntity>) = UserCompleteEntity(
     firstName = this.firstName,
     lastName = this.lastName,
     mainEmail = this.mainEmail,
@@ -55,10 +56,12 @@ fun UserCreateRequest.toUserEntity() = UserEntity(
     isActive = this.isActive,
     creatorId = currentUser.userId,
     userRoles = this.userRoles,
+    userGroups = userGroups,
 )
 
-fun UserEntity.updateFromRequest(
+fun UserCompleteEntity.updateFromRequest(
     request: UserUpdateRequest,
+    groups: Set<GroupEntity>
 ) = this.copy(
     firstName = request.firstName,
     lastName = request.lastName,
@@ -69,30 +72,29 @@ fun UserEntity.updateFromRequest(
     isActive = request.isActive,
     updatedAt = OffsetDateTime.now(UTC),
     userRoles = request.userRoles,
+    userGroups = groups
 )
 
-fun UserGroupsEntity.updateActive(
+fun UserCompleteEntity.updateActive(
     request: UserActiveRequest,
 ) = this.copy(
-    user = this.user.copy(
-        isActive = request.isActive,
-        updatedAt = OffsetDateTime.now(UTC),
-    )
+    isActive = request.isActive,
+    updatedAt = OffsetDateTime.now(UTC),
 )
 
-fun UserGroupsEntity.toUserUpsertedEvent() = UserUpsertedEvent(
-    id = this.user.id,
-    firstName = this.user.firstName,
-    lastName = this.user.lastName,
-    mainEmail = this.user.mainEmail,
-    documentNumber = this.user.documentNumber,
-    phoneNumber = this.user.phoneNumber,
-    profilePhoto = this.user.profilePhoto,
-    birthDate = this.user.birthDate,
-    userGender = this.user.userGender,
-    isActive = this.user.isActive,
-    createdAt = this.user.createdAt,
-    updatedAt = this.user.updatedAt,
-    userRoles = this.user.userRoles,
-    userGroups = this.groups.map { it.id },
+fun UserCompleteEntity.toUserUpsertedEvent() = UserUpsertedEvent(
+    id = this.id,
+    firstName = this.firstName,
+    lastName = this.lastName,
+    mainEmail = this.mainEmail,
+    documentNumber = this.documentNumber,
+    phoneNumber = this.phoneNumber,
+    profilePhoto = this.profilePhoto,
+    birthDate = this.birthDate,
+    userGender = this.userGender,
+    isActive = this.isActive,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt,
+    userRoles = this.userRoles,
+    userGroups = this.userGroups.map { it.id }.toSet(),
 )

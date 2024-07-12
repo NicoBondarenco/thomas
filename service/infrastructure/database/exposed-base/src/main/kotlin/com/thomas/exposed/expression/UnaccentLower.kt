@@ -13,7 +13,7 @@ class UnaccentLower<T : String?>(
     override fun toQueryBuilder(
         queryBuilder: QueryBuilder
     ): Unit = queryBuilder {
-        append("unaccented_lower(", expr, ")")
+        append("public.unaccented_lower(", expr, ")")
     }
 
 }

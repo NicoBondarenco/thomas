@@ -6,7 +6,8 @@ import com.thomas.core.extension.validate
 import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.GroupBaseEntity
+import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.repository.GroupRepository
 import com.thomas.management.domain.GroupService
 import com.thomas.management.domain.event.GroupEventProducer
@@ -82,8 +83,8 @@ class GroupServiceAdapter(
         )
     }
 
-    private fun GroupEntity.process(
-        save: (GroupEntity) -> GroupEntity,
+    private fun GroupCompleteEntity.process(
+        save: (GroupCompleteEntity) -> GroupCompleteEntity,
         produce: (GroupUpsertedEvent) -> Unit,
     ): GroupDetailResponse = this.let {
         it.validateData()
@@ -92,9 +93,9 @@ class GroupServiceAdapter(
         produce(this.toGroupUpsertedEvent())
     }.toGroupDetailResponse()
 
-    private fun GroupEntity.validateData() = listOf<EntityValidation<GroupEntity>>(
+    private fun GroupBaseEntity.validateData() = listOf<EntityValidation<GroupBaseEntity>>(
         EntityValidation(
-            GroupEntity::groupName.name.toSnakeCase(),
+            GroupBaseEntity::groupName.name.toSnakeCase(),
             { managementGroupValidationGroupNameAlreadyUsed() },
             { !groupRepository.hasAnotherWithSameGroupName(this.id, this.groupName) }
         )
@@ -121,7 +122,7 @@ class GroupServiceAdapter(
 
     private fun findByIdOrThrows(
         id: UUID,
-    ): GroupEntity = groupRepository.findById(id)
+    ): GroupCompleteEntity = groupRepository.one(id)
         ?: throw GroupNotFoundException(id)
 
 }

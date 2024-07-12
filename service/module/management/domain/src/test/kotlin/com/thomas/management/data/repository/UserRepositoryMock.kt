@@ -3,27 +3,28 @@ package com.thomas.management.data.repository
 import com.thomas.core.generator.PersonGenerator
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserEntity
-import com.thomas.management.data.entity.UserGroupsEntity
 import java.time.OffsetDateTime
 import java.util.UUID
 
 class UserRepositoryMock : UserRepository {
 
-    private val users = mutableMapOf<UUID, UserEntity>()
+    private val users = mutableMapOf<UUID, UserCompleteEntity>()
 
-    fun clear() = users.clear()
+    fun clear() {
+        users.clear()
+    }
 
     fun generateUsers(
         quantity: Int = 1,
-    ): List<UserEntity> = (1..quantity).map {
-        generateUserEntity().apply { users[id] = this }
+    ): List<UserCompleteEntity> = (1..quantity).map {
+        generateUserCompleteEntity().apply { users[id] = this }
     }
 
-    private fun generateUserEntity() = PersonGenerator.generate().let {
+    private fun generateUserCompleteEntity() = PersonGenerator.generate().let {
         val id = UUID.randomUUID()
-        UserEntity(
+        UserCompleteEntity(
             id = id,
             firstName = it.firstName,
             lastName = it.lastName,
@@ -34,9 +35,23 @@ class UserRepositoryMock : UserRepository {
             userGender = it.userGender,
             isActive = listOf(true, false).random(),
             creatorId = id,
-            userRoles = listOf(),
+            userRoles = setOf(),
+            userGroups = setOf(),
         )
     }
+
+    private fun UserCompleteEntity.toUserEntity() = UserEntity(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        mainEmail = this.mainEmail,
+        documentNumber = this.documentNumber,
+        phoneNumber = this.phoneNumber,
+        birthDate = this.birthDate,
+        userGender = this.userGender,
+        isActive = this.isActive,
+        creatorId = this.creatorId,
+    )
 
     override fun page(
         keywordText: String?,
@@ -46,15 +61,11 @@ class UserRepositoryMock : UserRepository {
         updatedStart: OffsetDateTime?,
         updatedEnd: OffsetDateTime?,
         pageable: PageRequest,
-    ): PageResponse<UserEntity> = PageResponse.of(users.values.toList(), pageable, users.size.toLong())
+    ): PageResponse<UserEntity> = PageResponse.of(users.values.map { it.toUserEntity() }, pageable, users.size.toLong())
 
-    override fun findById(
+    override fun one(
         id: UUID,
-    ): UserEntity? = users[id]
-
-    override fun findByIdWithGroups(
-        id: UUID,
-    ): UserGroupsEntity? = users[id]?.let { UserGroupsEntity(it, listOf()) }
+    ): UserCompleteEntity? = users[id]
 
     override fun hasAnotherWithSameMainEmail(
         id: UUID,
@@ -72,23 +83,15 @@ class UserRepositoryMock : UserRepository {
     ): Boolean = users.values.any { it.id != id && it.phoneNumber == phoneNumber }
 
     override fun create(
-        entity: UserEntity,
-        groups: List<GroupEntity>,
-    ): UserGroupsEntity = UserGroupsEntity(entity, groups).apply {
+        entity: UserCompleteEntity,
+    ): UserCompleteEntity = entity.apply {
         users[entity.id] = entity
     }
 
     override fun update(
-        entity: UserEntity,
-        groups: List<GroupEntity>,
-    ): UserGroupsEntity = UserGroupsEntity(entity, groups).apply {
+        entity: UserCompleteEntity,
+    ): UserCompleteEntity = entity.apply {
         users[entity.id] = entity
-    }
-
-    override fun update(
-        entity: UserEntity,
-    ): UserEntity = entity.apply {
-        users[this.id] = this
     }
 
 }

@@ -2,9 +2,8 @@ package com.thomas.management.data.repository
 
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserEntity
-import com.thomas.management.data.entity.UserGroupsEntity
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -21,13 +20,9 @@ interface UserRepository {
         pageable: PageRequest,
     ): PageResponse<UserEntity>
 
-    fun findById(
+    fun one(
         id: UUID,
-    ): UserEntity?
-
-    fun findByIdWithGroups(
-        id: UUID,
-    ): UserGroupsEntity?
+    ): UserCompleteEntity?
 
     fun hasAnotherWithSameMainEmail(
         id: UUID,
@@ -45,17 +40,11 @@ interface UserRepository {
     ): Boolean
 
     fun create(
-        entity: UserEntity,
-        groups: List<GroupEntity>,
-    ): UserGroupsEntity
+        entity: UserCompleteEntity,
+    ): UserCompleteEntity
 
     fun update(
-        entity: UserEntity,
-        groups: List<GroupEntity>,
-    ): UserGroupsEntity
-
-    fun update(
-        entity: UserEntity,
-    ): UserEntity
+        entity: UserCompleteEntity,
+    ): UserCompleteEntity
 
 }

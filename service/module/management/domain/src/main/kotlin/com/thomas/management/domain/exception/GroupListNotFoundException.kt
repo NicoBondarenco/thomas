@@ -6,7 +6,7 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementU
 import java.util.UUID
 
 class GroupListNotFoundException(
-    ids: List<UUID>
+    ids: Set<UUID>
 ) : DetailedException(
     message = managementUserValidationUserGroupsNotFound(ids.joinToString(", ") { it.toString() }),
     type = NOT_FOUND,

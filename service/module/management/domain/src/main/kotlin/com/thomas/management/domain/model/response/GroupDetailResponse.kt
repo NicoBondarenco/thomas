@@ -11,5 +11,5 @@ data class GroupDetailResponse(
     val isActive: Boolean,
     val createdAt: OffsetDateTime,
     val updatedAt: OffsetDateTime,
-    val groupRoles: List<SecurityRole>,
+    val groupRoles: Set<SecurityRole>,
 )

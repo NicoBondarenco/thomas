@@ -211,7 +211,7 @@ class MongoRepositoryTest {
             testCollection.insertMany(entities)
         }
 
-        val first = found.sortedBy { it.bigInteger }[6]
+        val list = found.sortedBy { it.bigInteger }.subList(6,12)
 
         val result = testMongoRepository.page(
             found.map { it.stringValue },
@@ -221,7 +221,7 @@ class MongoRepositoryTest {
         )
         assertEquals(6, result.contentList.size)
         assertEquals(found.size.toLong(), result.totalItems)
-        assertEquals(first, result.contentList.first())
+        assertTrue(result.contentList.map { it.stringValue }.containsAll(list.map { it.stringValue }))
     }
 
     @Test

@@ -19,6 +19,6 @@ data class UserUpsertedEvent(
     val isActive: Boolean,
     val createdAt: OffsetDateTime,
     val updatedAt: OffsetDateTime,
-    val userRoles: List<SecurityRole>,
-    val userGroups: List<UUID>,
+    val userRoles: Set<SecurityRole>,
+    val userGroups: Set<UUID>,
 )

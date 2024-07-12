@@ -10,7 +10,7 @@ import com.thomas.management.context.userWithUserCreateRole
 import com.thomas.management.context.userWithUserReadRole
 import com.thomas.management.context.userWithUserUpdateRole
 import com.thomas.management.context.userWithoutRole
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserBaseEntity
 import com.thomas.management.data.repository.GroupRepositoryMock
 import com.thomas.management.data.repository.UserRepositoryMock
 import com.thomas.management.domain.UserService
@@ -78,7 +78,7 @@ class UserServiceAdapterTest {
         assertThrows<UnauthorizedUserException> {
             service.one(UUID.randomUUID())
         }
-        verify(exactly = 0) { userRepository.findById(anyOrNull()) }
+        verify(exactly = 0) { userRepository.one(anyOrNull()) }
     }
 
     @Test
@@ -88,7 +88,7 @@ class UserServiceAdapterTest {
         assertThrows<UserNotFoundException> {
             service.one(UUID.randomUUID())
         }
-        verify(exactly = 1) { userRepository.findByIdWithGroups(any()) }
+        verify(exactly = 1) { userRepository.one(any()) }
     }
 
     @Test
@@ -96,7 +96,7 @@ class UserServiceAdapterTest {
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserReadRole
         service.one(users.random().id)
-        verify(exactly = 1) { userRepository.findByIdWithGroups(any()) }
+        verify(exactly = 1) { userRepository.one(any()) }
     }
 
     @Test
@@ -105,8 +105,8 @@ class UserServiceAdapterTest {
         assertThrows<UnauthorizedUserException> {
             service.create(createUserRequest)
         }
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
     }
 
@@ -114,8 +114,8 @@ class UserServiceAdapterTest {
     fun `WHEN create user with ROLE_USER_CREATE permission SHOULD save and return the user`() {
         currentUser = userWithUserCreateRole
         service.create(createUserRequest)
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 1) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 1) { userRepository.create(any()) }
         verify(exactly = 1) { userProducer.sendCreatedEvent(any()) }
     }
 
@@ -129,8 +129,8 @@ class UserServiceAdapterTest {
                 userGender = null,
             )
         )
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 1) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 1) { userRepository.create(any()) }
         verify(exactly = 1) { userProducer.sendCreatedEvent(any()) }
     }
 
@@ -138,15 +138,15 @@ class UserServiceAdapterTest {
     fun `WHEN create user AND all groups are found SHOULD save and return the user`() {
         currentUser = userWithUserCreateRole
         val groups = groupRepository.generateGroups(5)
-        service.create(createUserRequest.copy(userGroups = groups.map { it.id }))
-        verify(exactly = 1) { groupRepository.findByIds(any()) }
-        verify(exactly = 1) { userRepository.create(any(), any()) }
+        service.create(createUserRequest.copy(userGroups = groups.map { it.id }.toSet()))
+        verify(exactly = 1) { groupRepository.allByIds(any()) }
+        verify(exactly = 1) { userRepository.create(any()) }
         verify(exactly = 1) { userProducer.sendCreatedEvent(any()) }
     }
 
     @Test
     fun `WHEN create user with already used email SHOULD throws EntityValidationException`() {
-        val errorField = UserEntity::mainEmail.name.toSnakeCase()
+        val errorField = UserBaseEntity::mainEmail.name.toSnakeCase()
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserCreateRole
         val exception = assertThrows<EntityValidationException> {
@@ -155,14 +155,14 @@ class UserServiceAdapterTest {
         assertEquals(1, exception.errors.size)
         assertTrue(exception.errors.containsKey(errorField))
         assertEquals(managementUserValidationMainEmailAlreadyUsed(), exception.errors[errorField]!!.first())
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
     }
 
     @Test
     fun `WHEN create user with already used document SHOULD throws EntityValidationException`() {
-        val errorField = UserEntity::documentNumber.name.toSnakeCase()
+        val errorField = UserBaseEntity::documentNumber.name.toSnakeCase()
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserCreateRole
         val exception = assertThrows<EntityValidationException> {
@@ -171,14 +171,14 @@ class UserServiceAdapterTest {
         assertEquals(1, exception.errors.size)
         assertTrue(exception.errors.containsKey(errorField))
         assertEquals(managementUserValidationDocumentNumberAlreadyUsed(), exception.errors[errorField]!!.first())
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
     }
 
     @Test
     fun `WHEN create user with already used phone SHOULD throws EntityValidationException`() {
-        val errorField = UserEntity::phoneNumber.name.toSnakeCase()
+        val errorField = UserBaseEntity::phoneNumber.name.toSnakeCase()
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserCreateRole
         val exception = assertThrows<EntityValidationException> {
@@ -187,8 +187,8 @@ class UserServiceAdapterTest {
         assertEquals(1, exception.errors.size)
         assertTrue(exception.errors.containsKey(errorField))
         assertEquals(managementUserValidationPhoneNumberAlreadyUsed(), exception.errors[errorField]!!.first())
-        verify(exactly = 0) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.create(any(), any()) }
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
     }
 
@@ -199,12 +199,12 @@ class UserServiceAdapterTest {
         assertThrows<GroupListNotFoundException> {
             service.create(
                 createUserRequest.copy(
-                    userGroups = groups.map { it.id } + UUID.randomUUID()
+                    userGroups = (groups.map { it.id } + UUID.randomUUID()).toSet()
                 )
             )
         }
-        verify(exactly = 1) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.create(any(), any()) }
+        verify(exactly = 1) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
     }
 
@@ -214,7 +214,7 @@ class UserServiceAdapterTest {
         assertThrows<UnauthorizedUserException> {
             service.update(UUID.randomUUID(), updateUserRequest)
         }
-        verify(exactly = 0) { userRepository.update(any(), any()) }
+        verify(exactly = 0) { userRepository.update(any()) }
         verify(exactly = 0) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -223,7 +223,7 @@ class UserServiceAdapterTest {
         currentUser = userWithUserUpdateRole
         val users = userRepository.generateUsers(10)
         service.update(users.random().id, updateUserRequest)
-        verify(exactly = 1) { userRepository.update(any(), any()) }
+        verify(exactly = 1) { userRepository.update(any()) }
         verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -239,7 +239,7 @@ class UserServiceAdapterTest {
                 userGender = null,
             )
         )
-        verify(exactly = 1) { userRepository.update(any(), any()) }
+        verify(exactly = 1) { userRepository.update(any()) }
         verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -253,7 +253,7 @@ class UserServiceAdapterTest {
                 this.toUserUpdateRequest()
             )
         }
-        verify(exactly = 1) { userRepository.update(any(), any()) }
+        verify(exactly = 1) { userRepository.update(any()) }
         verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -262,9 +262,9 @@ class UserServiceAdapterTest {
         currentUser = userWithUserUpdateRole
         val users = userRepository.generateUsers(10)
         val groups = groupRepository.generateGroups(5)
-        service.update(users.random().id, updateUserRequest.copy(userGroups = groups.map { it.id }))
-        verify(exactly = 1) { groupRepository.findByIds(any()) }
-        verify(exactly = 1) { userRepository.update(any(), any()) }
+        service.update(users.random().id, updateUserRequest.copy(userGroups = groups.map { it.id }.toSet()))
+        verify(exactly = 1) { groupRepository.allByIds(any()) }
+        verify(exactly = 1) { userRepository.update(any()) }
         verify(exactly = 1) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -277,13 +277,13 @@ class UserServiceAdapterTest {
                 updateUserRequest
             )
         }
-        verify(exactly = 0) { userRepository.update(any(), any()) }
+        verify(exactly = 0) { userRepository.update(any()) }
         verify(exactly = 0) { userProducer.sendUpdatedEvent(any()) }
     }
 
     @Test
     fun `WHEN update user with already used document SHOULD throws EntityValidationException`() {
-        val errorField = UserEntity::documentNumber.name.toSnakeCase()
+        val errorField = UserBaseEntity::documentNumber.name.toSnakeCase()
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserUpdateRole
         val id = users.random().id
@@ -300,13 +300,13 @@ class UserServiceAdapterTest {
         assertEquals(1, exception.errors.size)
         assertTrue(exception.errors.containsKey(errorField))
         assertEquals(managementUserValidationDocumentNumberAlreadyUsed(), exception.errors[errorField]!!.first())
-        verify(exactly = 0) { userRepository.update(any(), any()) }
+        verify(exactly = 0) { userRepository.update(any()) }
         verify(exactly = 0) { userProducer.sendUpdatedEvent(any()) }
     }
 
     @Test
     fun `WHEN update user with already used phone SHOULD throws EntityValidationException`() {
-        val errorField = UserEntity::phoneNumber.name.toSnakeCase()
+        val errorField = UserBaseEntity::phoneNumber.name.toSnakeCase()
         val users = userRepository.generateUsers(10)
         currentUser = userWithUserUpdateRole
         val id = users.random().id
@@ -323,7 +323,7 @@ class UserServiceAdapterTest {
         assertEquals(1, exception.errors.size)
         assertTrue(exception.errors.containsKey(errorField))
         assertEquals(managementUserValidationPhoneNumberAlreadyUsed(), exception.errors[errorField]!!.first())
-        verify(exactly = 0) { userRepository.update(any(), any()) }
+        verify(exactly = 0) { userRepository.update(any()) }
         verify(exactly = 0) { userProducer.sendUpdatedEvent(any()) }
     }
 
@@ -336,12 +336,12 @@ class UserServiceAdapterTest {
             service.update(
                 users.random().id,
                 updateUserRequest.copy(
-                    userGroups = groups.map { it.id } + UUID.randomUUID()
+                    userGroups = (groups.map { it.id } + UUID.randomUUID()).toSet()
                 )
             )
         }
-        verify(exactly = 1) { groupRepository.findByIds(any()) }
-        verify(exactly = 0) { userRepository.update(any(), any()) }
+        verify(exactly = 1) { groupRepository.allByIds(any()) }
+        verify(exactly = 0) { userRepository.update(any()) }
         verify(exactly = 0) { userProducer.sendUpdatedEvent(any()) }
     }
 

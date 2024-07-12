@@ -2,6 +2,7 @@ package com.thomas.management.data.repository
 
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
+import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupEntity
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -18,21 +19,21 @@ interface GroupRepository {
         pageable: PageRequest
     ): PageResponse<GroupEntity>
 
-    fun findById(
+    fun one(
         id: UUID
-    ): GroupEntity?
+    ): GroupCompleteEntity?
 
-    fun findByIds(
-        ids: List<UUID>
-    ): List<GroupEntity>
+    fun allByIds(
+        ids: Set<UUID>
+    ): Set<GroupEntity>
 
     fun create(
-        entity: GroupEntity
-    ): GroupEntity
+        entity: GroupCompleteEntity
+    ): GroupCompleteEntity
 
     fun update(
-        entity: GroupEntity
-    ): GroupEntity
+        entity: GroupCompleteEntity
+    ): GroupCompleteEntity
 
     fun delete(
         id: UUID

@@ -13,6 +13,6 @@ data class UserUpdateRequest(
     val birthDate: LocalDate?,
     val userGender: Gender?,
     val isActive: Boolean,
-    val userRoles: List<SecurityRole>,
-    val userGroups: List<UUID>,
-)
+    val userRoles: Set<SecurityRole>,
+    override val userGroups: Set<UUID>,
+) : UserBaseRequest
