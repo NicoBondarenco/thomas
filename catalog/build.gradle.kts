@@ -22,12 +22,6 @@ publishing {
 catalog {
 
     versionCatalog {
-        //region DEFINITIONS
-
-        version("definition-detekt-configuration-configurationFilePath", "config/detekt/detekt.yml")
-        version("definition-detekt-configuration-buildUponDefault", "true")
-
-        //endregion DEFINITIONS
 
         //region VERSIONS
 

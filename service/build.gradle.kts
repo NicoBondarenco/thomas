@@ -3,8 +3,6 @@ import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.parsing.parseBoolean
 
-val definitions = libs.versions.definition
-
 @Suppress("DSL_SCOPE_VIOLATION") // workaround for IntelliJ bug with Gradle Version Catalogs DSL in plugins
 plugins {
     alias(libs.plugins.kotlin.lang)
@@ -16,18 +14,26 @@ plugins {
 
 detekt {
     toolVersion = libs.versions.detekt.get()
-    config.setFrom(file(definitions.detekt.configuration.configurationFilePath))
-    buildUponDefaultConfig = parseBoolean(definitions.detekt.configuration.buildUponDefault.get())
+    config.setFrom(file(properties["detekt.configuration.configurationFilePath"].toString()))
+    buildUponDefaultConfig = parseBoolean(properties["detekt.configuration.buildUponDefault"].toString())
 }
 
 sonar {
+
+    val projectKey = properties["sonar.projectKey"].toString()
+    val projectName = properties["sonar.projectName"].toString()
+    val hostUrl = properties["sonar.host.url"].toString()
+    val coveragePlugin = properties["sonar.java.coveragePlugin"].toString()
+    val reportPath = properties["sonar.coverage.jacoco.xmlReportPath"].toString()
+    val isVerbose = properties["sonar.verbose"].toString().toBoolean()
+
     properties {
-        property("sonar.projectKey", "thomas-service")
-        property("sonar.projectName", "T.H.O.M.A.S. Service")
-        property("sonar.host.url", "http://localhost:9500")
-        property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPath", "${rootProject.layout.buildDirectory}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml")
-        property("sonar.verbose", true)
+        property("sonar.projectKey", projectKey)
+        property("sonar.projectName", projectName)
+        property("sonar.host.url", hostUrl)
+        property("sonar.java.coveragePlugin", coveragePlugin)
+        property("sonar.coverage.jacoco.xmlReportPath", reportPath)
+        property("sonar.verbose", isVerbose)
     }
 }
 
@@ -40,17 +46,17 @@ dependencies {
 }
 
 val projectSource = file(projectDir)
-val configFile = files("$rootDir/config/detekt/detekt.yml")
-val kotlinFiles = "**/*.kt"
-val resourceFiles = "**/resources/**"
-val buildFiles = "**/build/**"
+val configFile = files("$rootDir/${properties["detekt.configuration.configurationFilePath"]}")
+val kotlinFiles = properties["detekt.configuration.kotlinFiles"].toString()
+val resourceFiles = properties["detekt.configuration.resourceFiles"].toString()
+val buildFiles = properties["detekt.configuration.buildFiles"].toString()
 
 val detektAll by tasks.registering(Detekt::class) {
-    description = "Custom DETEKT build for all modules"
-    parallel = true
-    ignoreFailures = false
-    autoCorrect = true
-    buildUponDefaultConfig = true
+    description = properties["detetk.all.description"].toString()
+    parallel = parseBoolean(properties["detetk.all.parallel"].toString())
+    ignoreFailures = parseBoolean(properties["detetk.all.ignoreFailures"].toString())
+    autoCorrect = parseBoolean(properties["detetk.all.autoCorrect"].toString())
+    buildUponDefaultConfig = parseBoolean(properties["detetk.all.buildUponDefaultConfig"].toString())
     setSource(projectSource)
     config.setFrom(configFile)
     include(kotlinFiles)
@@ -63,10 +69,10 @@ val detektAll by tasks.registering(Detekt::class) {
 }
 
 val detektGenerateBaseline = tasks.registering(DetektCreateBaselineTask::class) {
-    description = "Custom DETEKT build to build baseline for all modules"
-    parallel = true
-    ignoreFailures = false
-    buildUponDefaultConfig = true
+    description = properties["detetk.baseline.description"].toString()
+    parallel = parseBoolean(properties["detetk.baseline.parallel"].toString())
+    ignoreFailures = parseBoolean(properties["detetk.baseline.ignoreFailures"].toString())
+    buildUponDefaultConfig = parseBoolean(properties["detetk.baseline.autoCorrect"].toString())
     setSource(projectSource)
     config.setFrom(configFile)
     include(kotlinFiles)
@@ -84,7 +90,7 @@ allprojects {
     }
 
     group = "com.thomas"
-    version = "1.0.0.final"
+    version = properties["version"].toString()
 
     java.sourceCompatibility = JavaVersion.valueOf(libs.versions.target.get())
     java.targetCompatibility = JavaVersion.valueOf(libs.versions.target.get())
@@ -124,7 +130,7 @@ allprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.11"
+        toolVersion = libs.versions.jacoco.get()
     }
 
     tasks.jacocoTestReport {
