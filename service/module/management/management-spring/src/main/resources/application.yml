@@ -21,6 +21,7 @@ spring:
 #      definition: userCreatedProducer;userUpdatedProducer;groupCreatedProducer;groupUpdatedProducer;groupDeletedProducer
 
     stream:
+
       binders:
         rabbit:
           type: 'rabbit'
@@ -37,6 +38,11 @@ spring:
           binder: 'rabbit'
           destination: 'thomas-management-user-event'
           group:  'thomas-management-user-event'
+          content-type: 'application/json'
+
+        userSignupProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-user-event'
           content-type: 'application/json'
 
         groupCreatedProducer-out-0:
@@ -64,27 +70,32 @@ spring:
           userCreatedProducer-out-0:
             producer:
               exchange-type: topic
-              routing-key-expression: 'user.created.event'
+              routing-key-expression: '"user.created.event"'
 
           userUpdatedProducer-out-0:
             producer:
               exchange-type: topic
-              routing-key-expression: 'user.updated.event'
+              routing-key-expression: '"user.updated.event"'
+
+          userSignupProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: '"user.signup.event"'
 
           groupCreatedProducer-out-0:
             producer:
               exchange-type: topic
-              routing-key-expression: 'group.created.event'
+              routing-key-expression: '"group.created.event"'
 
           groupUpdatedProducer-out-0:
             producer:
               exchange-type: topic
-              routing-key-expression: 'group.updated.event'
+              routing-key-expression: '"group.updated.event"'
 
           groupDeletedProducer-out-0:
             producer:
               exchange-type: topic
-              routing-key-expression: 'group.deleted.event'
+              routing-key-expression: '"group.deleted.event"'
 
   autoconfigure:
     exclude:
@@ -141,3 +152,6 @@ management:
     repetition-attempts: 3
     database-auditory:
       tables-package: 'com.thomas.management.data.exposed.mapping'
+
+  service:
+    signup-enabled: true

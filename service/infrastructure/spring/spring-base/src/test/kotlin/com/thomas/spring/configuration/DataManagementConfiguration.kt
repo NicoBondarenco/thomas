@@ -5,7 +5,6 @@ import com.thomas.spring.properties.SecurityProperties
 import com.thomas.spring.util.groupDocuments
 import com.thomas.spring.util.userDocuments
 import jakarta.annotation.PostConstruct
-import org.bson.Document
 import org.springframework.context.annotation.Configuration
 
 @Configuration

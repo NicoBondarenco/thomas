@@ -5,6 +5,7 @@ import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_READ
 import com.thomas.core.model.security.SecurityRole.ROLE_USER_READ
 import com.thomas.management.data.entity.GroupEntity
 import com.thomas.management.data.entity.UserCompleteEntity
+import com.thomas.management.data.entity.UserEntity
 import java.util.UUID
 import java.util.UUID.fromString
 
@@ -25,6 +26,24 @@ val userUpsert: UserCompleteEntity
             creatorId = id,
             userRoles = setOf(ROLE_USER_READ, ROLE_GROUP_READ),
             userGroups = groupList,
+        )
+    }
+
+val userSignup: UserEntity
+    get() = PersonGenerator.generate().let {
+        val id = UUID.randomUUID()
+        UserEntity(
+            id = id,
+            firstName = it.firstName,
+            lastName = it.lastName,
+            mainEmail = it.mainEmail,
+            documentNumber = it.documentNumber,
+            phoneNumber = it.phoneNumber,
+            profilePhoto = null,
+            birthDate = it.birthDate,
+            userGender = it.userGender,
+            isActive = listOf(true, false).random(),
+            creatorId = id,
         )
     }
 

@@ -17,6 +17,7 @@ import com.thomas.core.model.security.SecurityRole.ROLE_USER_UPDATE
 import com.thomas.management.data.exposed.extension.guardiansGalaxyGroup
 import com.thomas.management.data.exposed.extension.theAvengersGroup
 import com.thomas.management.data.exposed.extension.toUserCompleteEntity
+import com.thomas.management.data.exposed.extension.userSignup
 import com.thomas.management.data.exposed.extension.userUpsert
 import com.thomas.management.data.exposed.mapping.UserExposedEntity
 import java.time.LocalDate
@@ -547,6 +548,29 @@ class UserExposedRepositoryTest : BaseExposedRepositoryTest() {
             this.userGroups.forEach { group ->
                 assertTrue(entity.userGroups.any { it.id == group.id })
             }
+        }
+    }
+
+    @Test
+    fun `Signup user`() {
+        insertData("user-one-insert")
+        userSignup.apply {
+            repository.signup(this)
+            val entity = transaction(database) {
+                UserExposedEntity.findById(this@apply.id)?.toUserCompleteEntity()
+            }
+
+            assertNotNull(entity)
+            assertEquals(this.firstName, entity!!.firstName)
+            assertEquals(this.lastName, entity.lastName)
+            assertEquals(this.mainEmail, entity.mainEmail)
+            assertEquals(this.documentNumber, entity.documentNumber)
+            assertEquals(this.phoneNumber, entity.phoneNumber)
+            assertEquals(this.birthDate, entity.birthDate)
+            assertEquals(this.userGender, entity.userGender)
+            assertEquals(this.isActive, entity.isActive)
+            assertTrue(entity.userRoles.isEmpty())
+            assertTrue(entity.userGroups.isEmpty())
         }
     }
 

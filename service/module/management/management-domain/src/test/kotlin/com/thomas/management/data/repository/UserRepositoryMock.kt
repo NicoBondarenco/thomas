@@ -82,16 +82,42 @@ class UserRepositoryMock : UserRepository {
         phoneNumber: String,
     ): Boolean = users.values.any { it.id != id && it.phoneNumber == phoneNumber }
 
+    override fun signup(
+        entity: UserEntity,
+    ): UserEntity = entity.apply {
+        this.toUserCompleteEntity().apply {
+            users[this.id] = this
+        }
+    }
+
     override fun create(
         entity: UserCompleteEntity,
     ): UserCompleteEntity = entity.apply {
-        users[entity.id] = entity
+        users[this.id] = this
     }
 
     override fun update(
         entity: UserCompleteEntity,
     ): UserCompleteEntity = entity.apply {
-        users[entity.id] = entity
+        users[this.id] = this
     }
+
+    private fun UserEntity.toUserCompleteEntity() = UserCompleteEntity(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        mainEmail = this.mainEmail,
+        documentNumber = this.documentNumber,
+        phoneNumber = this.phoneNumber,
+        profilePhoto = this.profilePhoto,
+        birthDate = this.birthDate,
+        userGender = this.userGender,
+        isActive = this.isActive,
+        creatorId = this.creatorId,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt,
+        userRoles = setOf(),
+        userGroups = setOf(),
+    )
 
 }

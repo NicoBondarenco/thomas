@@ -16,13 +16,18 @@ import com.thomas.management.data.repository.UserRepositoryMock
 import com.thomas.management.domain.UserService
 import com.thomas.management.domain.exception.GroupListNotFoundException
 import com.thomas.management.domain.exception.UserNotFoundException
+import com.thomas.management.domain.exception.UserSignupDisabledException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationDocumentNumberAlreadyUsed
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationMainEmailAlreadyUsed
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationPhoneNumberAlreadyUsed
+import com.thomas.management.domain.properties.UserServiceProperties
 import com.thomas.management.requests.activeUserRequest
 import com.thomas.management.requests.createUserRequest
+import com.thomas.management.requests.signupUserRequest
 import com.thomas.management.requests.toUserUpdateRequest
 import com.thomas.management.requests.updateUserRequest
+import io.mockk.every
+import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import java.util.UUID
@@ -38,10 +43,12 @@ class UserServiceAdapterTest {
     private val userRepository = spyk(UserRepositoryMock())
     private val groupRepository = spyk(GroupRepositoryMock())
     private val userProducer = spyk(UserEventProducerMock())
+    private val serviceProperties = mockk<UserServiceProperties>()
     private val service: UserService = UserServiceAdapter(
         userRepository = userRepository,
         groupRepository = groupRepository,
         eventProducer = userProducer,
+        serviceProperties = serviceProperties,
     )
 
     @BeforeEach
@@ -108,6 +115,30 @@ class UserServiceAdapterTest {
         verify(exactly = 0) { groupRepository.allByIds(any()) }
         verify(exactly = 0) { userRepository.create(any()) }
         verify(exactly = 0) { userProducer.sendCreatedEvent(any()) }
+    }
+
+    @Test
+    fun `WHEN signup user without current user SHOULD create the user without roles and groups`() {
+        every { serviceProperties.signupEnabled }.returns(true)
+
+        val response = service.signup(signupUserRequest)
+        verify(exactly = 0) { groupRepository.allByIds(any()) }
+        verify(exactly = 1) { userRepository.signup(any()) }
+        verify(exactly = 1) { userProducer.sendSignupEvent(any()) }
+
+        val entity = userRepository.one(response.id)!!
+        assertTrue(entity.userRoles.isEmpty())
+        assertTrue(entity.userGroups.isEmpty())
+    }
+
+    @Test
+    fun `WHEN signup user with signup disabled SHOULD throws UserSignupDisabledException`() {
+        every { serviceProperties.signupEnabled }.returns(false)
+
+        assertThrows<UserSignupDisabledException> {
+            service.signup(signupUserRequest)
+        }
+
     }
 
     @Test

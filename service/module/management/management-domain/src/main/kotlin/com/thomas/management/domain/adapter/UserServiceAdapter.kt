@@ -1,6 +1,7 @@
 package com.thomas.management.domain.adapter
 
 import com.thomas.core.authorization.authorized
+import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.throws
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.extension.validate
@@ -16,10 +17,13 @@ import com.thomas.management.domain.UserService
 import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.exception.GroupListNotFoundException
 import com.thomas.management.domain.exception.UserNotFoundException
+import com.thomas.management.domain.exception.UserSignupDisabledException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationDocumentNumberAlreadyUsed
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationMainEmailAlreadyUsed
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationPhoneNumberAlreadyUsed
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidData
+import com.thomas.management.domain.model.extension.toSecurityUser
+import com.thomas.management.domain.model.extension.toUserCompleteEntity
 import com.thomas.management.domain.model.extension.toUserDetailResponse
 import com.thomas.management.domain.model.extension.toUserEntity
 import com.thomas.management.domain.model.extension.toUserPageResponse
@@ -29,9 +33,11 @@ import com.thomas.management.domain.model.extension.updateFromRequest
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserBaseRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
+import com.thomas.management.domain.model.request.UserSignupRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 import com.thomas.management.domain.model.response.UserDetailResponse
 import com.thomas.management.domain.model.response.UserPageResponse
+import com.thomas.management.domain.properties.UserServiceProperties
 import com.thomas.management.domain.userCreateRoles
 import com.thomas.management.domain.userReadRoles
 import com.thomas.management.domain.userUpdateRoles
@@ -43,6 +49,7 @@ class UserServiceAdapter(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
     private val eventProducer: UserEventProducer,
+    private val serviceProperties: UserServiceProperties,
 ) : UserService {
 
     override fun page(
@@ -71,11 +78,21 @@ class UserServiceAdapter(
         findByIdWithGroupsOrThrows(id).toUserDetailResponse()
     }
 
+    override fun signup(
+        request: UserSignupRequest,
+    ): UserPageResponse = request.takeIf {
+        serviceProperties.signupEnabled
+    }?.toUserEntity()?.apply {
+        currentUser = this.toSecurityUser()
+        userRepository.signup(this)
+        eventProducer.sendSignupEvent(this.toUserUpsertedEvent())
+    }?.toUserPageResponse() ?: throw UserSignupDisabledException()
+
     override fun create(
         request: UserCreateRequest,
     ): UserDetailResponse = authorized(roles = userCreateRoles) {
         request.process(
-            { req, groups -> req.toUserEntity(groups) },
+            { req, groups -> req.toUserCompleteEntity(groups) },
             { user -> userRepository.create(user) },
             { eventProducer.sendCreatedEvent(it) },
         )

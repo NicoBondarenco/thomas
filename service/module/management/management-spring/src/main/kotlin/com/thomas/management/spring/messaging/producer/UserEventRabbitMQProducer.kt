@@ -15,23 +15,37 @@ class UserEventRabbitMQProducer(
     companion object {
         private const val USER_CREATED_PRODUCER_OUTPUT = "userCreatedProducer-out-0"
         private const val USER_UPDATED_PRODUCER_OUTPUT = "userUpdatedProducer-out-0"
+        private const val USER_SIGNUP_PRODUCER_OUTPUT = "userSignupProducer-out-0"
     }
 
     override fun sendCreatedEvent(
         event: UserUpsertedEvent
-    ): Boolean = sendMessage(USER_CREATED_PRODUCER_OUTPUT, event)
+    ): Boolean = sendMessage(
+        USER_CREATED_PRODUCER_OUTPUT,
+        event,
+    )
 
     override fun sendUpdatedEvent(
         event: UserUpsertedEvent
-    ): Boolean = sendMessage(USER_UPDATED_PRODUCER_OUTPUT, event)
+    ): Boolean = sendMessage(
+        USER_UPDATED_PRODUCER_OUTPUT,
+        event,
+    )
+
+    override fun sendSignupEvent(
+        event: UserUpsertedEvent
+    ): Boolean = sendMessage(
+        USER_SIGNUP_PRODUCER_OUTPUT,
+        event,
+    )
 
     private fun sendMessage(
-        output: String,
-        event: UserUpsertedEvent,
+        outputChannel: String,
+        userEvent: UserUpsertedEvent,
     ): Boolean = streamBridge.send(
-        output,
+        outputChannel,
         MessageBuilder
-            .withPayload(event)
+            .withPayload(userEvent)
             .setHeader("Authorization", "Bearer ${currentToken ?: ""}")
             .build(),
     )

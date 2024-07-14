@@ -39,6 +39,10 @@ interface UserRepository {
         phoneNumber: String,
     ): Boolean
 
+    fun signup(
+        entity: UserEntity,
+    ): UserEntity
+
     fun create(
         entity: UserCompleteEntity,
     ): UserCompleteEntity

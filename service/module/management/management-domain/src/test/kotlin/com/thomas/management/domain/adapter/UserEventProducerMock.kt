@@ -8,6 +8,11 @@ internal class UserEventProducerMock : UserEventProducer {
 
     private val events = mutableMapOf<UUID, UserUpsertedEvent>()
 
+    override fun sendSignupEvent(event: UserUpsertedEvent): Boolean {
+        events[event.id] = event
+        return true
+    }
+
     override fun sendCreatedEvent(event: UserUpsertedEvent): Boolean {
         events[event.id] = event
         return true

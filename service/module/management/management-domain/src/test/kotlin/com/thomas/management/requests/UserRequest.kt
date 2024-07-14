@@ -4,6 +4,7 @@ import com.thomas.core.generator.PersonGenerator
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
+import com.thomas.management.domain.model.request.UserSignupRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 
 val createUserRequest: UserCreateRequest
@@ -41,6 +42,19 @@ val activeUserRequest: UserActiveRequest
     get() = UserActiveRequest(
         isActive = listOf(true, false).random(),
     )
+
+val signupUserRequest: UserSignupRequest
+    get() = PersonGenerator.generate().let {
+        UserSignupRequest(
+            firstName = it.firstName,
+            lastName = it.lastName,
+            mainEmail = it.mainEmail,
+            documentNumber = it.documentNumber,
+            phoneNumber = it.phoneNumber,
+            birthDate = it.birthDate,
+            userGender = it.userGender,
+        )
+    }
 
 fun UserCompleteEntity.toUserUpdateRequest() = UserUpdateRequest(
     firstName = this.firstName,

@@ -4,6 +4,7 @@ import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
+import com.thomas.management.domain.model.request.UserSignupRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 import com.thomas.management.domain.model.response.UserDetailResponse
 import com.thomas.management.domain.model.response.UserPageResponse
@@ -26,6 +27,10 @@ interface UserService {
     fun one(
         id: UUID,
     ): UserDetailResponse
+
+    fun signup(
+        request: UserSignupRequest
+    ): UserPageResponse
 
     fun create(
         request: UserCreateRequest,
