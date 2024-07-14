@@ -1,8 +1,8 @@
 package com.thomas.authentication.jwt.auth0.repository
 
 import com.mongodb.ServerApiVersion
-import com.mongodb.kotlin.client.coroutine.MongoCollection
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.thomas.authentication.jwt.auth0.util.activeGroupAuthenticationOne
 import com.thomas.authentication.jwt.auth0.util.activeGroupAuthenticationTwo
 import com.thomas.authentication.jwt.auth0.util.activeUserAuthentication
@@ -15,7 +15,6 @@ import com.thomas.mongo.configuration.MongoDatabaseFactory
 import com.thomas.mongo.properties.MongoDatabaseProperties
 import java.time.Duration
 import java.util.UUID.randomUUID
-import kotlinx.coroutines.runBlocking
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -72,7 +71,7 @@ class UserAuthenticationRepositoryTest {
         insertData()
     }
 
-    private fun insertData() = runBlocking {
+    private fun insertData() {
         groupCollection.insertMany(groupDocuments)
         userCollection.insertMany(userDocuments)
     }

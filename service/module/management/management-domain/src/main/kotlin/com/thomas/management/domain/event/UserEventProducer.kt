@@ -4,8 +4,8 @@ import com.thomas.management.message.event.UserUpsertedEvent
 
 interface UserEventProducer {
 
-    fun sendCreatedEvent(event: UserUpsertedEvent)
+    fun sendCreatedEvent(event: UserUpsertedEvent): Boolean
 
-    fun sendUpdatedEvent(event: UserUpsertedEvent)
+    fun sendUpdatedEvent(event: UserUpsertedEvent): Boolean
 
 }

@@ -9,11 +9,11 @@ import com.mongodb.KotlinCodecProvider
 import com.mongodb.MongoClientSettings
 import com.mongodb.MongoCredential
 import com.mongodb.ServerApi
+import com.mongodb.client.MongoClients
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.gridfs.codecs.GridFSFileCodecProvider
 import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider
 import com.mongodb.client.model.mql.ExpressionCodecProvider
-import com.mongodb.kotlin.client.coroutine.MongoClient
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.mongo.configuration.codec.BigIntegerCodec
 import com.thomas.mongo.configuration.codec.OffsetDateTimeCodec
 import com.thomas.mongo.configuration.codec.UUIDCodec
@@ -73,7 +73,7 @@ object MongoDatabaseFactory {
         mongoClients().getDatabase(this.databaseName)
 
     private fun MongoDatabaseProperties.mongoClients() =
-        MongoClient.create(mongoClientSettings())
+        MongoClients.create(mongoClientSettings())
 
     private fun MongoDatabaseProperties.mongoClientSettings() =
         MongoClientSettings.builder()

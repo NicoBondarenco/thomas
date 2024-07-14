@@ -1,6 +1,6 @@
 package com.thomas.spring.configuration
 
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import com.mongodb.client.MongoDatabase
 import com.thomas.authentication.Authenticator
 import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0AuthenticatorFactory
 import com.thomas.mongo.configuration.MongoDatabaseFactory

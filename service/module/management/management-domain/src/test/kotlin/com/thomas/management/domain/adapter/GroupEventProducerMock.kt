@@ -10,16 +10,19 @@ internal class GroupEventProducerMock : GroupEventProducer {
     private val upsertEvents = mutableMapOf<UUID, GroupUpsertedEvent>()
     private val deleteEvents = mutableMapOf<UUID, GroupDeletedEvent>()
 
-    override fun sendCreatedEvent(event: GroupUpsertedEvent) {
+    override fun sendCreatedEvent(event: GroupUpsertedEvent): Boolean {
         upsertEvents[event.id] = event
+        return true
     }
 
-    override fun sendUpdatedEvent(event: GroupUpsertedEvent) {
+    override fun sendUpdatedEvent(event: GroupUpsertedEvent): Boolean {
         upsertEvents[event.id] = event
+        return true
     }
 
-    override fun sendDeletedEvent(event: GroupDeletedEvent) {
+    override fun sendDeletedEvent(event: GroupDeletedEvent): Boolean {
         deleteEvents[event.id] = event
+        return true
     }
 
 }

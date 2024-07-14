@@ -42,14 +42,14 @@ findProject(":infrastructure:storage:storage-base")?.name = "storage-base"
 include("infrastructure:storage:storage-local")
 findProject(":infrastructure:storage:storage-local")?.name = "storage-local"
 
-include("module:management:data")
-findProject(":module:management:data")?.name = "management-data"
+include("module:management:management-data")
+findProject(":module:management:management-data")?.name = "management-data"
 
-include("module:management:data-exposed")
-findProject(":module:management:data-exposed")?.name = "management-data-exposed"
+include("module:management:management-data-exposed")
+findProject(":module:management:management-data-exposed")?.name = "management-data-exposed"
 
-include("module:management:domain")
-findProject(":module:management:domain")?.name = "management-domain"
+include("module:management:management-domain")
+findProject(":module:management:management-domain")?.name = "management-domain"
 
-include("module:management:spring")
-findProject(":module:management:spring")?.name = "management-spring"
+include("module:management:management-spring")
+findProject(":module:management:management-spring")?.name = "management-spring"

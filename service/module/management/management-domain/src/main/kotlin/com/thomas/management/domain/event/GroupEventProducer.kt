@@ -5,10 +5,10 @@ import com.thomas.management.message.event.GroupUpsertedEvent
 
 interface GroupEventProducer {
 
-    fun sendCreatedEvent(event: GroupUpsertedEvent)
+    fun sendCreatedEvent(event: GroupUpsertedEvent): Boolean
 
-    fun sendUpdatedEvent(event: GroupUpsertedEvent)
+    fun sendUpdatedEvent(event: GroupUpsertedEvent): Boolean
 
-    fun sendDeletedEvent(event: GroupDeletedEvent)
+    fun sendDeletedEvent(event: GroupDeletedEvent): Boolean
 
 }

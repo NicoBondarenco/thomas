@@ -14,6 +14,12 @@ configurations {
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(libs.spring.cloud.dependencies.get().toString())
+    }
+}
+
 dependencies {
 
     implementation(project(":core"))
@@ -23,10 +29,19 @@ dependencies {
     implementation(project(":module:management:management-domain"))
 
     implementation(project(":infrastructure:database:exposed-base"))
+    implementation(project(":infrastructure:spring:spring-base"))
+    implementation(project(":infrastructure:message:management-message"))
 
     implementation(libs.spring.boot.starter.web)
-    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.spring.cloud.stream.core.all)
+    implementation(libs.bundles.spring.cloud.stream.rabbit.bundle)
 
-    testImplementation(libs.spring.boot.starter.test)
+    implementation(libs.exposed.core)
+
+    implementation(libs.postgresql)
+    implementation(libs.bundles.mongodb.sync.bundle)
+
+    testImplementation(libs.spring.boot.test.starter.core)
+    testImplementation(libs.spring.boot.test.container.testcontainers)
 
 }

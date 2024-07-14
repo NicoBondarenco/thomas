@@ -1,11 +1,11 @@
 package com.thomas.mongo.repository
 
 import com.mongodb.ServerApiVersion
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndReplaceOptions
 import com.mongodb.client.model.ReturnDocument.AFTER
-import com.mongodb.kotlin.client.coroutine.MongoCollection
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
@@ -26,8 +26,6 @@ import com.thomas.mongo.data.parentTestEntity
 import com.thomas.mongo.properties.MongoDatabaseProperties
 import java.time.Duration
 import java.time.ZoneOffset.UTC
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -98,23 +96,19 @@ class MongoRepositoryTest {
 
     @AfterEach
     fun afterEach() {
-        runBlocking {
-            testCollection.deleteMany(Filters.empty())
-            parentCollection.deleteMany(Filters.empty())
-            childCollection.deleteMany(Filters.empty())
-        }
+        testCollection.deleteMany(Filters.empty())
+        parentCollection.deleteMany(Filters.empty())
+        childCollection.deleteMany(Filters.empty())
     }
 
     @Test
     fun `Retrieve multilevel entity`() {
         val entity = TestMongoEntity()
-        runBlocking {
-            testCollection.findOneAndReplace(
-                Filters.eq("_id", entity.id),
-                entity,
-                FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
-            )!!
-        }
+        testCollection.findOneAndReplace(
+            Filters.eq("_id", entity.id),
+            entity,
+            FindOneAndReplaceOptions().upsert(true).returnDocument(AFTER)
+        )!!
 
         val result = testMongoRepository.one(entity.id)
         assertEquals(entity, result)
@@ -123,7 +117,7 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity list without filter`() {
         val entities = (1..10).map { TestMongoEntity() }
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.all()
         assertEquals(10, result.size)
@@ -133,7 +127,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity list with filter`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.all(
             found.map { it.stringValue },
@@ -147,7 +141,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity page without filter and sort`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.page(
             PageRequest(2, 7)
@@ -160,7 +154,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity page without filter sorted ASC`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val first = entities.sortedBy { it.datetimeOffset }[10]
 
@@ -175,7 +169,7 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity page without filter sorted DESC`() {
         val entities = entityListFoundData + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val first = entities.sortedByDescending { it.stringValue }[0]
 
@@ -191,7 +185,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity page with filter and without sort`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.page(
             found.map { it.stringValue },
@@ -207,9 +201,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity page with filter sorted ASC`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking {
-            testCollection.insertMany(entities)
-        }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.page(
             found.map { it.stringValue },
@@ -226,7 +218,7 @@ class MongoRepositoryTest {
     fun `Retrieve multilevel entity page with filter sorted DESC`() {
         val found = entityListFoundData
         val entities = found + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val first = found.sortedBy { it.bigDecimal }[12]
 
@@ -244,7 +236,7 @@ class MongoRepositoryTest {
     @Test
     fun `Retrieve multilevel entity page empty`() {
         val entities = entityListFoundData + entityListNotFoundData
-        runBlocking { testCollection.insertMany(entities) }
+        testCollection.insertMany(entities)
 
         val result = testMongoRepository.page(
             entityListFoundData.map { it.stringValue },
@@ -263,29 +255,27 @@ class MongoRepositoryTest {
         testMongoRepository.save(entity.id, entity)
         testMongoRepository.save(another.id, another)
 
-        val result = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
+        val result = testCollection.find(Filters.eq("_id", entity.id)).firstOrNull()
         assertEquals(entity, result)
     }
 
     @Test
     fun `Update multilevel entity`() {
         val saved = TestMongoEntity()
-        runBlocking { testCollection.insertMany(listOf(saved, TestMongoEntity())) }
+        testCollection.insertMany(listOf(saved, TestMongoEntity()))
 
         val entity = TestMongoEntity(id = saved.id)
         val result = testMongoRepository.save(saved.id, entity)
         assertEquals(entity, result)
 
-        val found = runBlocking { testCollection.find(Filters.eq("_id", entity.id)).firstOrNull() }
+        val found = testCollection.find(Filters.eq("_id", entity.id)).firstOrNull()
         assertEquals(entity, found)
     }
 
     @Test
     fun `Find joined entity`() {
-        runBlocking {
-            childCollection.insertMany(childTestList)
-            parentCollection.insertOne(parentTestEntity)
-        }
+        childCollection.insertMany(childTestList)
+        parentCollection.insertOne(parentTestEntity)
 
         val result = parentTestRepository.findFullTestEntity(parentTestEntity.id)
         assertEquals(fullTestEntity, result)

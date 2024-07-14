@@ -1,0 +1,143 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+
+  application:
+    name: thomas-management
+
+  main:
+    allow-bean-definition-overriding: true
+
+  rabbitmq:
+    username: ${MANAGEMENT_RABBITMQ_USERNAME:guest}
+    password: ${MANAGEMENT_RABBITMQ_PASSWORD:guest}
+    virtual-host: '/thomas-management'
+    addresses: ${MANAGEMENT_RABBITMQ_URL:localhost:6600}
+
+  cloud:
+
+#    function:
+#      definition: userCreatedProducer;userUpdatedProducer;groupCreatedProducer;groupUpdatedProducer;groupDeletedProducer
+
+    stream:
+      binders:
+        rabbit:
+          type: 'rabbit'
+
+      bindings:
+
+        userCreatedProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-user-event'
+          group:  'thomas-management-user-event'
+          content-type: 'application/json'
+
+        userUpdatedProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-user-event'
+          group:  'thomas-management-user-event'
+          content-type: 'application/json'
+
+        groupCreatedProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-group-event'
+          group:  'thomas-management-group-event'
+          content-type: 'application/json'
+
+        groupUpdatedProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-group-event'
+          group:  'thomas-management-group-event'
+          content-type: 'application/json'
+
+        groupDeletedProducer-out-0:
+          binder: 'rabbit'
+          destination: 'thomas-management-group-event'
+          group:  'thomas-management-group-event'
+          content-type: 'application/json'
+
+      rabbit:
+
+        bindings:
+
+          userCreatedProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: 'user.created.event'
+
+          userUpdatedProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: 'user.updated.event'
+
+          groupCreatedProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: 'group.created.event'
+
+          groupUpdatedProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: 'group.updated.event'
+
+          groupDeletedProducer-out-0:
+            producer:
+              exchange-type: topic
+              routing-key-expression: 'group.deleted.event'
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ} %-5p %c:%M{1}:%L - %m%n"
+  level:
+    root: INFO
+    com.thomas: DEBUG
+    Exposed: INFO
+
+security:
+
+  jwt:
+    privateKey: "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC4N05yJwWnnIheCbbrrVLKWNGGpibaixojU/HLU5CAww0NN+7DGzBK6owV+vKW7KW4lgMGTA86yHEAlzMCLmhRCZmx3B5LH9+//cmbgv03e9Kzbe5GwkADHSmcjZ/h9/7YQQPHc0PPAWZmRuIHO99xw2IjwFjlYi4vs/6e2CWwbaQzQPWZGpw++OMr50mqa6XMVdOtZR4Wu5vzLavurvnk0uiDKXIw8kU6+zCMT6QuHHdZqqAWCTOgai5o+rdNpOKJABixkICQL7S+MEwfLOnNRFSLyoq9VclUKsGzrbfEPORsi/n5AOjOML9pIqdwersSy2FtaWJOj4acaAvpM7MhAgMBAAECggEAErW5T7JDaoPlPMnXTIYIzdjqBPc8pH8yyypEOV62I0HMQk6vPx00kTNTwYrAl1AXP9FqornYZSPFCGaS7XKJsUtckxo0cHRfDRipYJRUBA3dN1CfvguOJVLRrl8bAUAnH88wo1IDbdOqUxJ5c/sihWMvBUsMrFWFs94f6wGwiEPaZ3pZlxUQuduGO7fKrKDJU9FRkOxSvoUKOeMPnugsTUXrsAMPJ2RBGg0UQs86TcNsHGeu3A7bDnKz3hWGIf/qcaNGDSfXrEF1V0NHVZYPKDx0XeUqKnwg3+WzD/Fp/+osuY4NmGK4dDa6lho8MmMrXw0LflqI5sVq88JoI2c2bQKBgQDbFlZ7DjfU+NzYYVzJluZxAxryBUQXKKlsoAWL0PUtmxcJba5qkpEW1Vr6ML9LiyczAUo+Odigvoz2Md3dCXlMahDnpVRuDV8gDWC2eCbeV8YtK5v9fwXvIl8bi5I9x1GD03a1tyXq0omIPQjeM1a7ig4R81ZhL0u7OIYWUoso7QKBgQDXQOehSLgJkooSr3bSjpgZ9zt2fO7W/tkSYHZmrCHYAE4UOBhEeVsOhWMMfRAimbgNjku8/dzmQIiHJzkmoL3o9jm/svGrEZyvUNa3Fs1nJWU1XxC2xkkvVaWm657ArLHRAgyZBBrwLanbk5Cz6uiRQD7VLXrYsFVpBYuju8cwhQKBgEcnoRzESGPWE7v/Gyip5twLeyPhi/TNkwEhk8uOKSMPvNKmGcCpK5Az6SFa1bZOUoPhRmChXvcODDAlj/4rBodH54ekjaBUnXGGhsOckFskPMwM3tPc/mtlSWhj0zJXWuUqt+JawmjayipCUHACUogEVX+E/agAuWLr/7ieRG4dAoGBAJZw+nKyzE2EaZPdpoJKvuuG67xIXPVOcJBzcs0XiR/aNrfS7MMOviFMAIn97oUAQq7WwQB5vSX//GvZcgwZVCG51Wqxuk4BpSyypx6XhT+N10qSArB7rTKz/W7IRtAK4sxdTkizodAzWf/pBr14dMrvx/peKvm/ZDJeedYZq4GxAoGBAMCJBDfNoymbqOZqghWiT939zqTHsYyyuAkYo3MPtRIsow+o3nET0YsFKMUXwj6BEfi+8MKSffSzT60CpdDAIoSCrqmfDOHPCk2CsfV+g6V8e0hd53oMM92iS85XRPR5AVGutnnYmP6S/1WRN1pOjZ/zVP623q0jVxpX4f0EPUNB"
+    publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuDdOcicFp5yIXgm2661SyljRhqYm2osaI1Pxy1OQgMMNDTfuwxswSuqMFfryluyluJYDBkwPOshxAJczAi5oUQmZsdweSx/fv/3Jm4L9N3vSs23uRsJAAx0pnI2f4ff+2EEDx3NDzwFmZkbiBzvfccNiI8BY5WIuL7P+ntglsG2kM0D1mRqcPvjjK+dJqmulzFXTrWUeFrub8y2r7q755NLogylyMPJFOvswjE+kLhx3WaqgFgkzoGouaPq3TaTiiQAYsZCAkC+0vjBMHyzpzURUi8qKvVXJVCrBs623xDzkbIv5+QDozjC/aSKncHq7EsthbWliTo+GnGgL6TOzIQIDAQAB"
+    issuerName: "thomas-management"
+    jwtAudience: "thomas-management-audience"
+    jwtRealm: "thomas-management-realm"
+    jwtAlgorithm: "RSA"
+    userCollection: "authentication-user"
+    groupCollection: "authentication-group"
+
+  database:
+    connection-url: "mongodb://localhost:26000"
+    database-name: "thomas-authentication"
+    connection-username: thomas
+    connection-password: thomas
+    api-version: V1
+
+pageable:
+  default:
+    pageNumber: 1
+    pageSize: 20
+
+management:
+
+  database:
+    driver-class: 'org.postgresql.Driver'
+    connection-url: 'jdbc:postgresql://localhost:6000/thomas-service'
+    database-username: 'thomas-service'
+    database-password: 'thomas-service'
+    default-schema: 'management'
+    explicit-dialect: POSTGRESQL
+    connection-timeout: 20000
+    idle-timeout: 20000
+    maximum-lifetime: 60000
+    maximum-pool: 5
+    isolation-level: TRANSACTION_READ_COMMITTED
+    repetition-attempts: 3
+    database-auditory:
+      tables-package: 'com.thomas.management.data.exposed.mapping'

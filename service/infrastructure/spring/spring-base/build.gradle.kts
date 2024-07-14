@@ -33,8 +33,6 @@ dependencies {
     implementation(libs.spring.boot.starter.security)
     implementation(libs.spring.boot.starter.validation)
 
-    implementation(libs.mongodb.driver.kotlin)
-
     implementation(libs.jackson.core)
     implementation(libs.jackson.annotations)
     implementation(libs.jackson.databind)
@@ -44,7 +42,9 @@ dependencies {
     implementation(libs.jackson.datatype.jdk8)
     implementation(libs.jackson.datatype.jsr310)
 
-    testImplementation(libs.spring.boot.starter.test)
+    implementation(libs.bundles.mongodb.sync.bundle)
+
+    testImplementation(libs.spring.boot.test.starter.core)
 
     testImplementation(libs.auth0.jwt)
 

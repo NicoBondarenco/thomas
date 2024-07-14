@@ -1,7 +1,7 @@
 package com.thomas.authentication.jwt.auth0
 
-import com.mongodb.kotlin.client.coroutine.MongoCollection
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.thomas.authentication.Authenticator
 import com.thomas.authentication.jwt.auth0.configuration.JWTAuth0AuthenticatorFactory
 import com.thomas.authentication.jwt.auth0.data.UserAuthentication

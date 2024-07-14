@@ -1,7 +1,7 @@
 package com.thomas.mongo.data
 
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.mongo.repository.MongoRepository

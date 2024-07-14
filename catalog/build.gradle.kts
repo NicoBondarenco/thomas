@@ -77,7 +77,7 @@ catalog {
 
         version("hikari", "5.1.0")
 
-        version("mongodb", "5.0.1")
+        version("mongodb", "5.1.2")
 
         version("exposed", "0.49.0")
 
@@ -158,8 +158,9 @@ catalog {
 
         //region DATABASES
 
-        library("mongodb-driver-kotlin", "org.mongodb", "mongodb-driver-kotlin-coroutine").versionRef("mongodb")
-        library("mongodb-bson-kotlinx", "org.mongodb", "bson-kotlinx").versionRef("mongodb")
+        library("mongodb-driver-core", "org.mongodb", "mongodb-driver-core").versionRef("mongodb")
+        library("mongodb-driver-sync", "org.mongodb", "mongodb-driver-sync").versionRef("mongodb")
+        library("mongodb-bson-core", "org.mongodb", "bson").versionRef("mongodb")
         library("mongodb-bson-kotlin", "org.mongodb", "bson-kotlin").versionRef("mongodb")
 
         library("exposed-core", "org.jetbrains.exposed", "exposed-core").versionRef("exposed")
@@ -174,6 +175,16 @@ catalog {
         library("h2", "com.h2database", "h2").versionRef("h2")
 
         library("hikaricp", "com.zaxxer", "HikariCP").versionRef("hikari")
+
+        bundle(
+            "mongodb-sync-bundle",
+            listOf(
+                "mongodb-driver-core",
+                "mongodb-driver-sync",
+                "mongodb-bson-core",
+                "mongodb-bson-kotlin",
+            ),
+        )
 
         //endregion DATABASES
 
@@ -198,28 +209,48 @@ catalog {
 
         //endregion SERIALIZATION
 
+        //region SPRING
+
+        library("spring-boot-starter-web", "org.springframework.boot", "spring-boot-starter-web").withoutVersion()
+        library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
+        library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
+
+        library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
+
+        library("spring-cloud-stream-core-all", "org.springframework.cloud", "spring-cloud-stream").withoutVersion()
+
+        library("spring-cloud-stream-binder-rabbit", "org.springframework.cloud", "spring-cloud-stream-binder-rabbit").withoutVersion()
+        library("spring-cloud-stream-starter-rabbit", "org.springframework.cloud", "spring-cloud-starter-stream-rabbit").withoutVersion()
+
+        library("spring-boot-test-starter-core", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
+        library("spring-boot-test-container-testcontainers", "org.springframework.boot", "spring-boot-testcontainers").withoutVersion()
+        library("spring-cloud-test-stream-binder", "org.springframework.cloud", "spring-cloud-stream-test-binder").withoutVersion()
+
+        bundle(
+            "spring-cloud-stream-rabbit-bundle",
+            listOf(
+                "spring-cloud-stream-binder-rabbit",
+                "spring-cloud-stream-starter-rabbit",
+            ),
+        )
+
+        //endregion SPRING
+
+        //region DETEKT
+
+        library("detekt-formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detektFormat")
+
+        //endregion DETEKT
+
         //region TESTS
 
         library("awaitility-base", "org.awaitility", "awaitility").versionRef("awaitility")
         library("awaitility-kotlin", "org.awaitility", "awaitility-kotlin").versionRef("awaitility")
 
         library("testcontainers-generic", "org.testcontainers", "testcontainers").versionRef("testcontainers")
+        library("testcontainers-junit", "org.testcontainers", "testcontainers").versionRef("testcontainers")
 
         //endregion TESTS
-
-        //region SPRING
-
-        library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
-
-        library("spring-boot-starter-web", "org.springframework.boot", "spring-boot-starter-web").withoutVersion()
-        library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
-        library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
-
-        library("spring-boot-starter-test", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
-
-        library("detekt-formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detektFormat")
-
-        //endregion SPRING
 
         //endregion DEPENDENCIES
 

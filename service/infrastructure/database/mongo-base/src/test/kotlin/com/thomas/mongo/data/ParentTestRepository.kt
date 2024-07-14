@@ -1,13 +1,11 @@
 package com.thomas.mongo.data
 
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.thomas.mongo.repository.MongoRepository
 import java.util.UUID
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 
 class ParentTestRepository(
     database: MongoDatabase,
@@ -27,30 +25,28 @@ class ParentTestRepository(
 
     fun findFullTestEntity(
         id: UUID
-    ): FullTestEntity? = runBlocking {
-        fullCollection.aggregate(
-            listOf(
-                Aggregates.lookup(
-                    CHILD_COLLECTION_NAME,
-                    ParentTestEntity::childIds.name,
-                    ChildTestEntity::id.name,
-                    CHILD_AGGREGATOR_NAME
-                ),
-                Aggregates.unwind(CHILD_AGGREGATOR_NAME.mongoParameter),
-                Aggregates.match(
-                    Filters.and(
-                        Filters.eq(ParentTestEntity::id.name, id),
-                        Filters.eq("$CHILD_AGGREGATOR_NAME.${ChildTestEntity::isActive.name}", true)
-                    )
-                ),
-                Aggregates.group(
-                    OBJECT_ID_PARAMETER_NAME,
-                    Accumulators.first(FullTestEntity::parentId.name, ParentTestEntity::id.mongoParameter),
-                    Accumulators.first(FullTestEntity::parentName.name, ParentTestEntity::parentName.mongoParameter),
-                    Accumulators.push(FullTestEntity::childList.name, CHILD_AGGREGATOR_NAME.mongoParameter)
+    ): FullTestEntity? = fullCollection.aggregate(
+        listOf(
+            Aggregates.lookup(
+                CHILD_COLLECTION_NAME,
+                ParentTestEntity::childIds.name,
+                ChildTestEntity::id.name,
+                CHILD_AGGREGATOR_NAME
+            ),
+            Aggregates.unwind(CHILD_AGGREGATOR_NAME.mongoParameter),
+            Aggregates.match(
+                Filters.and(
+                    Filters.eq(ParentTestEntity::id.name, id),
+                    Filters.eq("$CHILD_AGGREGATOR_NAME.${ChildTestEntity::isActive.name}", true)
                 )
+            ),
+            Aggregates.group(
+                OBJECT_ID_PARAMETER_NAME,
+                Accumulators.first(FullTestEntity::parentId.name, ParentTestEntity::id.mongoParameter),
+                Accumulators.first(FullTestEntity::parentName.name, ParentTestEntity::parentName.mongoParameter),
+                Accumulators.push(FullTestEntity::childList.name, CHILD_AGGREGATOR_NAME.mongoParameter)
             )
-        ).firstOrNull()
-    }
+        )
+    ).firstOrNull()
 
 }
