@@ -53,3 +53,7 @@ findProject(":module:management:management-domain")?.name = "management-domain"
 
 include("module:management:management-spring")
 findProject(":module:management:management-spring")?.name = "management-spring"
+include("module:authentication:authentication-data")
+findProject(":module:authentication:authentication-data")?.name = "authentication-data"
+include("module:authentication:authentication-domain")
+findProject(":module:authentication:authentication-domain")?.name = "authentication-domain"
