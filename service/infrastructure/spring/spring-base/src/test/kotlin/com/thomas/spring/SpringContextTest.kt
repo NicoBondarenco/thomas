@@ -6,78 +6,26 @@ import com.thomas.spring.data.response.ExceptionResponse
 import com.thomas.spring.extension.toHttpStatus
 import com.thomas.spring.i18n.SpringMessageI18N.exceptionInvalidArgumentParameterErrorsMessage
 import com.thomas.spring.i18n.SpringMessageI18N.requestRequestParameterValidationConvertError
+import com.thomas.spring.properties.PaginationProperties
 import com.thomas.spring.resource.ExceptionRequest
 import com.thomas.spring.resource.ValidateRequest
 import com.thomas.spring.util.TokenBuilder
 import com.thomas.spring.util.activeUser
-import java.time.Duration
-import org.awaitility.kotlin.atMost
-import org.awaitility.kotlin.await
-import org.awaitility.kotlin.until
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.HttpStatus.UNAUTHORIZED
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.junit4.SpringRunner
-import org.testcontainers.containers.GenericContainer
+import org.springframework.test.context.ActiveProfiles
 
-@RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@ContextConfiguration
-class SpringContextTest {
-
-    companion object {
-        private const val DATABASE: String = "mongo_database"
-        private const val USERNAME: String = "mongo_username"
-        private const val PASSWORD: String = "mongo_password"
-        private const val PORT: Int = 27017
-
-        private val MONGO_CONTAINER = GenericContainer("mongo:6.0.1")
-            .withEnv("MONGO_INITDB_DATABASE", DATABASE)
-            .withEnv("MONGO_INITDB_ROOT_USERNAME", USERNAME)
-            .withEnv("MONGO_INITDB_ROOT_PASSWORD", PASSWORD)
-            .withExposedPorts(PORT)
-
-        @JvmStatic
-        @BeforeAll
-        fun beforeAll() {
-            MONGO_CONTAINER.start()
-            await atMost Duration.ofSeconds(30) until { MONGO_CONTAINER.isRunning }
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun afterAll() {
-            MONGO_CONTAINER.stop()
-            await atMost Duration.ofSeconds(30) until { !MONGO_CONTAINER.isRunning }
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun registerDBContainer(registry: DynamicPropertyRegistry) {
-            registry.add("security.database.connectionUrl") { "mongodb://${MONGO_CONTAINER.host}:${MONGO_CONTAINER.getMappedPort(PORT)}" }
-            registry.add("security.database.databaseName") { DATABASE }
-            registry.add("security.database.connectionUsername") { USERNAME }
-            registry.add("security.database.connectionPassword") { PASSWORD }
-            registry.add("security.database.apiVersion") { "V1" }
-        }
-
-    }
+@ActiveProfiles("test")
+class SpringContextTest : SpringContextBaseTest() {
 
     @Autowired
     private lateinit var tokenBuilder: TokenBuilder
@@ -85,12 +33,21 @@ class SpringContextTest {
     @Autowired
     private lateinit var restBuilder: TestRestTemplateBuilder
 
+    @Autowired
+    private lateinit var paginationProperties: PaginationProperties
+
     @LocalServerPort
     private var port: Int = -1
 
     @Test
     fun `Context loads`() {
         assertTrue(MONGO_CONTAINER.isRunning)
+    }
+
+    @Test
+    fun `WHEN pageable properties are informed THEN should use the informed values`() {
+        assertEquals(20, paginationProperties.default.pageSize)
+        assertEquals(1, paginationProperties.default.pageNumber)
     }
 
     @ParameterizedTest

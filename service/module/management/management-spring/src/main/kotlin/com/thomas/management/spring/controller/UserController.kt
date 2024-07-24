@@ -79,5 +79,4 @@ class UserController(
         @RequestBody request: UserActiveRequest
     ): ResponseEntity<UserPageResponse> = accepted().body(userService.active(id, request))
 
-
 }

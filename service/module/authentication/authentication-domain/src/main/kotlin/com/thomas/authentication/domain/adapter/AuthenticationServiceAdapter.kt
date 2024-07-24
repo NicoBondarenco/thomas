@@ -4,7 +4,7 @@ import com.thomas.authentication.domain.AuthenticationService
 import com.thomas.authentication.domain.model.request.LoginRequest
 import com.thomas.authentication.domain.model.response.AccessTokenResponse
 
-class AuthenticationServiceAdapter: AuthenticationService {
+class AuthenticationServiceAdapter : AuthenticationService {
 
     override fun login(
         request: LoginRequest,

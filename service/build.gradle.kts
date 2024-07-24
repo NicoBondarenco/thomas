@@ -110,23 +110,7 @@ allprojects {
         implementation(libs.log4j.slf4j2)
         implementation(libs.log4j.kotlin)
 
-        testImplementation(libs.junit.pioneer)
-        testImplementation(libs.junit.jupiter.api)
-        testImplementation(libs.junit.jupiter.engine)
-        testImplementation(libs.junit.jupiter.params)
-
-        testImplementation(libs.mockk)
-
-        testImplementation(libs.system.stubs.core)
-        testImplementation(libs.system.stubs.jupiter)
-
-        testImplementation(libs.mockito.core)
-        testImplementation(libs.mockito.inline)
-        testImplementation(libs.mockito.junit)
-        testImplementation(libs.mockito.kotlin)
-
-        testImplementation(libs.skyscreamer.jsonassert)
-
+        testImplementation(libs.bundles.tests.base.dependencies.bundle)
     }
 
     jacoco {

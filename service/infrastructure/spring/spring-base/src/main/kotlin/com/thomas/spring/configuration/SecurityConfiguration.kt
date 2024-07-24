@@ -60,6 +60,7 @@ class SecurityConfiguration {
             .requestMatchers("/v3/api-docs/**").permitAll()
             .requestMatchers("/configuration/**").permitAll()
             .requestMatchers("/swagger-resources/**").permitAll()
+            .requestMatchers("/swagger-resources").permitAll()
             .requestMatchers("/swagger-ui/**").permitAll()
             .requestMatchers("/swagger-ui.html").permitAll()
             .requestMatchers("/webjars/**").permitAll()

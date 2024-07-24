@@ -49,8 +49,6 @@ class AuthenticationFilter(
         this.currentRoles().map { SimpleGrantedAuthority(it.name) }
 
     private fun HttpServletRequest.bearerToken() =
-        this.getHeader(AUTHORIZATION)?.takeIf {
-            it.trim().isNotEmpty() && it.startsWith("Bearer")
-        }?.replace("Bearer", "")?.trim()
+        this.getHeader(AUTHORIZATION)?.replaceFirst("Bearer", "")?.trim()
 
 }

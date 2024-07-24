@@ -57,9 +57,9 @@ class UserExposedRepository(
             predicates = listOfNotNull(
                 keywordText?.let {
                     (UserTable.documentNumber like it.toLikeParameter()) or
-                            (UserTable.firstName.unaccentLower() like it.unaccentedLower().toLikeParameter()) or
-                            (UserTable.lastName.unaccentLower() like it.unaccentedLower().toLikeParameter()) or
-                            (UserTable.mainEmail.unaccentLower() like it.unaccentedLower().toLikeParameter())
+                        (UserTable.firstName.unaccentLower() like it.unaccentedLower().toLikeParameter()) or
+                        (UserTable.lastName.unaccentLower() like it.unaccentedLower().toLikeParameter()) or
+                        (UserTable.mainEmail.unaccentLower() like it.unaccentedLower().toLikeParameter())
                 },
                 isActive?.let { UserTable.isActive eq it },
                 createdStart?.let { UserTable.createdAt greaterEq it },

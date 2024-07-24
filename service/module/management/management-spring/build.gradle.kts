@@ -41,6 +41,8 @@ dependencies {
     implementation(libs.postgresql)
     implementation(libs.bundles.mongodb.sync.bundle)
 
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
     testImplementation(libs.spring.boot.test.starter.core)
     testImplementation(libs.spring.boot.test.container.testcontainers)
 

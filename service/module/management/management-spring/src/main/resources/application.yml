@@ -155,3 +155,29 @@ management:
 
   service:
     signup-enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    info:
+      enabled: true
+    beans:
+      enabled: true
+    health:
+      enabled: false
+      probes:
+        enabled: true
+    env:
+      show-values: ALWAYS
+      enabled: true
+    configprops:
+      enabled: true
+      show-values: ALWAYS
+  info:
+    java:
+      enabled: true
+    env:
+      enabled: true

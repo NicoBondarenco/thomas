@@ -10,5 +10,4 @@ object ManagementAPIConfiguration {
 
     const val PRIVATE_API_V1_GROUPS = "$PRIVATE_API_V1_PREFIX/groups"
 
-
 }

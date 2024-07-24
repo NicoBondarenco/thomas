@@ -1,5 +1,6 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.core.aop.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.throws
@@ -45,7 +46,7 @@ import com.thomas.management.message.event.UserUpsertedEvent
 import java.time.OffsetDateTime
 import java.util.UUID
 
-class UserServiceAdapter(
+open class UserServiceAdapter(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
     private val eventProducer: UserEventProducer,
@@ -78,11 +79,13 @@ class UserServiceAdapter(
         findByIdWithGroupsOrThrows(id).toUserDetailResponse()
     }
 
+    @MethodLog
     override fun signup(
         request: UserSignupRequest,
     ): UserPageResponse = request.takeIf {
         serviceProperties.signupEnabled
     }?.toUserEntity()?.apply {
+        this.validateData()
         currentUser = this.toSecurityUser()
         userRepository.signup(this)
         eventProducer.sendSignupEvent(this.toUserUpsertedEvent())
@@ -144,7 +147,7 @@ class UserServiceAdapter(
     ): UserCompleteEntity = userRepository.one(id)
         ?: throw UserNotFoundException(id)
 
-    private fun UserCompleteEntity.validateData() = listOf<EntityValidation<UserBaseEntity>>(
+    private fun UserBaseEntity.validateData() = listOf<EntityValidation<UserBaseEntity>>(
         EntityValidation(
             UserBaseEntity::mainEmail.name.toSnakeCase(),
             { managementUserValidationMainEmailAlreadyUsed() },

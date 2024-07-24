@@ -87,6 +87,8 @@ catalog {
 
         version("springCloud", "2023.0.1")
 
+        version("springdocOpenapi", "2.6.0")
+
         version("detektFormat", "1.23.3")
 
         //endregion DEPENDENCIES
@@ -148,6 +150,24 @@ catalog {
 
         library("skyscreamer-jsonassert", "org.skyscreamer", "jsonassert").versionRef("jsonassert")
 
+        bundle(
+            "tests-base-dependencies-bundle",
+            listOf(
+                "junit-pioneer",
+                "junit-jupiter-api",
+                "junit-jupiter-engine",
+                "junit-jupiter-params",
+                "mockito-core",
+                "mockito-inline",
+                "mockito-junit",
+                "mockito-kotlin",
+                "mockk",
+                "system-stubs-core",
+                "system-stubs-jupiter",
+                "skyscreamer-jsonassert",
+            ),
+        )
+
         //endregion DEFAULTS
 
         //region UTILS
@@ -196,16 +216,32 @@ catalog {
 
         //region SERIALIZATION
 
-        library("jackson-core", "com.fasterxml.jackson.core", "jackson-core").versionRef("jackson")
         library("jackson-annotations", "com.fasterxml.jackson.core", "jackson-annotations").versionRef("jackson")
+        library("jackson-core", "com.fasterxml.jackson.core", "jackson-core").versionRef("jackson")
         library("jackson-databind", "com.fasterxml.jackson.core", "jackson-databind").versionRef("jackson")
-        library("jackson-module-parameter", "com.fasterxml.jackson.module", "jackson-module-parameter-names").versionRef("jackson")
-        library("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin").versionRef("jackson")
-        library("jackson-module-jaxb", "com.fasterxml.jackson.module", "jackson-module-jaxb-annotations").versionRef("jackson")
-        library("jackson-datatype-jdk8", "com.fasterxml.jackson.datatype", "jackson-datatype-jdk8").versionRef("jackson")
-        library("jackson-datatype-jsr310", "com.fasterxml.jackson.datatype", "jackson-datatype-jsr310").versionRef("jackson")
         library("jackson-dataformat-yaml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml").versionRef("jackson")
         library("jackson-dataformat-xml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-xml").versionRef("jackson")
+        library("jackson-datatype-jdk8", "com.fasterxml.jackson.datatype", "jackson-datatype-jdk8").versionRef("jackson")
+        library("jackson-datatype-jsr310", "com.fasterxml.jackson.datatype", "jackson-datatype-jsr310").versionRef("jackson")
+        library("jackson-module-jaxb", "com.fasterxml.jackson.module", "jackson-module-jaxb-annotations").versionRef("jackson")
+        library("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin").versionRef("jackson")
+        library("jackson-module-parameter", "com.fasterxml.jackson.module", "jackson-module-parameter-names").versionRef("jackson")
+
+        bundle(
+            "jackson-all-bundle",
+            listOf(
+                "jackson-annotations",
+                "jackson-core",
+                "jackson-databind",
+                "jackson-dataformat-yaml",
+                "jackson-dataformat-xml",
+                "jackson-datatype-jdk8",
+                "jackson-datatype-jsr310",
+                "jackson-module-jaxb",
+                "jackson-module-kotlin",
+                "jackson-module-parameter",
+            ),
+        )
 
         //endregion SERIALIZATION
 
@@ -214,6 +250,8 @@ catalog {
         library("spring-boot-starter-web", "org.springframework.boot", "spring-boot-starter-web").withoutVersion()
         library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
         library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
+        library("spring-boot-starter-aop", "org.springframework.boot", "spring-boot-starter-aop").withoutVersion()
+        library("spring-boot-starter-actuator", "org.springframework.boot", "spring-boot-starter-actuator").withoutVersion()
 
         library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
 
@@ -225,6 +263,9 @@ catalog {
         library("spring-boot-test-starter-core", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
         library("spring-boot-test-container-testcontainers", "org.springframework.boot", "spring-boot-testcontainers").withoutVersion()
         library("spring-cloud-test-stream-binder", "org.springframework.cloud", "spring-cloud-stream-test-binder").withoutVersion()
+
+        library("springdoc-openapi-starter-webmvc-ui", "org.springdoc", "springdoc-openapi-starter-webmvc-ui").versionRef("springdocOpenapi")
+        library("springdoc-openapi-starter-common-ui", "org.springdoc", "springdoc-openapi-starter-common").versionRef("springdocOpenapi")
 
         bundle(
             "spring-cloud-stream-rabbit-bundle",
