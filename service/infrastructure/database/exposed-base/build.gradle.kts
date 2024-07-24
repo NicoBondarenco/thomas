@@ -20,14 +20,7 @@ dependencies {
     implementation(libs.exposed.javatime)
     implementation(libs.exposed.json)
 
-    implementation(libs.jackson.core)
-    implementation(libs.jackson.annotations)
-    implementation(libs.jackson.databind)
-    implementation(libs.jackson.module.parameter)
-    implementation(libs.jackson.module.kotlin)
-    implementation(libs.jackson.module.jaxb)
-    implementation(libs.jackson.datatype.jdk8)
-    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.bundles.jackson.all.bundle)
 
     testImplementation(libs.h2)
     testImplementation(libs.postgresql)
@@ -35,6 +28,12 @@ dependencies {
     testImplementation(libs.awaitility.base)
     testImplementation(libs.awaitility.kotlin)
 
-    testImplementation(libs.testcontainers.generic)
+    testImplementation(libs.testcontainers.generic) { removeJackson() }
 
+}
+
+fun ExternalModuleDependency.removeJackson() {
+    libs.bundles.jackson.all.bundle.get().forEach {
+        exclude(group = it.module.group, module = it.module.name)
+    }
 }

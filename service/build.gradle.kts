@@ -134,3 +134,9 @@ allprojects {
     }
 
 }
+
+fun ExternalModuleDependency.removeJackson() {
+    libs.bundles.jackson.all.bundle.get().forEach {
+        exclude(group = it.module.group, module = it.module.name)
+    }
+}

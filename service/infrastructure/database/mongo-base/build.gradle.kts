@@ -11,9 +11,17 @@ dependencies {
 
     implementation(libs.bundles.mongodb.sync.bundle)
 
-    testImplementation(libs.testcontainers.generic)
+    testImplementation(libs.testcontainers.generic) { removeJackson() }
+
+    testImplementation(libs.bundles.jackson.all.bundle)
 
     testImplementation(libs.awaitility.base)
     testImplementation(libs.awaitility.kotlin)
 
+}
+
+fun ExternalModuleDependency.removeJackson() {
+    libs.bundles.jackson.all.bundle.get().forEach {
+        exclude(group = it.module.group, module = it.module.name)
+    }
 }
