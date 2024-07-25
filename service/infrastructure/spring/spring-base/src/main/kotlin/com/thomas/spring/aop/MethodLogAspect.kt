@@ -43,7 +43,7 @@ class MethodLogAspect(
         val logger = point.logger()
         val annotation = point.logAnnotation()
         val result = point.proceed()
-        logger.info("${annotation.userIdLog()}${point.methodLog()}${point.parametersLog(annotation)}${annotation.resultLog(result)}")
+        logger.log(annotation.logLevel.level, "${annotation.userIdLog()}${point.methodLog()}${point.parametersLog(annotation)}${annotation.resultLog(result)}")
         return result
     }
 

@@ -2,6 +2,8 @@ package com.thomas.spring.aop
 
 import com.thomas.core.aop.MaskField
 import com.thomas.core.aop.MethodLog
+import com.thomas.core.aop.MethodLogLevel
+import com.thomas.core.aop.MethodLogLevel.INFO
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.Gender.CIS_MALE
@@ -24,19 +26,23 @@ import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextFloat
 import kotlin.random.Random.Default.nextInt
 import kotlin.random.Random.Default.nextLong
+import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.kotlin.KotlinLogger
 import org.apache.logging.log4j.kotlin.cachedLoggerOf
 import org.apache.logging.log4j.kotlin.loggerOf
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
@@ -106,19 +112,29 @@ class MethodLogAspectTest {
     )
     private val mapper = JacksonConfiguration().aspectMapper()
     private val logger = mockk<KotlinLogger>()
-    private var logContent = ""
     private val aspect = MethodLogAspect(mapper)
+
+    private var logContent = ""
+    private var logLevel = Level.ALL
 
     @BeforeAll
     fun beforeAll() {
         currentUser = user
-        every { logger.info(any<String>()) } answers {
-            val log = it.invocation.args[0] as String
+        every { logger.log(any<Level>(), any<String>()) } answers {
+            val level = it.invocation.args[0] as Level
+            val log = it.invocation.args[1] as String
             logContent = log
+            logLevel = level
             realLogger.info(log)
         }
         mockkStatic("org.apache.logging.log4j.kotlin.LoggingFactoryKt")
         every { cachedLoggerOf(any()) } returns logger
+    }
+
+    @BeforeEach
+    fun beforeEach() {
+        logContent = ""
+        logLevel = Level.ALL
     }
 
     @Test
@@ -174,6 +190,7 @@ class MethodLogAspectTest {
 
         aspect.methodLogging(point)
 
+        assertEquals(logLevel, Level.INFO)
         assertTrue(logContent.startsWith("[UserId=${user.userId}] - "))
         assertTrue(logContent.contains("${MethodLogAspectTest::class.java.name}.simpleMethod: Person"))
         assertTrue(logContent.contains("parameter[0] -> personId: UUID = ************************************"))
@@ -299,8 +316,24 @@ class MethodLogAspectTest {
         assertFalse(logContent.contains("[UserId=${user.userId}] - "))
     }
 
+    @ParameterizedTest
+    @EnumSource(MethodLogLevel::class)
+    fun `Log method by level`(level: MethodLogLevel) {
+        val result = Person()
+        val point = configureJoinPoint(
+            logLevel = level,
+            returnArgument = result,
+            returnType = Person::class.java,
+        )
+
+        aspect.methodLogging(point)
+
+        assertEquals(logLevel, level.level)
+    }
+
     @Suppress("LongParameterList")
     private fun configureJoinPoint(
+        logLevel: MethodLogLevel = INFO,
         logParameters: Boolean = true,
         logResult: Boolean = true,
         maskResult: Boolean = true,
@@ -312,6 +345,7 @@ class MethodLogAspectTest {
     ): ProceedingJoinPoint = mockk<ProceedingJoinPoint>().apply {
         val method = mockk<Method>().also {
             every { it.getAnnotation(MethodLog::class.java) } returns MethodLog(
+                logLevel = logLevel,
                 logParameters = logParameters,
                 logResult = logResult,
                 maskResult = maskResult,
