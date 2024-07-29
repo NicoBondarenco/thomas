@@ -4,6 +4,8 @@ import com.thomas.authentication.data.entity.UserAuthenticationCompleteEntity
 import com.thomas.authentication.data.entity.UserAuthenticationEntity
 import com.thomas.core.model.security.SecurityUser
 import com.thomas.management.message.event.UserUpsertedEvent
+import java.time.OffsetDateTime.now
+import java.time.ZoneOffset.UTC
 
 private const val DEFAULT_PASSWORD_PREFIX = "Pass@"
 
@@ -61,4 +63,11 @@ fun UserAuthenticationCompleteEntity.toSecurityUser() = SecurityUser(
     isActive = this.isActive,
     userRoles = this.userRoles.toList(),
     userGroups = this.userGroups.map { it.toSecurityGroup() },
+)
+
+fun UserAuthenticationEntity.changePassword(
+    passwordHash: String
+) = this.copy(
+    passwordHash = passwordHash,
+    updatedAt = now(UTC),
 )

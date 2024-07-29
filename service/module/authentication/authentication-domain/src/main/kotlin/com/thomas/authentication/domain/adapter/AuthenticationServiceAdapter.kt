@@ -33,7 +33,7 @@ class AuthenticationServiceAdapter(
         user.validPassword(request.password) && user.isActive
     }?.toAccessTokenResponse() ?: throw InvalidCredentialsException()
 
-    fun refresh(
+    override fun refresh(
         request: RefreshTokenRequest
     ): AccessTokenResponse = refreshRepository.findByToken(request.refreshToken)?.takeIf {
         it.validUntil.isBefore(now(UTC)) && it.userAuthentication.isActive

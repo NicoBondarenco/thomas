@@ -14,5 +14,8 @@ object AuthenticationDomainMessageI18N : BundleResolver("strings/authentication-
     fun authenticationUserAuthenticationInvalidCredentialsUsernamePassword() =
         getFormattedMessage("authentication.user-authentication.invalid-credentials.username-password")
 
+    fun authenticationUserAuthenticationInvalidPasswordMinimumRequirements() =
+        getFormattedMessage("authentication.user-authentication.invalid-password.minimum-requirements")
+
 
 }
