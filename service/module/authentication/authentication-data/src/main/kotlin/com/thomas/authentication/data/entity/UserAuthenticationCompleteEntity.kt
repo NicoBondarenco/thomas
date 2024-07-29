@@ -1,6 +1,5 @@
 package com.thomas.authentication.data.entity
 
-import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.security.SecurityRole
 import java.time.LocalDate
@@ -21,7 +20,6 @@ data class UserAuthenticationCompleteEntity(
     override val birthDate: LocalDate? = null,
     override val userGender: Gender? = null,
     override val isActive: Boolean = true,
-    override val creatorId: UUID = currentUser.userId,
     override val passwordHash: String,
     override val passwordSalt: String,
     override val userRoles: Set<SecurityRole>,

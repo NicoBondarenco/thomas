@@ -24,11 +24,17 @@ findProject(":infrastructure:authentication:authentication-base")?.name = "authe
 include("infrastructure:authentication:authentication-jwt-auth0")
 findProject(":infrastructure:authentication:authentication-jwt-auth0")?.name = "authentication-jwt-auth0"
 
+include("infrastructure:database:exposed-base")
+findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
+
 include("infrastructure:database:mongo-base")
 findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
 
-include("infrastructure:database:exposed-base")
-findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
+include("infrastructure:hash:hash-base")
+findProject(":infrastructure:hash:hash-base")?.name = "hash-base"
+
+include("infrastructure:hash:hash-bouncy-castle")
+findProject(":infrastructure:hash:hash-bouncy-castle")?.name = "hash-bouncy-castle"
 
 include("infrastructure:message:management-message")
 findProject(":infrastructure:message:management-message")?.name = "management-message"
@@ -53,7 +59,15 @@ findProject(":module:management:management-domain")?.name = "management-domain"
 
 include("module:management:management-spring")
 findProject(":module:management:management-spring")?.name = "management-spring"
+
 include("module:authentication:authentication-data")
 findProject(":module:authentication:authentication-data")?.name = "authentication-data"
+
 include("module:authentication:authentication-domain")
 findProject(":module:authentication:authentication-domain")?.name = "authentication-domain"
+
+include("module:authentication:authentication-tokenizer")
+findProject(":module:authentication:authentication-tokenizer")?.name = "authentication-tokenizer"
+
+include("module:authentication:authentication-tokenizer-auth0")
+findProject(":module:authentication:authentication-tokenizer-auth0")?.name = "authentication-tokenizer-auth0"

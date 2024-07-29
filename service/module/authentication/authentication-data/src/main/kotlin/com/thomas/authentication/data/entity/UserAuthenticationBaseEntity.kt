@@ -5,7 +5,6 @@ import com.thomas.core.model.general.Gender
 import com.thomas.core.model.security.SecurityRole
 import java.time.LocalDate
 import java.time.OffsetDateTime
-import java.util.UUID
 
 abstract class UserAuthenticationBaseEntity : BaseEntity<UserAuthenticationBaseEntity>() {
 
@@ -18,7 +17,6 @@ abstract class UserAuthenticationBaseEntity : BaseEntity<UserAuthenticationBaseE
     abstract val birthDate: LocalDate?
     abstract val userGender: Gender?
     abstract val isActive: Boolean
-    abstract val creatorId: UUID
     abstract val passwordHash: String
     abstract val passwordSalt: String
     abstract val userRoles: Set<SecurityRole>
@@ -36,7 +34,6 @@ abstract class UserAuthenticationBaseEntity : BaseEntity<UserAuthenticationBaseE
         birthDate=$birthDate,
         userGender=$userGender,
         isActive=$isActive,
-        creatorId=$creatorId,
         createdAt=$createdAt,
         updatedAt=$updatedAt,
         userRoles=${userRoles.joinToString(", ")}

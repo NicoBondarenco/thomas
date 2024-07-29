@@ -27,4 +27,26 @@ class CollectionExtensionTest {
         assertEquals(1, list.size)
     }
 
+    @Test
+    fun `When condition is true, should add element`() {
+        val list = mutableListOf(0)
+        list.addIf(4) { list.sum() < 10}
+        assertTrue(list.contains(4))
+        list.addIf(2) { list.sum() < 10}
+        assertTrue(list.contains(2))
+        list.addIf(5) { list.sum() < 10}
+        assertTrue(list.contains(5))
+    }
+
+    @Test
+    fun `When condition is false, should add element`() {
+        val list = mutableListOf(10)
+        list.addIf(4) { list.sum() < 10}
+        assertFalse(list.contains(4))
+        list.addIf(2) { list.sum() < 10}
+        assertFalse(list.contains(2))
+        list.addIf(5) { list.sum() < 10}
+        assertFalse(list.contains(5))
+    }
+
 }
