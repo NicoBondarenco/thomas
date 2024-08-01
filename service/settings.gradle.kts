@@ -39,6 +39,9 @@ findProject(":infrastructure:hash:hash-bouncy-castle")?.name = "hash-bouncy-cast
 include("infrastructure:message:management-message")
 findProject(":infrastructure:message:management-message")?.name = "management-message"
 
+include("infrastructure:message:notification-message")
+findProject(":infrastructure:message:notification-message")?.name = "notification-message"
+
 include("infrastructure:spring:spring-base")
 findProject(":infrastructure:spring:spring-base")?.name = "spring-base"
 
