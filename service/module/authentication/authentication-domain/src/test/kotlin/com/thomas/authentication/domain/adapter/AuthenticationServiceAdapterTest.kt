@@ -211,4 +211,22 @@ class AuthenticationServiceAdapterTest {
         assertEquals(authenticationUserAuthenticationInvalidCredentialsRefreshToken(), exception.message)
     }
 
+    @Test
+    fun `WHEN refresh token with inexistent token THEN should throws InvalidRefreshTokenException`() {
+        val refresh = userCompleteAuthentication.copy(
+            isActive = false
+        ).let {
+            refreshTokenCompleteEntity.copy(
+                id = it.id,
+                userAuthentication = it,
+            )
+        }
+
+        val exception = assertThrows<InvalidRefreshTokenException> {
+            adapter.refresh(RefreshTokenRequest((refresh.refreshToken)))
+        }
+
+        assertEquals(authenticationUserAuthenticationInvalidCredentialsRefreshToken(), exception.message)
+    }
+
 }
