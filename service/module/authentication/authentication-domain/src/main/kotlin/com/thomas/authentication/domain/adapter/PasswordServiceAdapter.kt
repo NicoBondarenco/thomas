@@ -14,6 +14,7 @@ import com.thomas.authentication.domain.model.request.ChangePasswordRequest
 import com.thomas.authentication.domain.model.request.ForgotPasswordRequest
 import com.thomas.authentication.domain.model.request.PasswordResetRequest
 import com.thomas.authentication.domain.properties.AuthenticationProperties
+import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.throws
 import com.thomas.hash.Hasher
@@ -38,8 +39,10 @@ class PasswordServiceAdapter(
 
     override fun changePassword(
         request: ChangePasswordRequest
-    ) = request.newPassword.let { password ->
-        findByIdOrThrows(currentUser.userId).updatePassword(password)
+    ) = authorized {
+        request.newPassword.let { password ->
+            findByIdOrThrows(currentUser.userId).updatePassword(password)
+        }
     }
 
     override fun forgotPassword(request: ForgotPasswordRequest) {

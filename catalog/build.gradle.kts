@@ -27,12 +27,12 @@ catalog {
 
         //region PLUGINS
 
-        version("kotlin", "1.9.23")
+        version("kotlin", "2.0.0")
         version("kotlinx-coroutines", "1.8.0")
         version("jvm", "21")
         version("target", "VERSION_21")
 
-        version("ksp", "1.9.23-1.0.19")
+        version("ksp", "2.0.0-1.0.23")
 
         version("flywayPlugin", "10.11.0")
 

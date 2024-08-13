@@ -13,4 +13,5 @@ dependencies {
     implementation(project(":module:authentication:authentication-data"))
     implementation(project(":module:authentication:authentication-tokenizer"))
 
+    testImplementation(testFixtures(project(":core")))
 }

@@ -8,6 +8,7 @@ import com.thomas.authentication.data.repository.RefreshTokenRepository
 import com.thomas.authentication.data.repository.UserAuthenticationRepository
 import com.thomas.authentication.domain.AuthenticationService
 import com.thomas.authentication.domain.exception.InvalidCredentialsException
+import com.thomas.authentication.domain.exception.InvalidRefreshTokenException
 import com.thomas.authentication.domain.model.extension.toSecurityUser
 import com.thomas.authentication.domain.model.request.LoginRequest
 import com.thomas.authentication.domain.model.request.RefreshTokenRequest
@@ -36,8 +37,8 @@ class AuthenticationServiceAdapter(
     override fun refresh(
         request: RefreshTokenRequest
     ): AccessTokenResponse = refreshRepository.findByToken(request.refreshToken)?.takeIf {
-        it.validUntil.isBefore(now(UTC)) && it.userAuthentication.isActive
-    }?.toAccessTokenResponse() ?: throw InvalidCredentialsException()
+        it.validUntil.isAfter(now(UTC)) && it.userAuthentication.isActive
+    }?.toAccessTokenResponse() ?: throw InvalidRefreshTokenException()
 
     private fun UserAuthenticationBaseEntity.validPassword(
         password: String
