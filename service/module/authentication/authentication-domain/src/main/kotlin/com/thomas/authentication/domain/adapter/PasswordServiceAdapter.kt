@@ -54,14 +54,14 @@ class PasswordServiceAdapter(
 
     override fun resetPassword(request: PasswordResetRequest) {
         resetRepository.findByToken(request.resetToken)?.takeIf {
-            it.validUntil.isBefore(now(UTC))
+            it.validUntil.isAfter(now(UTC))
         }?.userAuthentication?.updatePassword(request.newPassword)
             ?: throw InvalidResetTokenException()
     }
 
     private fun UserAuthenticationEntity.updatePassword(
         password: String
-    ) = this.apply {
+    ) = this.let {
         password.validatePassword()
         this.changePassword(hasher.hash(password, this.passwordSalt))
     }.update()

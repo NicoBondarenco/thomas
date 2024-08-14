@@ -1,5 +1,6 @@
 package com.thomas.authentication.event
 
+import com.thomas.authentication.data.entity.PasswordResetCompleteEntity
 import com.thomas.authentication.data.entity.RefreshTokenCompleteEntity
 import com.thomas.authentication.domain.model.request.LoginRequest
 import com.thomas.core.random.randomString
@@ -21,5 +22,16 @@ val refreshTokenCompleteEntity: RefreshTokenCompleteEntity
             validUntil = now(UTC).plusDays(1),
             createdAt = now(UTC),
             userAuthentication = userCompleteAuthentication.copy(id = it),
+        )
+    }
+
+val resetCompleteEntity: PasswordResetCompleteEntity
+    get() = randomUUID().let {
+        PasswordResetCompleteEntity(
+            id = it,
+            resetToken = randomString(15),
+            validUntil = now(UTC).plusDays(1),
+            createdAt = now(UTC),
+            userAuthentication = userAuthentication.copy(id = it),
         )
     }
