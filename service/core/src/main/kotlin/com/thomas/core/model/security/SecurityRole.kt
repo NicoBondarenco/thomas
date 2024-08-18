@@ -24,9 +24,7 @@ enum class SecurityRole(
     ROLE_GROUP_READ(4, 1, MANAGEMENT_GROUP, true),
     ROLE_GROUP_CREATE(5, 2, MANAGEMENT_GROUP, true),
     ROLE_GROUP_UPDATE(6, 3, MANAGEMENT_GROUP, true),
-    ROLE_GROUP_DELETE(7, 4, MANAGEMENT_GROUP, true),
-
-    ROLE_FINANCE_DATA(8, 1, FINANCE_DATA, true);
+    ROLE_GROUP_DELETE(7, 4, MANAGEMENT_GROUP, true);
 
     companion object {
         fun byCode(code: Int): SecurityRole? =

@@ -9,8 +9,7 @@ enum class SecurityRoleGroup(
 ) {
 
     MASTER(0),
-    MANAGEMENT(1),
-    FINANCE(2);
+    MANAGEMENT(1);
 
     val groupName: String
         get() = coreRolesGroupName(this.name.lowercase())

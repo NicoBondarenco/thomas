@@ -1,7 +1,6 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.i18n.BundleResolver
-import com.thomas.core.model.security.SecurityRoleGroup.FINANCE
 import com.thomas.core.model.security.SecurityRoleGroup.MANAGEMENT
 import com.thomas.core.model.security.SecurityRoleGroup.MASTER
 import com.thomas.core.model.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupDescription
@@ -14,8 +13,7 @@ enum class SecurityRoleSubgroup(
 
     MASTER_SUBGROUP(MASTER, 0),
     MANAGEMENT_USER(MANAGEMENT, 1),
-    MANAGEMENT_GROUP(MANAGEMENT, 2),
-    FINANCE_DATA(FINANCE, 3);
+    MANAGEMENT_GROUP(MANAGEMENT, 2);
 
     val subgroupName: String
         get() = coreRolesSubgroupName(this.name.lowercase())
