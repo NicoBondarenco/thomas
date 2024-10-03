@@ -1,3 +1,16 @@
+master.user@thomas.com
+thomas.service.keycloak@gmail.com
 Master password = v2Ojh=!RX;kl%+_O1cvS
 gmail pass keycloak dev = okbo ikii iadx fswq
 okboikiiiadxfswq
+smtp.gmail.com
+587
+
+Fusion-Auth
+DX1mx172KR6YMgwROQuib0X5VKHWA8IRyfuz0F-5GXOdxx3-gUa4TDgX
+
+client-id
+d9200088-1d32-4f0e-986b-8da1064bcaba
+client-secret
+Julh4r0f-vb3_yqj7-AH868dpimVe0oYLnm0Nr4I7dM
+

@@ -1,6 +1,7 @@
 package com.thomas.spring.resolver
 
 import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
@@ -63,14 +64,14 @@ class PageRequestResolverTest {
         every { request.getParameterValues("o") } returns pageSort
     }
 
-    private fun PageRequest.sortParameter() = this.pageSort.map {
+    private fun PageRequestData.sortParameter() = this.pageSort.map {
         "${it.sortField},${it.sortDirection}"
     }.toTypedArray()
 
     @Test
     fun `Resolver should supports PageRequest class`() {
         val method = mockk<MethodParameter> {
-            every { parameterType } returns PageRequest::class.java
+            every { parameterType } returns PageRequestData::class.java
         }
         assertTrue(resolver.supportsParameter(method))
     }

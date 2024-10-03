@@ -1,6 +1,6 @@
 package com.thomas.management.data.repository
 
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserEntity
@@ -17,7 +17,7 @@ interface UserRepository {
         createdEnd: OffsetDateTime? = null,
         updatedStart: OffsetDateTime? = null,
         updatedEnd: OffsetDateTime? = null,
-        pageable: PageRequest,
+        pageable: PageRequestData,
     ): PageResponse<UserEntity>
 
     fun one(

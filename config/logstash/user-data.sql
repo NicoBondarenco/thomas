@@ -1,0 +1,31 @@
+SELECT "u"."id"::TEXT,
+       "u"."first_name",
+       "u"."last_name",
+       "u"."main_email",
+       "u"."document_number",
+       "u"."phone_number",
+       "u"."profile_photo",
+       "u"."birth_date",
+       "u"."user_gender",
+       "u"."is_active",
+       "u"."creator_id"::TEXT,
+       "u"."created_at",
+       "u"."updated_at",
+       COALESCE(ARRAY_AGG("r"."role_authority") FILTER (WHERE "r"."role_authority" IS NOT NULL), '{}') AS "user_roles",
+       COALESCE(ARRAY_AGG("g"."group_id"::TEXT) FILTER (WHERE "g"."group_id" IS NOT NULL), '{}')       AS "user_groups"
+FROM "management"."user" "u"
+         LEFT JOIN "management"."user_role" "r" ON "u"."id" = "r"."user_id"
+         LEFT JOIN "management"."user_group" "g" ON "u"."id" = "g"."user_id"
+GROUP BY "u"."id",
+         "u"."first_name",
+         "u"."last_name",
+         "u"."main_email",
+         "u"."document_number",
+         "u"."phone_number",
+         "u"."profile_photo",
+         "u"."birth_date",
+         "u"."user_gender",
+         "u"."is_active",
+         "u"."creator_id",
+         "u"."created_at",
+         "u"."updated_at"

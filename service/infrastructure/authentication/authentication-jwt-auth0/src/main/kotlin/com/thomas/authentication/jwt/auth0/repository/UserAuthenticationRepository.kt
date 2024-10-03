@@ -5,13 +5,13 @@ import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
 import com.thomas.authentication.jwt.auth0.data.UserAuthentication
 import com.thomas.authentication.jwt.auth0.properties.JWTAuth0Properties
-import com.thomas.mongo.repository.MongoRepository
+import com.thomas.mongodb.sync.repository.MongoSyncRepository
 import java.util.UUID
 
 internal class UserAuthenticationRepository(
     database: MongoDatabase,
     configuration: JWTAuth0Properties
-) : MongoRepository<UserAuthentication>(
+) : MongoSyncRepository<UserAuthentication>(
     database,
     configuration.userCollection,
     UserAuthentication::class,

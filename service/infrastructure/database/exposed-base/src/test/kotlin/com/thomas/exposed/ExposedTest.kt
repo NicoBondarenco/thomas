@@ -1,7 +1,7 @@
 package com.thomas.exposed
 
 import com.thomas.core.context.SessionContextHolder.currentUser
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
@@ -388,7 +388,7 @@ abstract class ExposedTest {
     @Test
     fun `WHEN select a page without conditions THEN should return full page`() {
         val result = searchableRepository.searchPage(
-            PageRequest(
+            PageRequestData(
                 3,
                 5,
                 listOf(PageSort("int_value", ASC))
@@ -409,7 +409,7 @@ abstract class ExposedTest {
         val result = searchableRepository.searchPage(
             "jose",
             15,
-            PageRequest(
+            PageRequestData(
                 2,
                 4,
                 listOf(PageSort("int_value", DESC))
@@ -430,7 +430,7 @@ abstract class ExposedTest {
     @Test
     fun `WHEN select a page with invalid sort column THEN should return unsorted page`() {
         val result = searchableRepository.searchPage(
-            PageRequest(
+            PageRequestData(
                 3,
                 5,
                 listOf(PageSort("another_field", ASC))

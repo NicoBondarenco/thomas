@@ -14,7 +14,7 @@ function create_user_and_database() {
 EOSQL
   if [ -n "$script" ]; then
     echo "Running script $script for database $database"
-    psql -U "$owner" -d "$database" -a -f /home/"$script"
+    psql -U "$POSTGRES_USER" -d "$database" -a -f /home/"$script"
   fi
 }
 

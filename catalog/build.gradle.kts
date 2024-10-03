@@ -9,6 +9,7 @@ version = "1.0.0.final"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven(url = "https://repo.typedb.com/public/public-release/maven/")
 }
 
 publishing {
@@ -28,7 +29,7 @@ catalog {
         //region PLUGINS
 
         version("kotlin", "2.0.0")
-        version("kotlinx-coroutines", "1.8.0")
+        version("kotlinx-coroutines", "1.8.1")
         version("jvm", "21")
         version("target", "VERSION_21")
 
@@ -81,6 +82,8 @@ catalog {
 
         version("exposed", "0.49.0")
 
+        version("typedb", "2.28.0")
+
         version("auth0", "4.4.0")
 
         version("jackson", "2.17.0")
@@ -126,7 +129,20 @@ catalog {
         library("kotlin-reflect", "org.jetbrains.kotlin", "kotlin-reflect").versionRef("kotlin")
 
         library("kotlinx-coroutines-core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").versionRef("kotlinx-coroutines")
-        library("kotlinx-coroutines-reactive", "org.jetbrains.kotlinx", "kotlinx-coroutines-reactive").versionRef("kotlinx-coroutines")
+        library("kotlinx-coroutines-jvm", "org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm").versionRef("kotlinx-coroutines")
+        library("kotlinx-coroutines-slf4j", "org.jetbrains.kotlinx", "kotlinx-coroutines-slf4j").versionRef("kotlinx-coroutines")
+        library("kotlinx-coroutines-reactor", "org.jetbrains.kotlinx", "kotlinx-coroutines-reactor").versionRef("kotlinx-coroutines")
+        library("kotlinx-coroutines-test", "org.jetbrains.kotlinx", "kotlinx-coroutines-test").versionRef("kotlinx-coroutines")
+
+        bundle(
+            "kotlinx-coroutines-bundle",
+            listOf(
+                "kotlinx-coroutines-core",
+                "kotlinx-coroutines-jvm",
+                "kotlinx-coroutines-slf4j",
+                "kotlinx-coroutines-reactor",
+            ),
+        )
 
         library("log4j-api", "org.apache.logging.log4j", "log4j-api").versionRef("log4j")
         library("log4j-core", "org.apache.logging.log4j", "log4j-core").versionRef("log4j")
@@ -196,6 +212,9 @@ catalog {
 
         library("hikaricp", "com.zaxxer", "HikariCP").versionRef("hikari")
 
+        library("typedb-driver", "com.vaticle.typedb", "typedb-driver").versionRef("typedb")
+        library("typedb-lang", "com.vaticle.typeql", "typeql-lang").versionRef("typedb")
+
         bundle(
             "mongodb-sync-bundle",
             listOf(
@@ -203,6 +222,14 @@ catalog {
                 "mongodb-driver-sync",
                 "mongodb-bson-core",
                 "mongodb-bson-kotlin",
+            ),
+        )
+
+        bundle(
+            "typedb-bundle",
+            listOf(
+                "typedb-driver",
+                "typedb-lang",
             ),
         )
 

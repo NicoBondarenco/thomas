@@ -7,6 +7,5 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.reactive)
+    testImplementation(libs.bundles.kotlinx.coroutines.bundle)
 }

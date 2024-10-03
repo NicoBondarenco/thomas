@@ -1,6 +1,6 @@
 package com.thomas.management.domain
 
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.domain.model.request.UserActiveRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
@@ -21,7 +21,7 @@ interface UserService {
         createdEnd: OffsetDateTime? = null,
         updatedStart: OffsetDateTime? = null,
         updatedEnd: OffsetDateTime? = null,
-        pageable: PageRequest = PageRequest(),
+        pageable: PageRequestData = PageRequestData(),
     ): PageResponse<UserPageResponse>
 
     fun one(

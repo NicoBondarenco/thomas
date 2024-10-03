@@ -1,0 +1,130 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    image: "postgres:14.1"
+    container_name: "thomas-postgresql"
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USER: thomas-service
+      POSTGRES_PASSWORD: thomas-service
+      POSTGRES_DB: thomas-service
+      PG_DB_MANAGEMENT: "management-service,management-service,management-service,init-management.sql"
+      PG_DB_KEYCLOACK: "keycloak,keycloak,keycloak,init-keycloak.sql"
+      PG_DB_SONARQUBE: "sonarqube,sonarqube,sonarqube"
+    volumes:
+      - type: bind
+        source: ./config/postgres
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+      - type: bind
+        source: ./config/scripts
+        target: /home
+        read_only: true
+      - type: volume
+        source: thomas-postgresql-volume
+        target: /var/lib/postgresql/data
+    networks:
+      - thomas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d thomas-service -U thomas-service"]
+      interval: 5s
+      timeout: 40s
+      retries: 5
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: "thomas-rabbit"
+    ports:
+      - "6600:5672"
+      - "16600:15672"
+    volumes:
+      - thomas-rabbitmq-volume:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks:
+      - thomas-network
+
+  mongo:
+    image: "mongo"
+    container_name: "thomas-mongo"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: thomas
+      MONGO_INITDB_ROOT_PASSWORD: thomas
+    ports:
+      - "26000:27017"
+    volumes:
+      - thomas-mongo-db-volume:/data/db
+      - thomas-mongo-config-volume:/data/configdb
+    networks:
+      - thomas-network
+
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: "thomas-sonarqube"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/sonarqube
+      SONAR_JDBC_USERNAME: sonarqube
+      SONAR_JDBC_PASSWORD: sonarqube
+      SONAR_SEARCH_JAVAOPTS: -Xms2048m -Xmx2048m
+    ports:
+      - "9500:9000"
+    volumes:
+      - thomas-sonarqube-conf:/opt/sonarqube/conf
+      - thomas-sonarqube-data:/opt/sonarqube/data
+      - thomas-sonarqube-extensions:/opt/sonarqube/extensions
+      - thomas-sonarqube-logs:/opt/sonarqube/logs
+      - thomas-sonarqube-temp:/opt/sonarqube/temp
+    networks:
+      - thomas-network
+
+  couchbase:
+    image: "couchbase:community-7.6.2"
+    container_name: "thomas-couchbase"
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210-11211:11210-11211"
+    volumes:
+      - thomas-couchbase-volume:/opt/couchbase/var
+    networks:
+      - thomas-network
+
+  redis:
+    image: "redis/redis-stack:7.4.0"
+    container_name: "thomas-redis"
+    restart: always
+    ports:
+      - "6300:6379"
+      - "8000:8001"
+    volumes:
+      - thomas-redis-volume:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      REDIS_PASSWORD: "thomas-service"
+      REDIS_PORT: "6379"
+      REDIS_DATABASES: "8"
+
+volumes:
+  thomas-postgresql-volume:
+  thomas-rabbitmq-volume:
+  thomas-mongo-db-volume:
+  thomas-mongo-config-volume:
+  thomas-sonarqube-conf:
+  thomas-sonarqube-data:
+  thomas-sonarqube-extensions:
+  thomas-sonarqube-logs:
+  thomas-sonarqube-temp:
+  thomas-couchbase-volume:
+  thomas-redis-volume:
+
+networks:
+  thomas-network:
+    driver: bridge

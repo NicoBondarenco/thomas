@@ -8,8 +8,11 @@ object SessionContextHolder {
 
     private val contextHolder = ThreadLocal<SessionContext?>()
 
-    val context: SessionContext
+    var context: SessionContext
         get() = contextHolder.get() ?: SessionContext().also { contextHolder.set(it) }
+        set(value) {
+            contextHolder.set(value)
+        }
 
     var currentUser: SecurityUser
         get() = context.currentUser

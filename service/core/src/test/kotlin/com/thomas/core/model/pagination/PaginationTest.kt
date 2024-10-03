@@ -2,6 +2,7 @@ package com.thomas.core.model.pagination
 
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -13,7 +14,15 @@ internal class PaginationTest {
     fun `Create a page response from page request`() {
         val response = PageResponse.of(
             listOf("qwerty"),
-            PageRequest(3, 10, listOf(PageSort("qwerty", ASC))),
+            PageRequestPeriod(
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                3,
+                10,
+                listOf(PageSort("qwerty", ASC))
+            ),
             50
         )
 

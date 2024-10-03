@@ -16,12 +16,12 @@ fun randomSecurityRoles(): List<SecurityRole> = Random.nextInt(1, SecurityRole.e
 
 fun randomSecurityGroups(
     quantity: Int = 2
-): List<SecurityGroup> = Random.nextInt(1, quantity).let {
-    (1..quantity).map {
-        SecurityGroup(
-            groupId = randomUUID(),
-            groupName = "Security Group $it",
-            groupRoles = randomSecurityRoles(),
-        )
-    }
+): List<SecurityGroup> = (1..quantity).map {
+    randomSecurityGroup()
 }
+
+fun randomSecurityGroup() = SecurityGroup(
+    groupId = randomUUID(),
+    groupName = "Security Group ${randomString(5)}",
+    groupRoles = randomSecurityRoles(),
+)

@@ -1,6 +1,7 @@
 package com.thomas.spring.resolver
 
 import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection
 import com.thomas.spring.exception.RequestException
@@ -26,7 +27,7 @@ internal class PageRequestResolver(
     }
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.parameterType == PageRequest::class.java
+        return parameter.parameterType == PageRequestData::class.java
     }
 
     override fun resolveArgument(
@@ -34,7 +35,7 @@ internal class PageRequestResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): PageRequest = PageRequest(
+    ): PageRequestData = PageRequest(
         webRequest.pageNumber(),
         webRequest.pageSize(),
         webRequest.sortList(),

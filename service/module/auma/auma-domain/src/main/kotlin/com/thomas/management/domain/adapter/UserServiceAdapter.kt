@@ -1,0 +1,173 @@
+package com.thomas.management.domain.adapter
+
+import com.thomas.core.aop.MethodLog
+import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.coroutines.authorization.authorized
+import com.thomas.core.extension.throws
+import com.thomas.core.extension.toSnakeCase
+import com.thomas.core.extension.validate
+import com.thomas.core.model.entity.EntityValidation
+import com.thomas.core.model.pagination.PageRequestPeriod
+import com.thomas.core.model.pagination.PageResponse
+import com.thomas.hash.Hasher
+import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.UserBaseEntity
+import com.thomas.management.data.entity.UserGroupsEntity
+import com.thomas.management.data.repository.GroupRepository
+import com.thomas.management.data.repository.UserRepository
+import com.thomas.management.domain.UserService
+import com.thomas.management.domain.event.UserEventProducer
+import com.thomas.management.domain.exception.GroupListNotFoundException
+import com.thomas.management.domain.exception.UserNotFoundException
+import com.thomas.management.domain.exception.UserSignupDisabledException
+import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationDocumentNumberAlreadyUsed
+import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationMainEmailAlreadyUsed
+import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationPhoneNumberAlreadyUsed
+import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidData
+import com.thomas.management.domain.model.extension.toSecurityUser
+import com.thomas.management.domain.model.extension.toUserCompleteEntity
+import com.thomas.management.domain.model.extension.toUserDetailResponse
+import com.thomas.management.domain.model.extension.toUserEntity
+import com.thomas.management.domain.model.extension.toUserPageResponse
+import com.thomas.management.domain.model.extension.toUserUpsertedEvent
+import com.thomas.management.domain.model.extension.updateActive
+import com.thomas.management.domain.model.extension.updateFromRequest
+import com.thomas.management.domain.model.request.UserActiveRequest
+import com.thomas.management.domain.model.request.UserBaseRequest
+import com.thomas.management.domain.model.request.UserCreateRequest
+import com.thomas.management.domain.model.request.UserSignupRequest
+import com.thomas.management.domain.model.request.UserUpdateRequest
+import com.thomas.management.domain.model.response.UserDetailResponse
+import com.thomas.management.domain.model.response.UserPageResponse
+import com.thomas.management.domain.properties.UserServiceProperties
+import com.thomas.management.domain.userCreateRoles
+import com.thomas.management.domain.userReadRoles
+import com.thomas.management.domain.userUpdateRoles
+import com.thomas.management.message.event.UserUpsertedEvent
+import java.util.UUID
+
+open class UserServiceAdapter(
+    private val hasher: Hasher,
+    private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository,
+    private val eventProducer: UserEventProducer,
+    private val serviceProperties: UserServiceProperties,
+) : UserService {
+
+    override suspend fun page(
+        keywordText: String?,
+        isActive: Boolean?,
+        pageable: PageRequestPeriod
+    ): PageResponse<UserPageResponse> = authorized(roles = userReadRoles) {
+        userRepository.page(
+            keywordText,
+            isActive,
+            pageable,
+        )
+    }.map { it.toUserPageResponse() }
+
+    override suspend fun one(
+        id: UUID
+    ): UserDetailResponse = authorized(roles = userReadRoles) {
+        findByIdWithGroupsOrThrows(id).toUserDetailResponse()
+    }
+
+    @MethodLog
+    override suspend fun signup(
+        request: UserSignupRequest,
+    ): UserPageResponse = request.takeIf {
+        serviceProperties.signupEnabled
+    }?.toUserEntity(hasher)?.apply {
+        this.validateData()
+        currentUser = this.toSecurityUser()
+        userRepository.signup(this)
+        eventProducer.sendSignupEvent(this.toUserUpsertedEvent())
+    }?.toUserPageResponse() ?: throw UserSignupDisabledException()
+
+    override suspend fun create(
+        request: UserCreateRequest,
+    ): UserDetailResponse = authorized(roles = userCreateRoles) {
+        request.process(
+            { req, groups -> req.toUserCompleteEntity(groups) },
+            { user -> userRepository.create(user) },
+            { eventProducer.sendCreatedEvent(it) },
+        )
+    }
+
+    override suspend fun update(
+        id: UUID,
+        request: UserUpdateRequest,
+    ): UserDetailResponse = authorized(roles = userUpdateRoles) {
+        request.process(
+            { req, groups -> findByIdWithGroupsOrThrows(id).updateFromRequest(req, groups) },
+            { userRepository.update(it) },
+            { eventProducer.sendUpdatedEvent(it) },
+        )
+    }
+
+    private fun <T : UserBaseRequest> T.process(
+        entity: (T, Set<GroupEntity>) -> UserGroupsEntity,
+        save: (UserGroupsEntity) -> UserGroupsEntity,
+        produce: (UserUpsertedEvent) -> Unit,
+    ): UserDetailResponse = this.let {
+        val groups = this.userGroups.findGroupsByIds()
+        entity(this, groups).apply {
+            validateData()
+            save(this)
+        }
+    }.apply {
+        produce(this.toUserUpsertedEvent())
+    }.toUserDetailResponse()
+
+    private fun Set<UUID>.findGroupsByIds() = this.takeIf {
+        it.isNotEmpty()
+    }?.let {
+        findGroups(this)
+    } ?: setOf()
+
+    override suspend fun active(
+        id: UUID,
+        request: UserActiveRequest,
+    ): UserPageResponse = authorized(roles = userUpdateRoles) {
+        findByIdWithGroupsOrThrows(id).updateActive(request).apply {
+            userRepository.update(this)
+            eventProducer.sendUpdatedEvent(this.toUserUpsertedEvent())
+        }.toUserPageResponse()
+    }
+
+    private suspend fun findByIdWithGroupsOrThrows(
+        id: UUID,
+    ): UserGroupsEntity = userRepository.one(id)
+        ?: throw UserNotFoundException(id)
+
+    private suspend fun UserBaseEntity.validateData() = listOf<EntityValidation<UserBaseEntity>>(
+        EntityValidation(
+            UserBaseEntity::mainEmail.name.toSnakeCase(),
+            { managementUserValidationMainEmailAlreadyUsed() },
+            { !userRepository.hasAnotherWithSameMainEmail(this.id, this.mainEmail) }
+        ),
+        EntityValidation(
+            UserBaseEntity::documentNumber.name.toSnakeCase(),
+            { managementUserValidationDocumentNumberAlreadyUsed() },
+            { !userRepository.hasAnotherWithSameDocumentNumber(this.id, this.documentNumber) }
+        ),
+        EntityValidation(
+            UserBaseEntity::phoneNumber.name.toSnakeCase(),
+            { managementUserValidationPhoneNumberAlreadyUsed() },
+            { !(this.phoneNumber?.let { userRepository.hasAnotherWithSamePhoneNumber(this.id, it) } ?: false) }
+        ),
+    ).validate(this, managementUserValidationUserDataInvalidData())
+
+    private fun findGroups(
+        ids: Set<UUID>,
+    ): Set<GroupEntity> = ids.let {
+        groupRepository.allByIds(ids).apply {
+            (ids subtract this.map { it.id }.toSet()).takeIf {
+                it.isNotEmpty()
+            }?.throws {
+                GroupListNotFoundException(it)
+            }
+        }
+    }
+
+}

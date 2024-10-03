@@ -1,0 +1,64 @@
+define
+
+id sub attribute, value string;
+is_active sub attribute, value boolean;
+created_at sub attribute, value datetime;
+updated_at sub attribute, value datetime;
+
+first_name sub attribute, value string;
+last_name sub attribute, value string;
+main_email sub attribute, value string;
+document_number sub attribute, value string;
+phone_number sub attribute, value string;
+profile_photo sub attribute, value string;
+birth_date sub attribute, value datetime;
+user_gender sub attribute, value string;
+
+group_name sub attribute, value string;
+group_description sub attribute, value string;
+
+role_authority sub attribute, value string;
+
+user_roles sub relation,
+    relates ur_user,
+    relates ur_role;
+
+group_roles sub relation,
+    relates gr_group,
+    relates gr_role;
+
+user_groups sub relation,
+    relates ug_user,
+    relates ug_group;
+
+user sub entity,
+    owns id @key,
+    owns first_name,
+    owns last_name,
+    owns main_email,
+    owns document_number,
+    owns phone_number,
+    owns profile_photo,
+    owns birth_date,
+    owns user_gender,
+    owns is_active,
+    owns created_at,
+    owns updated_at,
+    plays user_roles:ur_user,
+    plays user_groups:ug_user;
+
+group sub entity,
+    owns id @key,
+    owns group_name,
+    owns group_description,
+    owns is_active,
+    owns created_at,
+    owns updated_at,
+    plays group_roles:gr_group,
+    plays user_groups:ug_group;
+
+role sub entity,
+    owns role_authority @key,
+    plays user_roles:ur_role,
+    plays group_roles:gr_role;
+

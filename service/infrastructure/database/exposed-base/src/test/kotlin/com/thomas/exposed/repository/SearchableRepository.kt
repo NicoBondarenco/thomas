@@ -1,6 +1,6 @@
 package com.thomas.exposed.repository
 
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.exposed.expression.toLikeParameter
 import com.thomas.exposed.expression.unaccentLower
 import com.thomas.exposed.model.auditable.SearchableEntity
@@ -35,7 +35,7 @@ class SearchableRepository(
     fun searchPage(
         name: String,
         value: Int,
-        pageable: PageRequest,
+        pageable: PageRequestData,
     ) = transacted {
         SearchableTable.page(
             pageable,
@@ -47,7 +47,7 @@ class SearchableRepository(
     }
 
     fun searchPage(
-        pageable: PageRequest,
+        pageable: PageRequestData,
     ) = transacted {
         SearchableTable.page(
             pageable

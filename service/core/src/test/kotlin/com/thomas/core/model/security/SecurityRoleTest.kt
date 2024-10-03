@@ -4,7 +4,7 @@ import com.thomas.core.context.SessionContextHolder.currentLocale
 import com.thomas.core.model.security.SecurityRole.MASTER
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
 import com.thomas.core.model.security.SecurityRoleGroup.MANAGEMENT
-import com.thomas.core.model.security.SecurityRoleSubgroup.FINANCE_DATA
+import com.thomas.core.model.security.SecurityRoleSubgroup.MANAGEMENT_USER
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
@@ -83,7 +83,7 @@ internal class SecurityRoleTest {
         currentLocale = Locale.forLanguageTag("pt-BR")
 
         val group = MANAGEMENT
-        val subgroup = FINANCE_DATA
+        val subgroup = MANAGEMENT_USER
         val role = ROLE_GROUP_CREATE
 
         assertEquals(propertiesBr.getProperty("security.role-group.${group.name.lowercase()}.name"), group.groupName)

@@ -27,7 +27,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":infrastructure:authentication:authentication-base"))
     implementation(project(":infrastructure:authentication:authentication-jwt-auth0"))
-    implementation(project(":infrastructure:database:mongo-base"))
+    implementation(project(":infrastructure:database:mongodb:mongodb-base"))
+    implementation(project(":infrastructure:database:mongodb:mongodb-sync"))
 
     implementation(libs.spring.boot.starter.web) { removeJackson() }
     implementation(libs.spring.boot.starter.security)

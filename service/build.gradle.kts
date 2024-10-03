@@ -98,6 +98,7 @@ allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven(url = "https://repo.typedb.com/public/public-release/maven/")
     }
 
     dependencies {

@@ -1,7 +1,7 @@
 package com.thomas.management.data.repository
 
 import com.thomas.core.generator.PersonGenerator
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserEntity
@@ -60,7 +60,7 @@ class UserRepositoryMock : UserRepository {
         createdEnd: OffsetDateTime?,
         updatedStart: OffsetDateTime?,
         updatedEnd: OffsetDateTime?,
-        pageable: PageRequest,
+        pageable: PageRequestData,
     ): PageResponse<UserEntity> = PageResponse.of(users.values.map { it.toUserEntity() }, pageable, users.size.toLong())
 
     override fun one(

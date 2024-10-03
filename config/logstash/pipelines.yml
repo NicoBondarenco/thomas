@@ -1,0 +1,4 @@
+- pipeline.id: "user-data"
+  path.config: "/home/logstash/pipelines/user-data.conf"
+- pipeline.id: "group-data"
+  path.config: "/home/logstash/pipelines/group-data.conf"

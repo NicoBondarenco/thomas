@@ -7,7 +7,7 @@ import com.thomas.core.extension.throws
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.extension.validate
 import com.thomas.core.model.entity.EntityValidation
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.GroupEntity
 import com.thomas.management.data.entity.UserBaseEntity
@@ -60,7 +60,7 @@ open class UserServiceAdapter(
         createdEnd: OffsetDateTime?,
         updatedStart: OffsetDateTime?,
         updatedEnd: OffsetDateTime?,
-        pageable: PageRequest
+        pageable: PageRequestData
     ): PageResponse<UserPageResponse> = authorized(roles = userReadRoles) {
         userRepository.page(
             keywordText,

@@ -1,0 +1,76 @@
+----------------------------------------------------------------------------------------------
+
+match
+$user_roles (ur_user: $user, ur_role: $role) isa user_roles;
+$user isa user, has id $id, has first_name $first_name, has main_email $main_email;
+$id contains "90113601-0e7b-4d07-8e71-2f8f44e6fc9f";
+$role isa role, has role_authority $role_authority;
+get $id, $first_name, $main_email, $role_authority;
+group $id;
+
+----------------------------------------------------------------------------------------------
+
+match
+$user_roles (ur_user: $user, ur_role: $role) isa user_roles;
+$user isa user, has id "90113601-0e7b-4d07-8e71-2f8f44e6fc9f";
+$role isa role, has role_authority $role_authority;
+get $user, $role;
+group $user;
+
+----------------------------------------------------------------------------------------------
+
+match
+  $user isa user, has id "46399aba-e4b8-4edc-b51f-f2700c7c944a";
+fetch
+  $user: id, first_name, profile_photo;
+  "user_roles": {
+    match
+      $role isa role;
+      $user_roles (ur_user: $user, ur_role: $role) isa user_roles;
+    fetch
+      $role: role_authority;
+  };
+
+----------------------------------------------------------------------------------------------
+
+match
+  $group isa group, has id "46399aba-e4b8-4edc-b51f-f2700c7c944a";
+fetch
+  $group: id, group_name;
+  "group_roles": {
+    match
+      $role isa role;
+      $group_roles (gr_group: $group, gr_role: $role) isa group_roles;
+    fetch
+      $role: role_authority;
+  };
+
+----------------------------------------------------------------------------------------------
+
+match
+  $user isa user;
+fetch
+  $user: id, first_name, profile_photo;
+  "user_roles": {
+    match
+      $role isa role;
+      $user_roles (ur_user: $user, ur_role: $role) isa user_roles;
+    fetch
+      $role: role_authority;
+  };
+  "user_groups": {
+    match
+      $group isa group;
+      $user_groups (ug_user:$user, ug_group: $group) isa user_groups;
+    fetch
+      $group: id, group_name;
+      "group_roles": {
+        match
+          $role isa role;
+          $group_roles (gr_group: $group, gr_role: $role) isa group_roles;
+        fetch
+          $role: role_authority;
+      };
+  };
+
+----------------------------------------------------------------------------------------------

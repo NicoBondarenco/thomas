@@ -1,6 +1,6 @@
 package com.thomas.exposed.table
 
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection
@@ -19,7 +19,7 @@ fun <E> ColumnSet.list(
 
 @Suppress("SpreadOperator")
 fun <E> ColumnSet.page(
-    pageable: PageRequest,
+    pageable: PageRequestData,
     predicates: List<Op<Boolean>> = listOf(),
     mapper: ((ResultRow) -> E),
 ): PageResponse<E> {
@@ -56,8 +56,8 @@ private fun PageSortDirection.toExposedDirection() = when (this) {
     PageSortDirection.DESC -> SortOrder.DESC
 }
 
-private val PageRequest.take
+private val PageRequestData.take
     get() = this.pageSize.toInt()
 
-private val PageRequest.skip
+private val PageRequestData.skip
     get() = (this.pageNumber - 1) * this.pageSize

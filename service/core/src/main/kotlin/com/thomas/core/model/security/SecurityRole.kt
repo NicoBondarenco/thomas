@@ -3,7 +3,6 @@ package com.thomas.core.model.security
 import com.thomas.core.i18n.BundleResolver
 import com.thomas.core.model.security.SecurityRole.RoleStringsI18N.coreRolesDescription
 import com.thomas.core.model.security.SecurityRole.RoleStringsI18N.coreRolesName
-import com.thomas.core.model.security.SecurityRoleSubgroup.FINANCE_DATA
 import com.thomas.core.model.security.SecurityRoleSubgroup.MANAGEMENT_GROUP
 import com.thomas.core.model.security.SecurityRoleSubgroup.MANAGEMENT_USER
 import com.thomas.core.model.security.SecurityRoleSubgroup.MASTER_SUBGROUP

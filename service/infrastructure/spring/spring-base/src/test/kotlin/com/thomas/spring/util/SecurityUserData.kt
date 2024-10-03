@@ -2,7 +2,6 @@ package com.thomas.spring.util
 
 import com.thomas.core.model.general.Gender.CIS_MALE
 import com.thomas.core.model.security.SecurityGroup
-import com.thomas.core.model.security.SecurityRole.ROLE_FINANCE_DATA
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_CREATE
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_DELETE
 import com.thomas.core.model.security.SecurityRole.ROLE_GROUP_READ
@@ -29,7 +28,7 @@ val activeGroupTwo = SecurityGroup(
 val inactiveGroupThree = SecurityGroup(
     groupId = randomUUID(),
     groupName = "Group Three",
-    groupRoles = listOf(ROLE_FINANCE_DATA),
+    groupRoles = listOf(ROLE_GROUP_CREATE),
 )
 
 val activeUser = SecurityUser(

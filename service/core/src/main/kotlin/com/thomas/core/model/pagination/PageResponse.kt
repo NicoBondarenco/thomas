@@ -12,7 +12,7 @@ data class PageResponse<T>(
 ) {
 
     companion object {
-        fun <T> of(contentList: List<T>, pageable: PageRequest, totalItems: Long): PageResponse<T> {
+        fun <T> of(contentList: List<T>, pageable: PageRequestData, totalItems: Long): PageResponse<T> {
             val addPage = (totalItems % pageable.pageSize).takeIf { it == 0L } ?: 1L
             val totalPages = (totalItems / pageable.pageSize) + addPage
 

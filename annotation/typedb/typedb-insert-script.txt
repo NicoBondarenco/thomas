@@ -1,0 +1,145 @@
+insert
+
+$role_master isa role, has role_authority "MASTER";
+$role_user_read isa role, has role_authority "ROLE_USER_READ";
+$role_user_create isa role, has role_authority "ROLE_USER_CREATE";
+$role_user_update isa role, has role_authority "ROLE_USER_UPDATE";
+$role_group_read isa role, has role_authority "ROLE_GROUP_READ";
+$role_group_create isa role, has role_authority "ROLE_GROUP_CREATE";
+$role_group_update isa role, has role_authority "ROLE_GROUP_UPDATE";
+$role_group_delete isa role, has role_authority "ROLE_GROUP_DELETE";
+
+$user_tony isa user,
+    has id "90113601-0e7b-4d07-8e71-2f8f44e6fc9f",
+    has first_name "Tony",
+    has last_name "Stark",
+    has main_email "iron.man@email.com",
+    has document_number "98765432154",
+    has phone_number "16988774455",
+    has birth_date 1990-04-28,
+    has user_gender "CIS_MALE",
+    has is_active true,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+$user_steve isa user,
+    has id "46399aba-e4b8-4edc-b51f-f2700c7c944a",
+    has first_name "Steve",
+    has last_name "Rogers",
+    has main_email "captains.america@email.com",
+    has document_number "32165498700",
+    has phone_number "1633221100",
+    has birth_date 1990-05-10,
+    has user_gender "CIS_MALE",
+    has is_active false,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+$user_natasha isa user,
+    has id "e5669eef-3237-4922-8168-0502732b2876",
+    has first_name "Natasha",
+    has last_name "Romanoff",
+    has main_email "black.widow@email.com",
+    has document_number "15975385264",
+    has phone_number "16963008520",
+    has birth_date 1990-06-15,
+    has user_gender "CIS_FEMALE",
+    has is_active true,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+----------------------------------------------------------------------------------------------
+
+match
+
+$user_tony isa user, has id "90113601-0e7b-4d07-8e71-2f8f44e6fc9f";
+
+$role_user_read isa role, has role_authority "ROLE_USER_READ";
+$role_user_create isa role, has role_authority "ROLE_USER_CREATE";
+$role_user_update isa role, has role_authority "ROLE_USER_UPDATE";
+
+insert
+
+$user_role_user_read (ur_user:$user_tony, ur_role: $role_user_read) isa user_roles;
+$user_role_user_create (ur_user:$user_tony, ur_role: $role_user_create) isa user_roles;
+$user_role_user_update (ur_user:$user_tony, ur_role: $role_user_update) isa user_roles;
+
+----------------------------------------------------------------------------------------------
+
+match
+
+$role_master isa role, has role_authority "MASTER";
+$role_user_read isa role, has role_authority "ROLE_USER_READ";
+$role_user_create isa role, has role_authority "ROLE_USER_CREATE";
+$role_user_update isa role, has role_authority "ROLE_USER_UPDATE";
+$role_group_read isa role, has role_authority "ROLE_GROUP_READ";
+$role_group_create isa role, has role_authority "ROLE_GROUP_CREATE";
+$role_group_update isa role, has role_authority "ROLE_GROUP_UPDATE";
+$role_group_delete isa role, has role_authority "ROLE_GROUP_DELETE";
+
+insert
+
+$group01 isa group,
+    has id "f1012d52-6438-4318-ab4f-fd0d9f0afe18",
+    has group_name "Group 01",
+    has is_active true,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+$group02 isa group,
+    has id "ff63eb37-5424-4aa1-b13a-7b60fa147601",
+    has group_name "Group 02",
+    has is_active true,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+$group03 isa group,
+    has id "67c435ab-c92a-4a02-b5e9-9b9ba61e798a",
+    has group_name "Group 03",
+    has group_description "Group 03",
+    has is_active false,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+$group04 isa group,
+    has id "c5c5cf97-d68c-4112-ad9c-5c06a2f7bde8",
+    has group_name "Group 04",
+    has group_description "Group 04",
+    has is_active true,
+    has created_at 2024-01-01T19:28:44.981,
+    has updated_at 2024-01-01T19:28:44.981;
+
+
+(gr_group:$group01, gr_role: $role_user_read) isa group_roles;
+(gr_group:$group01, gr_role: $role_group_read) isa group_roles;
+
+(gr_group:$group02, gr_role: $role_group_read) isa group_roles;
+(gr_group:$group02, gr_role: $role_group_create) isa group_roles;
+(gr_group:$group02, gr_role: $role_group_update) isa group_roles;
+(gr_group:$group02, gr_role: $role_group_delete) isa group_roles;
+
+(gr_group:$group03, gr_role: $role_master) isa group_roles;
+
+----------------------------------------------------------------------------------------------
+
+match
+
+$user_tony isa user, has id "90113601-0e7b-4d07-8e71-2f8f44e6fc9f";
+$user_natasha isa user, has id "e5669eef-3237-4922-8168-0502732b2876";
+
+$group01 isa group, has id "f1012d52-6438-4318-ab4f-fd0d9f0afe18";
+$group02 isa group, has id "ff63eb37-5424-4aa1-b13a-7b60fa147601";
+$group03 isa group, has id "67c435ab-c92a-4a02-b5e9-9b9ba61e798a";
+$group04 isa group, has id "c5c5cf97-d68c-4112-ad9c-5c06a2f7bde8";
+
+insert
+
+(ug_user:$user_tony, ug_group: $group01) isa user_groups;
+(ug_user:$user_tony, ug_group: $group02) isa user_groups;
+(ug_user:$user_tony, ug_group: $group03) isa user_groups;
+(ug_user:$user_tony, ug_group: $group04) isa user_groups;
+
+(ug_user:$user_natasha, ug_group: $group01) isa user_groups;
+(ug_user:$user_natasha, ug_group: $group04) isa user_groups;
+
+----------------------------------------------------------------------------------------------

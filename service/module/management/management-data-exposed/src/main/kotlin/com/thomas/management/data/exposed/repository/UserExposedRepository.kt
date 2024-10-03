@@ -1,7 +1,7 @@
 package com.thomas.management.data.exposed.repository
 
 import com.thomas.core.extension.unaccentedLower
-import com.thomas.core.model.pagination.PageRequest
+import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.security.SecurityRole
 import com.thomas.exposed.expression.toLikeParameter
@@ -50,7 +50,7 @@ class UserExposedRepository(
         createdEnd: OffsetDateTime?,
         updatedStart: OffsetDateTime?,
         updatedEnd: OffsetDateTime?,
-        pageable: PageRequest
+        pageable: PageRequestData
     ): PageResponse<UserEntity> = transacted {
         UserTable.joined().page(
             pageable = pageable,

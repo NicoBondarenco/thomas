@@ -1,0 +1,208 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: "postgres:14.1"
+    container_name: "thomas-postgresql"
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USER: thomas-service
+      POSTGRES_PASSWORD: thomas-service
+      POSTGRES_DB: thomas-service
+      PG_DB_MANAGEMENT: "management-service,management-service,management-service,init-management.sql"
+    volumes:
+      - type: bind
+        source: ./config/postgres
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+      - type: bind
+        source: ./config/scripts
+        target: /home
+        read_only: true
+      - type: volume
+        source: thomas-postgresql-volume
+        target: /var/lib/postgresql/data
+    networks:
+      - thomas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d thomas-service -U thomas-service"]
+      interval: 5s
+      timeout: 40s
+      retries: 5
+
+  essetup:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.15.0"
+    container_name: "thomas-essetup"
+    volumes:
+      - thomas-elasticsearch-certs-volume:/usr/share/elasticsearch/config/certs
+      - type: bind
+        source: ./config/elasticsearch
+        target: /home
+        read_only: true
+    user: "0"
+    environment:
+      ELASTIC_PASSWORD: "thomas-service"
+      KIBANA_PASSWORD: "thomas-service"
+    entrypoint: bash -c "/home/generate-certs.sh"
+    networks:
+      - thomas-network
+    healthcheck:
+      test: [ "CMD-SHELL", "[ -f config/certs/elasticsearch/elasticsearch.crt ]" ]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.15.0"
+    container_name: "thomas-elasticsearch"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      essetup:
+        condition: service_healthy
+    environment:
+      node.name: "elasticsearch"
+      cluster.name: "thomas-es-cluster"
+      discovery.type: single-node
+      ELASTIC_PASSWORD: "thomas-service"
+      bootstrap.memory_lock: true
+      xpack.security.enabled: true
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.key: certs/elasticsearch/elasticsearch.key
+      xpack.security.http.ssl.certificate: certs/elasticsearch/elasticsearch.crt
+      xpack.security.http.ssl.certificate_authorities: certs/ca/ca.crt
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.key: certs/elasticsearch/elasticsearch.key
+      xpack.security.transport.ssl.certificate: certs/elasticsearch/elasticsearch.crt
+      xpack.security.transport.ssl.certificate_authorities: certs/ca/ca.crt
+      xpack.security.transport.ssl.verification_mode: certificate
+      xpack.license.self_generated.type: basic
+    volumes:
+      - thomas-elasticsearch-data-volume:/usr/share/elasticsearch/data
+      - thomas-elasticsearch-certs-volume:/usr/share/elasticsearch/config/certs
+    mem_limit: 1073741824
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - thomas-network
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:8.15.0"
+    container_name: "thomas-kibana"
+    ports:
+      - "5600:5601"
+    environment:
+      SERVERNAME: kibana
+      ELASTICSEARCH_HOSTS: https://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: "thomas-service"
+      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: config/certs/ca/ca.crt
+      XPACK_SECURITY_ENCRYPTIONKEY: "c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2"
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: "c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2"
+      XPACK_REPORTING_ENCRYPTIONKEY: "c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+      - thomas-kibana-volume:/usr/share/kibana/data
+      - thomas-elasticsearch-certs-volume:/usr/share/kibana/config/certs
+    mem_limit: 1073741824
+    healthcheck:
+      test:
+        [
+        "CMD-SHELL",
+        "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - thomas-network
+
+  logstash:
+    image: "docker.elastic.co/logstash/logstash:8.15.0"
+    container_name: "thomas-logstash"
+    user: root
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    volumes:
+      - thomas-logstash-data-volume:/usr/share/logstash/data
+      - thomas-logstash-ingest-volume:/usr/share/logstash/ingest_data/
+      - thomas-elasticsearch-certs-volume:/usr/share/logstash/certs
+      - type: bind
+        source: ./config/logstash/pipelines.yml
+        target: /usr/share/logstash/config/pipelines.yml
+        read_only: true
+      - type: bind
+        source: ./config/logstash/user-data.conf
+        target: /home/logstash/pipelines/user-data.conf
+        read_only: true
+      - type: bind
+        source: ./config/logstash/group-data.conf
+        target: /home/logstash/pipelines/group-data.conf
+        read_only: true
+      - type: bind
+        source: ./config/logstash/user-data.sql
+        target: /home/logstash/scripts/user-data.sql
+        read_only: true
+      - type: bind
+        source: ./config/logstash/group-data.sql
+        target: /home/logstash/scripts/group-data.sql
+        read_only: true
+      - type: bind
+        source: ./config/logstash/postgresql-42.7.4.jar
+        target: /usr/share/logstash/logstash-core/lib/jars/postgresql-42.7.4.jar
+        read_only: true
+    environment:
+      ELASTIC_USER: elastic
+      ELASTIC_PASSWORD: "thomas-service"
+      ELASTIC_HOSTS: https://elasticsearch:9200
+      xpack.monitoring.enabled: true
+    networks:
+      - thomas-network
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: "thomas-rabbit"
+    ports:
+      - "6600:5672"
+      - "16600:15672"
+    volumes:
+      - thomas-rabbitmq-volume:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks:
+      - thomas-network
+
+volumes:
+  thomas-postgresql-volume:
+  thomas-elasticsearch-data-volume:
+  thomas-elasticsearch-certs-volume:
+  thomas-kibana-volume:
+  thomas-logstash-data-volume:
+  thomas-logstash-ingest-volume:
+  thomas-rabbitmq-volume:
+
+networks:
+  thomas-network:
+    driver: bridge

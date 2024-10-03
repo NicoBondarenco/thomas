@@ -18,17 +18,31 @@ dependencyResolutionManagement {
 
 include("core")
 
+include("core-coroutines")
+
 include("infrastructure:authentication:authentication-base")
 findProject(":infrastructure:authentication:authentication-base")?.name = "authentication-base"
+
+include("infrastructure:authentication:authentication-coroutines")
+findProject(":infrastructure:authentication:authentication-coroutines")?.name = "authentication-coroutines"
 
 include("infrastructure:authentication:authentication-jwt-auth0")
 findProject(":infrastructure:authentication:authentication-jwt-auth0")?.name = "authentication-jwt-auth0"
 
+include("infrastructure:authentication:authentication-jwt-auth0-coroutines")
+findProject(":infrastructure:authentication:authentication-jwt-auth0-coroutines")?.name = "authentication-jwt-auth0-coroutines"
+
 include("infrastructure:database:exposed-base")
 findProject(":infrastructure:database:exposed-base")?.name = "exposed-base"
 
-include("infrastructure:database:mongo-base")
-findProject(":infrastructure:database:mongo-base")?.name = "mongo-base"
+include("infrastructure:database:mongodb:mongodb-base")
+findProject(":infrastructure:database:mongodb:mongodb-base")?.name = "mongodb-base"
+
+include("infrastructure:database:mongodb:mongodb-sync")
+findProject(":infrastructure:database:mongodb:mongodb-sync")?.name = "mongodb-sync"
+
+include("infrastructure:database:mongodb:mongodb-coroutines")
+findProject(":infrastructure:database:mongodb:mongodb-coroutines")?.name = "mongodb-coroutines"
 
 include("infrastructure:hash:hash-base")
 findProject(":infrastructure:hash:hash-base")?.name = "hash-base"
@@ -50,6 +64,18 @@ findProject(":infrastructure:storage:storage-base")?.name = "storage-base"
 
 include("infrastructure:storage:storage-local")
 findProject(":infrastructure:storage:storage-local")?.name = "storage-local"
+
+include("module:auma:auma-data")
+findProject(":module:auma:auma-data")?.name = "auma-data"
+
+include("module:auma:auma-data-exposed")
+findProject(":module:auma:auma-data-exposed")?.name = "auma-data-exposed"
+
+include("module:auma:auma-domain")
+findProject(":module:auma:auma-domain")?.name = "auma-domain"
+
+include("module:auma:auma-spring")
+findProject(":module:auma:auma-spring")?.name = "auma-spring"
 
 include("module:management:management-data")
 findProject(":module:management:management-data")?.name = "management-data"
