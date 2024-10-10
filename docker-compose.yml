@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
 
@@ -11,24 +11,26 @@ services:
       POSTGRES_USER: thomas-service
       POSTGRES_PASSWORD: thomas-service
       POSTGRES_DB: thomas-service
+      PG_DB_MANAGEMENT: "management-service,management-service,management-service,init-management.sql"
     volumes:
-      - thomas-postgresql-volume:/var/lib/postgresql/data
+      - type: bind
+        source: ./config/postgres
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+      - type: bind
+        source: ./config/scripts
+        target: /home
+        read_only: true
+      - type: volume
+        source: thomas-postgresql-volume
+        target: /var/lib/postgresql/data
     networks:
       - thomas-network
-
-  rabbit:
-    image: "rabbitmq:3-management"
-    container_name: "thomas-rabbit"
-    ports:
-      - "6600:5672"
-      - "16600:15672"
     healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
-      interval: 2s
-      timeout: 3s
-      retries: 30
-    networks:
-      - thomas-network
+      test: ["CMD-SHELL", "pg_isready -d thomas-service -U thomas-service"]
+      interval: 5s
+      timeout: 40s
+      retries: 5
 
   mongo:
     image: "mongo"
@@ -39,13 +41,43 @@ services:
     ports:
       - "26000:27017"
     volumes:
-      - thomas-mongo-volume:/data/db
+      - thomas-mongo-db-volume:/data/db
+      - thomas-mongo-config-volume:/data/configdb
+    networks:
+      - thomas-network
+
+  typedb:
+    image: "vaticle/typedb:latest"
+    container_name: "thomas-typedb"
+    platform: linux/amd64
+    ports:
+      - "1700:1729"
+    volumes:
+      - thomas-typedb-data-volume:/opt/typedb-all-linux-x86_64/server/data
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: "thomas-rabbit"
+    ports:
+      - "6600:5672"
+      - "16600:15672"
+    volumes:
+      - thomas-rabbitmq-volume:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
     networks:
       - thomas-network
 
 volumes:
   thomas-postgresql-volume:
-  thomas-mongo-volume:
+  thomas-mongo-db-volume:
+  thomas-mongo-config-volume:
+  thomas-typedb-data-volume:
+  thomas-dynamodb-data-volume:
+  thomas-rabbitmq-volume:
 
 networks:
   thomas-network:
