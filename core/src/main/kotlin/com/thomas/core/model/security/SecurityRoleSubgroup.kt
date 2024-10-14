@@ -1,40 +1,59 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.i18n.BundleResolver
-import com.thomas.core.model.security.SecurityRoleGroup.ORGANIZATION_MANAGEMENT
-import com.thomas.core.model.security.SecurityRoleGroup.MASTER
 import com.thomas.core.model.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupDescription
 import com.thomas.core.model.security.SecurityRoleSubgroup.RoleStringsI18N.coreRolesSubgroupName
+import kotlin.reflect.KClass
 
-enum class SecurityRoleSubgroup(
-    val subgroupGroup: SecurityRoleGroup,
+interface SecurityRoleSubgroup<R, S, G> where
+G : SecurityRoleGroup<R, S, G>,
+S : SecurityRoleSubgroup<R, S, G>,
+R : SecurityRole<R, S, G>,
+R : Enum<R>,
+S : Enum<S>,
+G : Enum<G> {
+
+    val kclass: KClass<R>
+    val name: String
+    val subgroupGroup: G
     val subgroupOrder: Int
-) {
-
-    MASTER_SUBGROUP(MASTER, 0),
-    ORGANIZATION_MANAGEMENT_USER(ORGANIZATION_MANAGEMENT, 1),
-    ORGANIZATION_MANAGEMENT_GROUP(ORGANIZATION_MANAGEMENT, 2),
-    ORGANIZATION_MANAGEMENT_HUB(ORGANIZATION_MANAGEMENT, 3),
-    HUB_ACCOUNTING_COA(ORGANIZATION_MANAGEMENT, 4);
 
     val subgroupName: String
-        get() = coreRolesSubgroupName(this.name.lowercase())
+        get() = coreRolesSubgroupName(
+            this.subgroupGroup.groupCategory.name.lowercase(),
+            this.name.lowercase(),
+        )
 
     val subgroupDescription: String
-        get() = coreRolesSubgroupDescription(this.name.lowercase())
+        get() = coreRolesSubgroupDescription(
+            this.subgroupGroup.groupCategory.name.lowercase(),
+            this.name.lowercase(),
+        )
 
-    fun roles(): List<SecurityRole> =
-        SecurityRole.entries
-            .filter { it.roleSubgroup == this }
+    @Suppress("UNCHECKED_CAST")
+    fun roles(): Set<R> =
+        kclass.java.enumConstants
+            .filter { (it.roleSubgroup as S) == (this as S) }
             .sortedBy { it.roleOrder }
+            .toSet()
 
-    private object RoleStringsI18N : BundleResolver("strings/core-roles-subgroups") {
+    object RoleStringsI18N : BundleResolver("strings/core-roles-subgroups") {
 
-        fun coreRolesSubgroupName(subgroup: String): String = coreRoleSubgroupsString(subgroup, "name")
+        fun coreRolesSubgroupName(
+            category: String,
+            subgroup: String,
+        ): String = coreRoleSubgroupsString(category, subgroup, "name")
 
-        fun coreRolesSubgroupDescription(subgroup: String): String = coreRoleSubgroupsString(subgroup, "description")
+        fun coreRolesSubgroupDescription(
+            category: String,
+            subgroup: String,
+        ): String = coreRoleSubgroupsString(category, subgroup, "description")
 
-        private fun coreRoleSubgroupsString(subgroup: String, attribute: String): String = formattedMessage("security.role-subgroup.$subgroup.$attribute")
+        private fun coreRoleSubgroupsString(
+            category: String,
+            subgroup: String,
+            attribute: String,
+        ): String = formattedMessage("security.role-subgroup.$category.$subgroup.$attribute")
 
     }
 

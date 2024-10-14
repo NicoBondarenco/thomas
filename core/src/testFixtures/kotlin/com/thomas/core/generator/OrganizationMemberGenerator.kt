@@ -1,16 +1,15 @@
 package com.thomas.core.generator
 
-import com.thomas.core.data.HubTestData
+import com.thomas.core.data.MemberTestData
 import com.thomas.core.data.OrganizationTestData
-import com.thomas.core.generator.RoleGenerator.generateRoles
-import com.thomas.core.model.security.SecurityHub
+import com.thomas.core.generator.RoleGenerator.generateMemberRoles
+import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
+import com.thomas.core.model.security.SecurityMember
 import com.thomas.core.model.security.SecurityOrganization
-import com.thomas.core.model.security.SecurityRoleCategory.HUB
-import com.thomas.core.model.security.SecurityRoleCategory.ORGANIZATION
 import java.util.UUID
 import kotlin.random.Random
 
-object OrganizationHubGenerator {
+object OrganizationMemberGenerator {
 
     private val namesDescriptions = mapOf(
         "TechNova" to listOf("Inovação em software e IA.", null),
@@ -129,32 +128,32 @@ object OrganizationHubGenerator {
         SecurityOrganization(
             organizationId = it.id,
             organizationName = it.organizationName,
-            organizationRoles = generateRoles(ORGANIZATION),
+            organizationRoles = generateOrganizationRoles(),
         )
     }
 
     @Suppress("MagicNumber")
-    fun generateHub(): HubTestData = namesDescriptions.entries.random().let {
-        HubTestData(
+    fun generateMember(): MemberTestData = namesDescriptions.entries.random().let {
+        MemberTestData(
             id = UUID.randomUUID(),
-            hubName = "${it.key} - ${Random.nextInt(1000, 9999)}",
-            hubDescription = it.value.random(),
+            memberName = "${it.key} - ${Random.nextInt(1000, 9999)}",
+            memberDescription = it.value.random(),
             isActive = listOf(true, false).random(),
         )
     }
 
-    fun generateSecurityHub(): SecurityHub = generateHub().let {
-        SecurityHub(
-            hubId = it.id,
-            hubName = it.hubName,
-            hubRoles = generateRoles(HUB),
+    fun generateSecurityMember(): SecurityMember = generateMember().let {
+        SecurityMember(
+            memberId = it.id,
+            memberName = it.memberName,
+            memberRoles = generateMemberRoles(),
         )
     }
 
-    fun generateSecurityHubSet(
+    fun generateSecurityMemberSet(
         quantity: Int = 3
-    ): Set<SecurityHub> = (1..quantity).map {
-        generateSecurityHub()
+    ): Set<SecurityMember> = (1..quantity).map {
+        generateSecurityMember()
     }.toSet()
 
 }

@@ -2,9 +2,9 @@ package com.thomas.core.data
 
 import java.util.UUID
 
-data class HubTestData(
+data class MemberTestData(
     val id: UUID,
-    val hubName: String,
-    val hubDescription: String?,
+    val memberName: String,
+    val memberDescription: String?,
     val isActive: Boolean,
 )

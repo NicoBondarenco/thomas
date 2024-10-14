@@ -1,8 +1,8 @@
 package com.thomas.core.model.security
 
-import com.thomas.core.context.SessionContextHolder.currentHub
+import com.thomas.core.context.SessionContextHolder.currentMember
 import com.thomas.core.model.general.Gender
-import com.thomas.core.model.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER
 import java.time.LocalDate
 import java.util.UUID
 
@@ -18,7 +18,7 @@ data class SecurityUser(
     val isActive: Boolean,
     val userOrganization: SecurityOrganization,
     val userGroups: Set<SecurityGroup> = setOf(),
-    val userHubs: Set<SecurityHub> = setOf(),
+    val userMembers: Set<SecurityMember> = setOf(),
 ) {
 
     val fullName: String
@@ -33,27 +33,27 @@ data class SecurityUser(
     val isMaster: Boolean
         get() = userOrganization.organizationRoles.contains(MASTER) || groupsHasMasterRole()
 
-    val organizationRoles: Set<SecurityRole>
+    val organizationRoles: Set<SecurityOrganizationRole>
         get() = (userOrganization.organizationRoles + userGroups.organizationRoles()).distinct().toSet()
 
-    val hubRoles: Set<SecurityRole>
-        get() = currentHub?.let {
-            (userHubs.hubRoles(it) + userGroups.hubRoles(it)).distinct().toSet()
+    val memberRoles: Set<SecurityMemberRole>
+        get() = currentMember?.let {
+            (userMembers.memberRoles(it) + userGroups.memberRoles(it)).distinct().toSet()
         } ?: emptySet()
 
-    val currentRoles: Set<SecurityRole>
-        get() = (organizationRoles + hubRoles).distinct().toSet()
+    val currentRoles: Set<SecurityRole<*, *, *>>
+        get() = (organizationRoles + memberRoles).distinct().toSet()
 
     private fun groupsHasMasterRole() = userGroups.any { group -> group.isMaster }
 
-    private fun Set<SecurityHub>.hubRoles(
-        hubId: UUID
-    ): Set<SecurityRole> = this.firstOrNull { it.hubId == hubId }?.hubRoles ?: setOf()
+    private fun Set<SecurityMember>.memberRoles(
+        memberId: UUID
+    ): Set<SecurityMemberRole> = this.firstOrNull { it.memberId == memberId }?.memberRoles ?: setOf()
 
     private fun Set<SecurityGroup>.organizationRoles() = this.map { it.groupOrganization.organizationRoles }.flatten()
 
-    private fun Set<SecurityGroup>.hubRoles(
-        hubId: UUID
-    ) = this.map { it.groupHubs.hubRoles(hubId) }.flatten()
+    private fun Set<SecurityGroup>.memberRoles(
+        memberId: UUID
+    ) = this.map { it.groupMembers.memberRoles(memberId) }.flatten()
 
 }

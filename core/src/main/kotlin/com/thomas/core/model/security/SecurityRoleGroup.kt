@@ -3,33 +3,57 @@ package com.thomas.core.model.security
 import com.thomas.core.i18n.BundleResolver
 import com.thomas.core.model.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupDescription
 import com.thomas.core.model.security.SecurityRoleGroup.RoleStringsI18N.coreRolesGroupName
+import kotlin.reflect.KClass
 
-enum class SecurityRoleGroup(
+interface SecurityRoleGroup<R, S, G> where
+G : SecurityRoleGroup<R, S, G>,
+S : SecurityRoleSubgroup<R, S, G>,
+R : SecurityRole<R, S, G>,
+R : Enum<R>,
+S : Enum<S>,
+G : Enum<G> {
+
+    val kclass: KClass<S>
+    val name: String
     val groupOrder: Int
-) {
-
-    MASTER(0),
-    ORGANIZATION_MANAGEMENT(1),
-    HUB_ACCOUNTING(2);
+    val groupCategory: SecurityRoleGroupCategory
 
     val groupName: String
-        get() = coreRolesGroupName(this.name.lowercase())
+        get() = coreRolesGroupName(
+            this.groupCategory.name.lowercase(),
+            this.name.lowercase(),
+        )
 
     val groupDescription: String
-        get() = coreRolesGroupDescription(this.name.lowercase())
+        get() = coreRolesGroupDescription(
+            this.groupCategory.name.lowercase(),
+            this.name.lowercase(),
+        )
 
-    fun subgroups(): List<SecurityRoleSubgroup> =
-        SecurityRoleSubgroup.entries
-            .filter { it.subgroupGroup == this }
+    @Suppress("UNCHECKED_CAST")
+    fun subgroups(): Set<S> =
+        kclass.java.enumConstants
+            .filter { (it.subgroupGroup as G) == (this as G) }
             .sortedBy { it.subgroupOrder }
+            .toSet()
 
     private object RoleStringsI18N : BundleResolver("strings/core-roles-groups") {
 
-        fun coreRolesGroupName(group: String): String = coreRoleGroupsString(group, "name")
+        fun coreRolesGroupName(
+            category: String,
+            group: String,
+        ): String = coreRoleGroupsString(category, group, "name")
 
-        fun coreRolesGroupDescription(group: String): String = coreRoleGroupsString(group, "description")
+        fun coreRolesGroupDescription(
+            category: String,
+            group: String,
+        ): String = coreRoleGroupsString(category, group, "description")
 
-        private fun coreRoleGroupsString(group: String, attribute: String): String = formattedMessage("security.role-group.$group.$attribute")
+        private fun coreRoleGroupsString(
+            category: String,
+            group: String,
+            attribute: String,
+        ): String = formattedMessage("security.role-group.$category.$group.$attribute")
 
     }
 

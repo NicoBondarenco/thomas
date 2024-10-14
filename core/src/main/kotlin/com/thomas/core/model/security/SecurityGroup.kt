@@ -1,14 +1,14 @@
 package com.thomas.core.model.security
 
-import com.thomas.core.model.security.SecurityRole.MASTER
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER
 import java.util.UUID
 
 data class SecurityGroup(
     val groupId: UUID,
     val groupName: String,
     val groupOrganization: SecurityOrganization,
-    val groupHubs: Set<SecurityHub> = setOf(),
-){
+    val groupMembers: Set<SecurityMember> = setOf(),
+) {
 
     val isMaster: Boolean
         get() = groupOrganization.organizationRoles.contains(MASTER)

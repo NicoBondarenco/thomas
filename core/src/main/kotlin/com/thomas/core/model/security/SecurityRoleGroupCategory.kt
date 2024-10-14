@@ -1,13 +1,13 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.i18n.BundleResolver
-import com.thomas.core.model.security.SecurityRoleCategory.RoleCategoryStringsI18N.coreRolesCategoryDescription
-import com.thomas.core.model.security.SecurityRoleCategory.RoleCategoryStringsI18N.coreRolesCategoryName
+import com.thomas.core.model.security.SecurityRoleGroupCategory.RoleCategoryStringsI18N.coreRolesCategoryDescription
+import com.thomas.core.model.security.SecurityRoleGroupCategory.RoleCategoryStringsI18N.coreRolesCategoryName
 
-enum class SecurityRoleCategory {
+enum class SecurityRoleGroupCategory {
 
     ORGANIZATION,
-    HUB;
+    MEMBER;
 
     val categoryName: String
         get() = coreRolesCategoryName(this.name.lowercase())
