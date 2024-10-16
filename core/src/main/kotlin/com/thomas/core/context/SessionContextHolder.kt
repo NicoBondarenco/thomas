@@ -32,10 +32,10 @@ object SessionContextHolder {
             context.currentLocale = value
         }
 
-    var currentMember: UUID?
-        get() = context.currentMember
+    var currentUnit: UUID?
+        get() = context.currentUnit
         set(value) {
-            context.currentMember = value
+            context.currentUnit = value
         }
 
     val currentOrganization: UUID

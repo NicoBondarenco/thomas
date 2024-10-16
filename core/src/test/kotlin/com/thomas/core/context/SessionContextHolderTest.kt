@@ -40,7 +40,7 @@ internal class SessionContextHolderTest {
         null
     }.toMutableMap()
 
-    private val members: MutableMap<Int, UUID?> = (1..threads).associateWith {
+    private val units: MutableMap<Int, UUID?> = (1..threads).associateWith {
         null
     }.toMutableMap()
 
@@ -57,14 +57,14 @@ internal class SessionContextHolderTest {
         runBlocking { delay(session.delay) }
         locales[session.number] = SessionContextHolder.context.currentLocale
         users[session.number] = SessionContextHolder.context.currentUser
-        members[session.number] = session.member
+        units[session.number] = session.unit
         latch.countDown()
     }
 
     private data class SessionData(
         val id: UUID = randomUUID(),
         val locale: Locale?,
-        val member: UUID?,
+        val unit: UUID?,
         val number: Int,
         val delay: Long,
     )
@@ -82,11 +82,11 @@ internal class SessionContextHolderTest {
     @Test
     fun `Given different threads, they should be treated separately`() {
         val sessions = listOf(
-            SessionData(locale = CHINA, member = randomUUID(), number = 1, delay = 1500),
-            SessionData(locale = GERMAN, member = null, number = 2, delay = 500),
-            SessionData(locale = ITALY, member = randomUUID(), number = 3, delay = 1500),
-            SessionData(locale = null, member = randomUUID(), number = 4, delay = 3500),
-            SessionData(locale = KOREA, member = randomUUID(), number = 5, delay = 800),
+            SessionData(locale = CHINA, unit = randomUUID(), number = 1, delay = 1500),
+            SessionData(locale = GERMAN, unit = null, number = 2, delay = 500),
+            SessionData(locale = ITALY, unit = randomUUID(), number = 3, delay = 1500),
+            SessionData(locale = null, unit = randomUUID(), number = 4, delay = 3500),
+            SessionData(locale = KOREA, unit = randomUUID(), number = 5, delay = 800),
         )
 
         sessions.forEach { executors.submitTest(it) }
@@ -102,7 +102,7 @@ internal class SessionContextHolderTest {
             assertEquals("User ${it.number}", user.firstName)
             assertEquals("Last Name ${it.number}", user.lastName)
             assertEquals("user${it.number}@test.com", user.mainEmail)
-            assertEquals(it.member, members[it.number])
+            assertEquals(it.unit, units[it.number])
         }
     }
 
@@ -133,10 +133,10 @@ internal class SessionContextHolderTest {
     }
 
     @Test
-    fun `When member is set in a session, current member should be returned`() {
+    fun `When unit is set in a session, current unit should be returned`() {
         val uuid = randomUUID()
-        SessionContextHolder.currentMember = uuid
-        assertEquals(uuid, SessionContextHolder.currentMember)
+        SessionContextHolder.currentUnit = uuid
+        assertEquals(uuid, SessionContextHolder.currentUnit)
     }
 
 }

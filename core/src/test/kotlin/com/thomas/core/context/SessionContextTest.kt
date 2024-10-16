@@ -3,8 +3,8 @@ package com.thomas.core.context
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.context
 import com.thomas.core.context.SessionContextHolder.currentLocale
-import com.thomas.core.context.SessionContextHolder.currentMember
 import com.thomas.core.context.SessionContextHolder.currentOrganization
+import com.thomas.core.context.SessionContextHolder.currentUnit
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.context.SessionContextHolder.getSessionProperty
 import com.thomas.core.context.SessionContextHolder.setSessionProperty
@@ -32,21 +32,21 @@ internal class SessionContextTest {
 
     @Test
     fun `Clear session context`() {
-        val memberId = randomUUID()
+        val unitId = randomUUID()
         val propOne = "prop_one"
         val propTwo = "prop_two"
         val propValue = "value_two"
 
         currentUser = user
         currentLocale = FRENCH
-        currentMember = memberId
+        currentUnit = unitId
 
         setSessionProperty(propOne, null)
         setSessionProperty(propTwo, propValue)
 
         assertEquals(user, context.currentUser)
         assertEquals(FRENCH, context.currentLocale)
-        assertEquals(memberId, context.currentMember)
+        assertEquals(unitId, context.currentUnit)
         assertEquals(user.userOrganization.organizationId, context.currentOrganization)
         assertNull(getSessionProperty(propOne))
         assertEquals(propValue, getSessionProperty(propTwo))
@@ -56,7 +56,7 @@ internal class SessionContextTest {
         assertThrows<UnauthenticatedUserException> { currentUser }
         assertThrows<UnresolvedOrganizationException> { currentOrganization }
         assertEquals(ROOT, currentLocale)
-        assertNull(currentMember)
+        assertNull(currentUnit)
         assertNull(getSessionProperty(propOne))
         assertNull(getSessionProperty(propTwo))
     }

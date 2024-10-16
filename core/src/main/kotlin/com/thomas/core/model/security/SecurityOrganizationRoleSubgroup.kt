@@ -1,7 +1,7 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.model.security.SecurityOrganizationRoleGroup.MANAGEMENT
-import com.thomas.core.model.security.SecurityOrganizationRoleGroup.MASTER
+import com.thomas.core.model.security.SecurityOrganizationRoleGroup.ORGANIZATION
 import kotlin.reflect.KClass
 
 enum class SecurityOrganizationRoleSubgroup(
@@ -9,10 +9,10 @@ enum class SecurityOrganizationRoleSubgroup(
     override val subgroupOrder: Int
 ) : SecurityRoleSubgroup<SecurityOrganizationRole, SecurityOrganizationRoleSubgroup, SecurityOrganizationRoleGroup> {
 
-    MASTER_SUBGROUP(MASTER, 0),
+    ORGANIZATION_SUBGROUP(ORGANIZATION, 0),
     MANAGEMENT_USER(MANAGEMENT, 1),
     MANAGEMENT_GROUP(MANAGEMENT, 2),
-    MANAGEMENT_MEMBER(MANAGEMENT, 3);
+    MANAGEMENT_UNIT(MANAGEMENT, 3);
 
     override val kclass: KClass<SecurityOrganizationRole> = SecurityOrganizationRole::class
 

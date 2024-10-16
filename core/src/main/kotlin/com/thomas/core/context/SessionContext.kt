@@ -15,7 +15,7 @@ data class SessionContext(
 
     internal var currentLocale: Locale = ROOT
 
-    internal var currentMember: UUID? = null
+    internal var currentUnit: UUID? = null
 
     internal var currentUser: SecurityUser
         get() = _currentUser ?: throw UnauthenticatedUserException()
@@ -34,7 +34,7 @@ data class SessionContext(
     internal fun clear() {
         _currentUser = null
         currentLocale = ROOT
-        currentMember = null
+        currentUnit = null
         sessionProperties.clear()
     }
 

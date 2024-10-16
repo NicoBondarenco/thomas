@@ -1,12 +1,12 @@
 package com.thomas.core.authorization
 
 import com.thomas.core.context.SessionContextHolder.clearContext
-import com.thomas.core.context.SessionContextHolder.currentMember
+import com.thomas.core.context.SessionContextHolder.currentUnit
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.exception.ErrorType.UNAUTHORIZED_ACTION
 import com.thomas.core.generator.UserGenerator.generateSecurityUserWithRoles
-import com.thomas.core.model.security.SecurityMemberRole
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityUnitRole
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
@@ -31,8 +31,8 @@ class AuthorizationTest {
         role: SecurityOrganizationRole
     ) = runTest(StandardTestDispatcher()) {
         currentUser = generateSecurityUserWithRoles(
-            userMemberRoles = SecurityMemberRole.entries.toSet(),
-            groupMemberRoles = SecurityMemberRole.entries.toSet(),
+            userUnitRoles = SecurityUnitRole.entries.toSet(),
+            groupUnitRoles = SecurityUnitRole.entries.toSet(),
         )
         val exception = assertThrows<UnauthorizedUserException> {
             authorized(roles = arrayOf(role)) {}
@@ -42,9 +42,9 @@ class AuthorizationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(SecurityMemberRole::class)
-    fun `When member role is required and user does not have it, should throws UnauthorizedUserException`(
-        role: SecurityMemberRole
+    @EnumSource(SecurityUnitRole::class)
+    fun `When unit role is required and user does not have it, should throws UnauthorizedUserException`(
+        role: SecurityUnitRole
     ) = runTest(StandardTestDispatcher()) {
         currentUser = generateSecurityUserWithRoles(
             userOrganizationRoles = SecurityOrganizationRole.entries.toSet(),
@@ -84,28 +84,28 @@ class AuthorizationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(SecurityMemberRole::class)
-    fun `When member role is required and user have it, should return the block`(
-        role: SecurityMemberRole
+    @EnumSource(SecurityUnitRole::class)
+    fun `When unit role is required and user have it, should return the block`(
+        role: SecurityUnitRole
     ) = runTest(StandardTestDispatcher()) {
         currentUser = generateSecurityUserWithRoles(
-            userMemberRoles = setOf(role),
+            userUnitRoles = setOf(role),
         )
-        currentMember = currentUser.userMembers.random().memberId
+        currentUnit = currentUser.userUnits.random().unitId
         assertDoesNotThrow {
             assertTrue(authorized(roles = arrayOf(role)) { true })
         }
     }
 
     @ParameterizedTest
-    @EnumSource(SecurityMemberRole::class)
-    fun `When member role is required and group have it, should return the block`(
-        role: SecurityMemberRole
+    @EnumSource(SecurityUnitRole::class)
+    fun `When unit role is required and group have it, should return the block`(
+        role: SecurityUnitRole
     ) = runTest(StandardTestDispatcher()) {
         currentUser = generateSecurityUserWithRoles(
-            groupMemberRoles = setOf(role),
+            groupUnitRoles = setOf(role),
         )
-        currentMember = currentUser.userGroups.random().groupMembers.random().memberId
+        currentUnit = currentUser.userGroups.random().groupUnits.random().unitId
         assertDoesNotThrow {
             assertTrue(authorized(roles = arrayOf(role)) { true })
         }

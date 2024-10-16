@@ -7,7 +7,7 @@ import com.thomas.core.model.security.SecurityRoleGroupCategory.RoleCategoryStri
 enum class SecurityRoleGroupCategory {
 
     ORGANIZATION,
-    MEMBER;
+    UNIT;
 
     val categoryName: String
         get() = coreRolesCategoryName(this.name.lowercase())

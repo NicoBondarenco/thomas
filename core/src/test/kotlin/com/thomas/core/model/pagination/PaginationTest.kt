@@ -1,6 +1,5 @@
 package com.thomas.core.model.pagination
 
-import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
 import java.time.OffsetDateTime
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -14,29 +13,31 @@ internal class PaginationTest {
 
     @Test
     fun `Create a page response from page request`() {
-        val response = PageResponse.of(
-            listOf("qwerty"),
-            PageRequestPeriod(
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                3,
-                10,
-                listOf(PageSort("qwerty", ASC))
-            ),
-            50
-        )
+        PageSortDirection.entries.forEach {
+            val response = PageResponse.of(
+                listOf("qwerty"),
+                PageRequestPeriod(
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now(),
+                    3,
+                    10,
+                    listOf(PageSort("qwerty", it))
+                ),
+                50
+            )
 
-        assertFalse(response.firstPage)
-        assertFalse(response.lastPage)
-        assertEquals(3L, response.pageNumber)
-        assertEquals(10L, response.pageSize)
-        assertEquals(5L, response.totalPages)
-        assertEquals(50L, response.totalItems)
-        assertEquals(1, response.sortedBy.size)
-        assertEquals("qwerty", response.sortedBy[0].sortField)
-        assertEquals(ASC, response.sortedBy[0].sortDirection)
+            assertFalse(response.firstPage)
+            assertFalse(response.lastPage)
+            assertEquals(3L, response.pageNumber)
+            assertEquals(10L, response.pageSize)
+            assertEquals(5L, response.totalPages)
+            assertEquals(50L, response.totalItems)
+            assertEquals(1, response.sortedBy.size)
+            assertEquals("qwerty", response.sortedBy[0].sortField)
+            assertEquals(it, response.sortedBy[0].sortDirection)
+        }
     }
 
     @Test

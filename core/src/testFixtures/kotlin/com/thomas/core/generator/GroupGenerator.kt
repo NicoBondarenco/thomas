@@ -1,8 +1,8 @@
 package com.thomas.core.generator
 
 import com.thomas.core.data.GroupTestData
-import com.thomas.core.generator.OrganizationMemberGenerator.generateSecurityMemberSet
-import com.thomas.core.generator.OrganizationMemberGenerator.generateSecurityOrganization
+import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityUnitSet
+import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrganization
 import com.thomas.core.model.security.SecurityGroup
 import java.util.UUID
 import kotlin.random.Random
@@ -72,7 +72,7 @@ object GroupGenerator {
             groupId = it.id,
             groupName = it.groupName,
             groupOrganization = generateSecurityOrganization(),
-            groupMembers = generateSecurityMemberSet(),
+            groupUnits = generateSecurityUnitSet(),
         )
     }
 

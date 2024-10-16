@@ -1,11 +1,11 @@
 package com.thomas.core.generator
 
 import com.thomas.core.generator.GroupGenerator.generateSecurityGroupSet
-import com.thomas.core.generator.OrganizationMemberGenerator.generateSecurityMemberSet
-import com.thomas.core.generator.OrganizationMemberGenerator.generateSecurityOrganization
+import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityUnitSet
+import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrganization
 import com.thomas.core.generator.PersonGenerator.generatePerson
 import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
-import com.thomas.core.model.security.SecurityMemberRole
+import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.core.model.security.SecurityUser
 
@@ -31,23 +31,23 @@ object UserGenerator {
                     )
                 )
             }.toSet(),
-            userMembers = generateSecurityMemberSet(),
+            userUnits = generateSecurityUnitSet(),
         )
     }
 
     fun generateSecurityUserWithRoles(
         userOrganizationRoles: Set<SecurityOrganizationRole> = setOf(),
-        userMemberRoles: Set<SecurityMemberRole> = setOf(),
+        userUnitRoles: Set<SecurityUnitRole> = setOf(),
         groupOrganizationRoles: Set<SecurityOrganizationRole> = setOf(),
-        groupMemberRoles: Set<SecurityMemberRole> = setOf(),
+        groupUnitRoles: Set<SecurityUnitRole> = setOf(),
     ): SecurityUser = generateSecurityUser().let { user ->
         user.copy(
             userOrganization = user.userOrganization.copy(
                 organizationRoles = userOrganizationRoles
             ),
-            userMembers = user.userMembers.map { member ->
-                member.copy(
-                    memberRoles = userMemberRoles
+            userUnits = user.userUnits.map { unit ->
+                unit.copy(
+                    unitRoles = userUnitRoles
                 )
             }.toSet(),
             userGroups = user.userGroups.map { group ->
@@ -55,9 +55,9 @@ object UserGenerator {
                     groupOrganization = group.groupOrganization.copy(
                         organizationRoles = groupOrganizationRoles
                     ),
-                    groupMembers = group.groupMembers.map { member ->
-                        member.copy(
-                            memberRoles = groupMemberRoles
+                    groupUnits = group.groupUnits.map { unit ->
+                        unit.copy(
+                            unitRoles = groupUnitRoles
                         )
                     }.toSet()
                 )

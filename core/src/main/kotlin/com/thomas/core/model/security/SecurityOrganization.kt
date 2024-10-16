@@ -5,5 +5,5 @@ import java.util.UUID
 data class SecurityOrganization(
     val organizationId: UUID,
     val organizationName: String,
-    val organizationRoles: Set<SecurityOrganizationRole> = setOf(),
+    val organizationRoles: Set<SecurityOrganizationRole>,
 )

@@ -41,6 +41,20 @@ class DetailedExceptionTest {
         assertNull(exception.cause)
     }
 
+    @Test
+    fun `When DetailException with type is thrown without parameters then the defaults should be used`() {
+        ErrorType.entries.forEach {
+            val exception = assertThrows<DetailedException> {
+                throw object : DetailedException(type = it) {}
+            }
+
+            assertEquals(exceptionDetailedExceptionMessageDefault(), exception.message)
+            assertEquals(it, exception.type)
+            assertNull(exception.detail)
+            assertNull(exception.cause)
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("errorParameters")
     fun `When DetailException is thrown with parameters then the values should be used`(

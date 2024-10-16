@@ -1,15 +1,15 @@
 package com.thomas.core.generator
 
-import com.thomas.core.data.MemberTestData
+import com.thomas.core.data.UnitTestData
 import com.thomas.core.data.OrganizationTestData
-import com.thomas.core.generator.RoleGenerator.generateMemberRoles
+import com.thomas.core.generator.RoleGenerator.generateUnitRoles
 import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
-import com.thomas.core.model.security.SecurityMember
+import com.thomas.core.model.security.SecurityUnit
 import com.thomas.core.model.security.SecurityOrganization
 import java.util.UUID
 import kotlin.random.Random
 
-object OrganizationMemberGenerator {
+object OrganizationUnitGenerator {
 
     private val namesDescriptions = mapOf(
         "TechNova" to listOf("Inovação em software e IA.", null),
@@ -133,27 +133,27 @@ object OrganizationMemberGenerator {
     }
 
     @Suppress("MagicNumber")
-    fun generateMember(): MemberTestData = namesDescriptions.entries.random().let {
-        MemberTestData(
+    fun generateUnit(): UnitTestData = namesDescriptions.entries.random().let {
+        UnitTestData(
             id = UUID.randomUUID(),
-            memberName = "${it.key} - ${Random.nextInt(1000, 9999)}",
-            memberDescription = it.value.random(),
+            unitName = "${it.key} - ${Random.nextInt(1000, 9999)}",
+            unitDescription = it.value.random(),
             isActive = listOf(true, false).random(),
         )
     }
 
-    fun generateSecurityMember(): SecurityMember = generateMember().let {
-        SecurityMember(
-            memberId = it.id,
-            memberName = it.memberName,
-            memberRoles = generateMemberRoles(),
+    fun generateSecurityUnit(): SecurityUnit = generateUnit().let {
+        SecurityUnit(
+            unitId = it.id,
+            unitName = it.unitName,
+            unitRoles = generateUnitRoles(),
         )
     }
 
-    fun generateSecurityMemberSet(
+    fun generateSecurityUnitSet(
         quantity: Int = 3
-    ): Set<SecurityMember> = (1..quantity).map {
-        generateSecurityMember()
+    ): Set<SecurityUnit> = (1..quantity).map {
+        generateSecurityUnit()
     }.toSet()
 
 }
