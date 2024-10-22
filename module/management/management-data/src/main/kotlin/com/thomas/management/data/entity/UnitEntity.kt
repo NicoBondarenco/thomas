@@ -29,6 +29,7 @@ data class UnitEntity(
     val fantasyName: String? = null,
     val documentNumber: String,
     val unitType: UnitType,
+    val unitOrganization: OrganizationEntity,
     override val mainEmail: String,
     override val mainPhone: String,
     override val addressZipcode: String,
@@ -39,7 +40,7 @@ data class UnitEntity(
     override val addressCity: String,
     override val addressState: AddressState,
     override val isActive: Boolean = true,
-    override val createAt: OffsetDateTime = now(UTC),
+    override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
 ) : BaseEntity<UnitEntity>(), ContactInfo, AddressInfo, BasicInfo {
 

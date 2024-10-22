@@ -6,6 +6,7 @@ import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.util.StringUtils.randomZipcode
+import com.thomas.management.data.entity.generator.OrganizationGenerator.generateOrganizationEntity
 import com.thomas.management.data.entity.value.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import com.thomas.management.data.entity.value.UnitType.LEGAL
@@ -237,6 +238,7 @@ class UnitEntityTest : EntityValidationTest() {
                 fantasyName = listOf(null, randomString()).random(),
                 documentNumber = if (it == NATURAL) randomDocumentNumber() else randomRegistrationNumber(),
                 unitType = it,
+                unitOrganization = generateOrganizationEntity(),
                 mainEmail = randomEmail(),
                 mainPhone = randomPhone(),
                 addressZipcode = randomZipcode(),
@@ -247,7 +249,7 @@ class UnitEntityTest : EntityValidationTest() {
                 addressCity = randomString(numbers = false),
                 addressState = AddressState.entries.random(),
                 isActive = listOf(true, false).random(),
-                createAt = now(UTC),
+                createdAt = now(UTC),
                 updatedAt = now(UTC),
             )
         }

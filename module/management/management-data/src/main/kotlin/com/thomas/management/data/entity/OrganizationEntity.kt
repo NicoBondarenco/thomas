@@ -37,7 +37,7 @@ data class OrganizationEntity(
     override val addressCity: String,
     override val addressState: AddressState,
     override val isActive: Boolean = true,
-    override val createAt: OffsetDateTime = now(UTC),
+    override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
 ) : BaseEntity<OrganizationEntity>(), ContactInfo, AddressInfo, BasicInfo {
 

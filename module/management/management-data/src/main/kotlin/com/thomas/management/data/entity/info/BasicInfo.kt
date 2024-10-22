@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 interface BasicInfo {
 
     val isActive: Boolean
-    val createAt: OffsetDateTime
+    val createdAt: OffsetDateTime
     val updatedAt: OffsetDateTime
 
 }

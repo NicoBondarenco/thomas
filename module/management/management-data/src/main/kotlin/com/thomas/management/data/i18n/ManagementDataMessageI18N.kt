@@ -112,17 +112,8 @@ object ManagementDataMessageI18N : BundleResolver("strings/management-data") {
     fun managementUserValidationLastNameInvalidValue() =
         formattedMessage("management.user-validation.last-name.invalid-value")
 
-    fun managementUserValidationMainEmailInvalidValue() =
-        formattedMessage("management.user-validation.main-email.invalid-value")
-
     fun managementUserValidationDocumentNumberInvalidValue() =
         formattedMessage("management.user-validation.document-number.invalid-value")
-
-    fun managementUserValidationPhoneNumberInvalidCharacter() =
-        formattedMessage("management.user-validation.phone-number.invalid-character")
-
-    fun managementUserValidationMainEmailDuplicatedValue() =
-        formattedMessage("management.user-validation.main-email.duplicated-value")
 
     //endregion USER
 
@@ -136,6 +127,12 @@ object ManagementDataMessageI18N : BundleResolver("strings/management-data") {
 
     fun managementGroupValidationGroupNameInvalidValue() =
         formattedMessage("management.group-validation.group-name.invalid-value")
+
+    fun managementGroupValidationGroupDescriptionInvalidLength(min: Int, max: Int) =
+        formattedMessage("management.group-validation.group-description.invalid-length", min, max)
+
+    fun managementGroupValidationGroupDescriptionInvalidValue() =
+        formattedMessage("management.group-validation.group-description.invalid-value")
 
     //endregion GROUP
 

@@ -136,7 +136,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             addressCity = randomString(numbers = false),
             addressState = AddressState.entries.random(),
             isActive = listOf(true, false).random(),
-            createAt = now(UTC),
+            createdAt = now(UTC),
             updatedAt = now(UTC),
         )
 
