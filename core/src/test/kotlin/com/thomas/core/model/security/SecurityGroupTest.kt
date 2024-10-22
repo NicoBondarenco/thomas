@@ -1,7 +1,7 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrganization
-import com.thomas.core.generator.StringGenerator.randomString
+import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_CREATE
 import java.util.UUID.randomUUID

@@ -83,6 +83,8 @@ dependencyResolutionManagement {
 
             version("detektFormat", "1.23.3")
 
+            version("aspectj", "1.9.22.1")
+
             //endregion DEPENDENCIES
 
             //endregion VERSIONS
@@ -150,6 +152,9 @@ dependencyResolutionManagement {
                     "log4j-kotlin",
                 ),
             )
+
+            library("aspectj-core", "org.aspectj", "aspectjrt").versionRef("aspectj")
+            library("aspectj-tools", "org.aspectj", "aspectjtools").versionRef("aspectj")
 
             library("junit-pioneer", "org.junit-pioneer", "junit-pioneer").versionRef("junitPioneer")
             library("junit-jupiter-api", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit")
@@ -329,3 +334,9 @@ dependencyResolutionManagement {
 }
 
 include("core")
+
+include("module:management:management-data")
+findProject(":module:management:management-data")?.name = "management-data"
+
+include("module:management:management-domain")
+findProject(":module:management:management-domain")?.name = "management-domain"

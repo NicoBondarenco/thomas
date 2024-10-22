@@ -7,7 +7,7 @@ import com.thomas.core.extension.VT
 import com.thomas.core.extension.withSessionContext
 import com.thomas.core.extension.withSessionContextIO
 import com.thomas.core.extension.withSessionContextVT
-import com.thomas.core.generator.StringGenerator.randomString
+import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.generator.UserGenerator.generateSecurityUser
 import com.thomas.core.model.entity.DeferredEntityValidationContext
 import java.util.Locale

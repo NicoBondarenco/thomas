@@ -51,9 +51,6 @@ allprojects {
         finalizedBy("jacocoTestReport")
     }
 
-    tasks.withType<KotlinCompile> {
-    }
-
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions.jvmTarget.set(JvmTarget.valueOf(libs.versions.jvm.get()))
     }

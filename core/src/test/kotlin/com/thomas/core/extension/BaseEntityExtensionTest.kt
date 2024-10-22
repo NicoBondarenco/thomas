@@ -1,6 +1,6 @@
 package com.thomas.core.extension
 
-import com.thomas.core.generator.StringGenerator.randomString
+import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.DeferredEntityValidation
 import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.EMPTY
