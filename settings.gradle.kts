@@ -335,8 +335,12 @@ dependencyResolutionManagement {
 
 include("core")
 
+include("infrastructure:hasher:hasher")
+findProject(":infrastructure:hasher:hasher")?.name = "hasher"
+
 include("module:management:management-data")
 findProject(":module:management:management-data")?.name = "management-data"
 
 include("module:management:management-domain")
 findProject(":module:management:management-domain")?.name = "management-domain"
+

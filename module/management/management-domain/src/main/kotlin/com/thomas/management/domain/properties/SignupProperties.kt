@@ -1,5 +1,5 @@
 package com.thomas.management.domain.properties
 
-data class UserDomainProperties(
+data class SignupProperties(
     val signupEnabled: Boolean,
 )

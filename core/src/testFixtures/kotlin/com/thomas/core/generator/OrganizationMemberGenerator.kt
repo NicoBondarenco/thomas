@@ -1,11 +1,11 @@
 package com.thomas.core.generator
 
-import com.thomas.core.data.UnitTestData
 import com.thomas.core.data.OrganizationTestData
-import com.thomas.core.generator.RoleGenerator.generateUnitRoles
+import com.thomas.core.data.UnitTestData
 import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
-import com.thomas.core.model.security.SecurityUnit
+import com.thomas.core.generator.RoleGenerator.generateUnitRoles
 import com.thomas.core.model.security.SecurityOrganization
+import com.thomas.core.model.security.SecurityUnit
 import java.util.UUID
 import kotlin.random.Random
 

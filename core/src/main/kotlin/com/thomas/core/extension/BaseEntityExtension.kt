@@ -2,7 +2,6 @@ package com.thomas.core.extension
 
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.DeferredEntityValidation
-import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.entity.EntityValidationException
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.awaitAll
@@ -16,7 +15,7 @@ suspend fun <T : BaseEntity<T>> List<DeferredEntityValidation<T>>.validate(
 
     this@validate.map { validation ->
         validation.context.defer(this) {
-            errors.validate(entity, validation.validation)
+            errors.validate(entity, validation)
         }
     }.awaitAll()
 
@@ -29,11 +28,11 @@ suspend fun <T : BaseEntity<T>> List<DeferredEntityValidation<T>>.validate(
 
 private suspend fun <T : BaseEntity<T>> ConcurrentHashMap<String, MutableList<String>>.validate(
     entity: T,
-    validation: EntityValidation<T>,
+    validation: DeferredEntityValidation<T>,
 ) = coroutineScope {
     validation.takeIf {
         !it.validate(entity)
     }?.run {
-        this@validate.getOrPut(this.field) { mutableListOf() }.add(this.message(entity))
+        this@validate.getOrPut(this.field.name.toSnakeCase()) { mutableListOf() }.add(this.message(entity))
     }
 }

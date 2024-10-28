@@ -126,6 +126,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             organizationName = randomString(),
             fantasyName = listOf(null, randomString()).random(),
             registrationNumber = randomRegistrationNumber(),
+            maximumUsers = 10,
             mainEmail = randomEmail(),
             mainPhone = randomPhone(),
             addressZipcode = randomZipcode(),

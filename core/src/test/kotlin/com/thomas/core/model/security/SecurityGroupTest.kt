@@ -1,9 +1,9 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrganization
-import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_CREATE
+import com.thomas.core.util.StringUtils.randomString
 import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

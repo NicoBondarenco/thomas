@@ -125,6 +125,7 @@ class GroupEntityTest : EntityValidationTest() {
             groupName = randomString(),
             groupDescription = listOf(null, randomString(500)).random(),
             groupOrganization = generateOrganizationEntity(),
+            organizationRoles = setOf(),
             isActive = listOf(true, false).random(),
             createdAt = now(UTC),
             updatedAt = now(UTC),

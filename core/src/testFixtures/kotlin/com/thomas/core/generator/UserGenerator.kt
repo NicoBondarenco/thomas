@@ -1,12 +1,12 @@
 package com.thomas.core.generator
 
 import com.thomas.core.generator.GroupGenerator.generateSecurityGroupSet
-import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityUnitSet
 import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrganization
+import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityUnitSet
 import com.thomas.core.generator.PersonGenerator.generatePerson
 import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
-import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityUser
 
 object UserGenerator {

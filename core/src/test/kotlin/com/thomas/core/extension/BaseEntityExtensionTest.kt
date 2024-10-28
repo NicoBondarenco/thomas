@@ -1,13 +1,12 @@
 package com.thomas.core.extension
 
-import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.DeferredEntityValidation
 import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.EMPTY
 import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.IO
 import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.VT
-import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.entity.EntityValidationException
+import com.thomas.core.util.StringUtils.randomString
 import java.util.UUID
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -39,25 +38,35 @@ class BaseEntityExtensionTest {
 
     }
 
-    private val validations = listOf<DeferredEntityValidation<TestEntity>>(
+    private val validations = listOf(
         DeferredEntityValidation(
-            validation = EntityValidation(TestEntity::name.name, { ERROR_MESSAGE_01 }, { it.name.trim().isNotEmpty() }),
+            field = TestEntity::name.name,
+            message = { ERROR_MESSAGE_01 },
+            validate = { it.name.trim().isNotEmpty() },
             context = EMPTY,
         ),
-        DeferredEntityValidation(
-            validation = EntityValidation(TestEntity::name.name, { ERROR_MESSAGE_02 }, { it.name.length <= 10 }),
+        DeferredEntityValidation<TestEntity>(
+            field = TestEntity::name.name,
+            message = { ERROR_MESSAGE_02 },
+            validate = { it.name.length <= 10 },
             context = IO,
         ),
-        DeferredEntityValidation(
-            validation = EntityValidation(TestEntity::name.name, { ERROR_MESSAGE_03 }, { it.name.length > 2 }),
+        DeferredEntityValidation<TestEntity>(
+            field = TestEntity::name.name,
+            message = { ERROR_MESSAGE_03 },
+            validate = { it.name.length > 2 },
             context = IO,
         ),
-        DeferredEntityValidation(
-            validation = EntityValidation(TestEntity::email.name, { ERROR_MESSAGE_04 }, { it.email.contains("@") }),
+        DeferredEntityValidation<TestEntity>(
+            field = TestEntity::email.name,
+            message = { ERROR_MESSAGE_04 },
+            validate = { it.email.contains("@") },
             context = VT,
         ),
-        DeferredEntityValidation(
-            validation = EntityValidation(TestEntity::id.name, { "" }, { it.id.toString().isNotEmpty() }),
+        DeferredEntityValidation<TestEntity>(
+            field = TestEntity::id.name,
+            message = { "" },
+            validate = { it.id.toString().isNotEmpty() },
         ),
     )
 

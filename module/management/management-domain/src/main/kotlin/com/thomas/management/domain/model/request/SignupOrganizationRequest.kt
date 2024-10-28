@@ -1,20 +1,20 @@
 package com.thomas.management.domain.model.request
 
-import java.time.OffsetDateTime
+import com.thomas.management.data.entity.value.AddressState
 
 data class SignupOrganizationRequest(
     val organizationName: String,
-    val fantasyName: String?,
-    val organizationNumber: String,
+    val fantasyName: String? = null,
+    val registrationNumber: String,
+    val maximumUsers: Int,
+    val maximumUnits: Int,
     val mainEmail: String,
     val mainPhone: String,
     val addressZipcode: String,
     val addressStreet: String,
     val addressNumber: String,
-    val addressComplement: String,
+    val addressComplement: String? = null,
+    val addressNeighborhood: String,
     val addressCity: String,
-    val addressState: String,
-    val isActive: Boolean,
-    val createAt: OffsetDateTime,
-    val updatedAt: OffsetDateTime,
+    val addressState: AddressState,
 )

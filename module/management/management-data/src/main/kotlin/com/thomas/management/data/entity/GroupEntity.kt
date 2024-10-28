@@ -4,6 +4,7 @@ import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
+import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.management.data.entity.info.BasicInfo
 import com.thomas.management.data.extension.LEGAL_NAME_REGEX
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupDescriptionInvalidLength
@@ -22,10 +23,11 @@ data class GroupEntity(
     val groupName: String,
     val groupDescription: String?,
     val groupOrganization: OrganizationEntity,
+    val organizationRoles: Set<SecurityOrganizationRole>,
     override val isActive: Boolean = true,
     override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
-): BaseEntity<GroupEntity>(), BasicInfo {
+) : BaseEntity<GroupEntity>(), BasicInfo {
 
     companion object {
         private const val MIN_NAME_SIZE = 5

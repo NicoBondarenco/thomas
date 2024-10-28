@@ -1,10 +1,12 @@
 package com.thomas.management.data.entity
 
+import com.thomas.core.aspect.MaskField
 import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.management.data.entity.info.BasicInfo
 import com.thomas.management.data.entity.info.ContactInfo
 import com.thomas.management.data.extension.NATURAL_NAME_REGEX
@@ -26,11 +28,14 @@ data class UserEntity(
     override val id: UUID = randomUUID(),
     val firstName: String,
     val lastName: String,
-    val documentNumber: String,
+    @MaskField val documentNumber: String,
     val profilePhoto: String? = null,
     val userGender: Gender? = null,
     val birthDate: LocalDate? = null,
+    @MaskField val passwordSalt: String,
+    @MaskField val passwordHash: String,
     val userOrganization: OrganizationEntity,
+    val organizationRoles: Set<SecurityOrganizationRole>,
     override val mainEmail: String,
     override val mainPhone: String,
     override val isActive: Boolean = true,

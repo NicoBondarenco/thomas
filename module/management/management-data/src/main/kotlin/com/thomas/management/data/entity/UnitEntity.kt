@@ -1,6 +1,5 @@
 package com.thomas.management.data.entity
 
-import com.thomas.core.extension.LETTERS_ONLY_REGEX_VALUE
 import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity

@@ -1,7 +1,7 @@
 package com.thomas.core.generator
 
-import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityUnitRole
 
 object RoleGenerator {
 

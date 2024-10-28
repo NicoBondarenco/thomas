@@ -15,6 +15,7 @@ object OrganizationGenerator {
         registrationNumber = randomRegistrationNumber(),
         mainEmail = randomEmail(),
         mainPhone = randomPhone(),
+        maximumUsers = 10,
         addressZipcode = randomZipcode(),
         addressStreet = randomString(),
         addressNumber = randomString(),

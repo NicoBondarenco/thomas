@@ -27,6 +27,8 @@ data class OrganizationEntity(
     val organizationName: String,
     val fantasyName: String? = null,
     val registrationNumber: String,
+    val maximumUsers: Int,
+    val maximumUnits: Int,
     override val mainEmail: String,
     override val mainPhone: String,
     override val addressZipcode: String,

@@ -8,6 +8,11 @@ plugins {
 dependencies {
 
     implementation(project(":core"))
+
+    implementation(project(":infrastructure:hasher:hasher"))
+
     implementation(project(":module:management:management-data"))
+
+    testImplementation(testFixtures(project(":core")))
 
 }
