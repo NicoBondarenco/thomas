@@ -19,7 +19,7 @@ suspend fun SignupRequest.toSignupEntity(
 
 suspend fun SignupEntity.toSignupResponse() = coroutineScope {
     SignupResponse(
-        organizationData = this@toSignupResponse.organizationData.toSignupOrganizationResponse(),
+        organizationData = this@toSignupResponse.organizationData.toOrganizationResponse(),
         userData = this@toSignupResponse.userData.toSignupUserResponse(),
     )
 }

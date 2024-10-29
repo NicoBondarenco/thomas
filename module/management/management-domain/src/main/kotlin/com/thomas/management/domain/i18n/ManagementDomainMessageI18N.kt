@@ -1,6 +1,7 @@
 package com.thomas.management.domain.i18n
 
 import com.thomas.core.i18n.BundleResolver
+import java.util.UUID
 
 object ManagementDomainMessageI18N : BundleResolver("strings/management-domain") {
 
@@ -16,11 +17,17 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //region ORGANIZATION
 
+    fun managementOrganizationValidationOrganizationDataInvalidData() =
+        formattedMessage("management.organization-validation.organization-data.invalid-data")
+
     fun managementOrganizationValidationOrganizationDataDuplicatedName() =
         formattedMessage("management.organization-validation.organization-data.duplicated-name")
 
     fun managementOrganizationValidationOrganizationDataDuplicatedRegistration() =
         formattedMessage("management.organization-validation.organization-data.duplicated-registration")
+
+    fun managementOrganizationSearchNotFoundErrorMessage(id: UUID) =
+        formattedMessage("management.organization-search.not-found.error-message", id)
 
     //endregion ORGANIZATION
 

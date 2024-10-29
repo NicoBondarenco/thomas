@@ -4,7 +4,7 @@ import com.thomas.management.data.entity.value.AddressState
 import java.time.OffsetDateTime
 import java.util.UUID
 
-data class SignupOrganizationResponse(
+data class OrganizationResponse(
     val id: UUID,
     val organizationName: String,
     val fantasyName: String?,

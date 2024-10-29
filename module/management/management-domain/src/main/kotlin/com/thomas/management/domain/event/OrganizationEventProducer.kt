@@ -6,4 +6,6 @@ interface OrganizationEventProducer {
 
     suspend fun organizationCreated(entity: OrganizationEntity)
 
+    suspend fun organizationUpdated(entity: OrganizationEntity)
+
 }

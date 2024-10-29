@@ -1,9 +1,14 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
+import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.management.domain.mock.organizationProducerMock
 import com.thomas.management.domain.mock.userProducerMock
+import com.thomas.management.domain.util.securityOrganization
+import com.thomas.management.domain.util.securityUser
 import io.mockk.clearMocks
 import java.util.stream.Stream
 import kotlin.reflect.KProperty1
@@ -71,6 +76,14 @@ abstract class DomainValidationTest {
         assertTrue(details.containsKey(field))
         assertEquals(1, details[field]!!.size)
         assertEquals(message, details[field]!!.first())
+    }
+
+    protected fun userWithOrganizationRole(role: SecurityOrganizationRole){
+        currentUser = securityUser.copy(
+            userOrganization = securityOrganization.copy(
+                organizationRoles = setOf(role),
+            ),
+        )
     }
 
     private fun Map<String, List<String>>.errorListMessage() = this.entries.joinToString("\n") {

@@ -1,11 +1,13 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -105,6 +107,12 @@ class SecurityOrganizationRoleTest {
     @Test
     fun `Security Role by Code not found`() {
         assertNull(SecurityOrganizationRole.byCode(987654321))
+    }
+
+    @Test
+    fun `Security Role displayable`(){
+        assertFalse(MASTER_ROLE.roleDisplayable)
+        assertTrue(ORGANIZATION_ALL.roleDisplayable)
     }
 
 }

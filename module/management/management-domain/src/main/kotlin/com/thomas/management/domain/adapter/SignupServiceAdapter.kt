@@ -38,12 +38,12 @@ import kotlinx.coroutines.coroutineScope
 
 class SignupServiceAdapter(
     private val signupRepository: SignupRepository,
-    private val organizationRepository: OrganizationRepository,
-    private val userRepository: UserRepository,
     private val signupProperties: SignupProperties,
     private val hasher: Hasher,
     private val organizationEventProducer: OrganizationEventProducer,
     private val userEventProducer: UserEventProducer,
+    organizationRepository: OrganizationRepository,
+    userRepository: UserRepository,
 ) : SignupService {
 
     private val organizationValidations = listOf(

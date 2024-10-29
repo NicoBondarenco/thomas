@@ -3,29 +3,33 @@ package com.thomas.core.model.security
 import com.thomas.core.model.security.SecurityOrganizationRoleSubgroup.MANAGEMENT_GROUP
 import com.thomas.core.model.security.SecurityOrganizationRoleSubgroup.MANAGEMENT_UNIT
 import com.thomas.core.model.security.SecurityOrganizationRoleSubgroup.MANAGEMENT_USER
+import com.thomas.core.model.security.SecurityOrganizationRoleSubgroup.MASTER_SUBGROUP
 import com.thomas.core.model.security.SecurityOrganizationRoleSubgroup.ORGANIZATION_SUBGROUP
 
 enum class SecurityOrganizationRole(
     override val roleCode: Int,
     override val roleOrder: Int,
     override val roleSubgroup: SecurityOrganizationRoleSubgroup,
+    val roleDisplayable: Boolean,
 ) : SecurityRole<SecurityOrganizationRole, SecurityOrganizationRoleSubgroup, SecurityOrganizationRoleGroup> {
 
-    ORGANIZATION_ALL(0, 1, ORGANIZATION_SUBGROUP),
+    MASTER_ROLE(0, 1, MASTER_SUBGROUP, false),
 
-    USER_READ(1, 1, MANAGEMENT_USER),
-    USER_CREATE(2, 2, MANAGEMENT_USER),
-    USER_UPDATE(3, 3, MANAGEMENT_USER),
+    ORGANIZATION_ALL(1, 1, ORGANIZATION_SUBGROUP, true),
 
-    GROUP_READ(4, 1, MANAGEMENT_GROUP),
-    GROUP_CREATE(5, 2, MANAGEMENT_GROUP),
-    GROUP_UPDATE(6, 3, MANAGEMENT_GROUP),
-    GROUP_DELETE(7, 4, MANAGEMENT_GROUP),
+    USER_READ(2, 1, MANAGEMENT_USER, true),
+    USER_CREATE(3, 2, MANAGEMENT_USER, true),
+    USER_UPDATE(4, 3, MANAGEMENT_USER, true),
 
-    UNIT_READ(8, 1, MANAGEMENT_UNIT),
-    UNIT_CREATE(9, 2, MANAGEMENT_UNIT),
-    UNIT_UPDATE(10, 3, MANAGEMENT_UNIT),
-    UNIT_DELETE(11, 4, MANAGEMENT_UNIT);
+    GROUP_READ(5, 1, MANAGEMENT_GROUP, true),
+    GROUP_CREATE(6, 2, MANAGEMENT_GROUP, true),
+    GROUP_UPDATE(7, 3, MANAGEMENT_GROUP, true),
+    GROUP_DELETE(8, 4, MANAGEMENT_GROUP, true),
+
+    UNIT_READ(9, 1, MANAGEMENT_UNIT, true),
+    UNIT_CREATE(10, 2, MANAGEMENT_UNIT, true),
+    UNIT_UPDATE(11, 3, MANAGEMENT_UNIT, true),
+    UNIT_DELETE(12, 4, MANAGEMENT_UNIT, true);
 
     companion object {
         fun byCode(code: Int): SecurityOrganizationRole? =
