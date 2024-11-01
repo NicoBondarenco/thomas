@@ -31,6 +31,25 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //endregion ORGANIZATION
 
+    //region UNIT
+
+    fun managementUnitValidationUnitDataInvalidData() =
+        formattedMessage("management.unit-validation.unit-data.invalid-data")
+
+    fun managementUnitValidationUnitDataDuplicatedName() =
+        formattedMessage("management.unit-validation.unit-data.duplicated-name")
+
+    fun managementUnitValidationUnitDataDuplicatedDocument() =
+        formattedMessage("management.unit-validation.unit-data.duplicated-document")
+
+    fun managementUnitValidationOrganizationDataMaxUnit() =
+        formattedMessage("management.unit-validation.organization-data.max-unit")
+
+    fun managementUnitSearchNotFoundErrorMessage(id: UUID) =
+        formattedMessage("management.unit-search.not-found.error-message", id)
+
+    //endregion UNIT
+
     //region USER
 
     fun managementUserValidationUserDataDuplicatedDocument() =

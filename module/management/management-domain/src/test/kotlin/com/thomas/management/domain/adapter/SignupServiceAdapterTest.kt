@@ -17,7 +17,7 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementU
 import com.thomas.management.domain.mock.hasherMock
 import com.thomas.management.domain.mock.organizationNames
 import com.thomas.management.domain.mock.organizationProducerMock
-import com.thomas.management.domain.mock.organizationRegistration
+import com.thomas.management.domain.mock.organizationRegistrations
 import com.thomas.management.domain.mock.organizationRepositoryMock
 import com.thomas.management.domain.mock.signupRepositoryMock
 import com.thomas.management.domain.mock.userEmails
@@ -70,7 +70,7 @@ class SignupServiceAdapterTest : DomainValidationTest() {
             organizationNames.add(this)
         }
         val existentRegistration = randomRegistrationNumber().apply {
-            organizationRegistration.add(this)
+            organizationRegistrations.add(this)
         }
         val existentEmail = randomEmail().apply {
             userEmails.add(this)
@@ -143,7 +143,7 @@ class SignupServiceAdapterTest : DomainValidationTest() {
     override fun beforeEach() {
         super.beforeEach()
         organizationNames.clear()
-        organizationRegistration.clear()
+        organizationRegistrations.clear()
         userEmails.clear()
         SIGNUP_ENABLED = true
     }
@@ -172,7 +172,7 @@ class SignupServiceAdapterTest : DomainValidationTest() {
             organizationNames.add(this)
         }
         val existentRegistration = randomRegistrationNumber().apply {
-            organizationRegistration.add(this)
+            organizationRegistrations.add(this)
         }
         val existentEmail = randomEmail().apply {
             userEmails.add(this)

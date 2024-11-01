@@ -1,16 +1,18 @@
 package com.thomas.management.domain.model.response
 
+import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.value.AddressState
+import com.thomas.management.data.entity.value.UnitType
 import java.time.OffsetDateTime
 import java.util.UUID
 
-data class OrganizationResponse(
+data class UnitResponse(
     val id: UUID,
-    val organizationName: String,
+    val unitName: String,
     val fantasyName: String?,
-    val registrationNumber: String,
-    val maximumUsers: Int,
-    val maximumUnits: Int,
+    val documentNumber: String,
+    val unitType: UnitType,
+    val unitOrganization: OrganizationResponse,
     val mainEmail: String,
     val mainPhone: String,
     val addressZipcode: String,

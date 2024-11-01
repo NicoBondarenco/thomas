@@ -34,6 +34,7 @@ suspend fun OrganizationEntity.toOrganizationResponse() = coroutineScope {
         fantasyName = this@toOrganizationResponse.fantasyName,
         registrationNumber = this@toOrganizationResponse.registrationNumber,
         maximumUsers = this@toOrganizationResponse.maximumUsers,
+        maximumUnits = this@toOrganizationResponse.maximumUnits,
         mainEmail = this@toOrganizationResponse.mainEmail,
         mainPhone = this@toOrganizationResponse.mainPhone,
         addressZipcode = this@toOrganizationResponse.addressZipcode,

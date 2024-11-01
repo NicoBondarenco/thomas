@@ -4,12 +4,12 @@ import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
-import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.management.domain.mock.organizationProducerMock
 import com.thomas.management.domain.mock.userProducerMock
 import com.thomas.management.domain.util.securityOrganization
 import com.thomas.management.domain.util.securityUser
 import io.mockk.clearMocks
+import java.util.UUID
 import java.util.stream.Stream
 import kotlin.reflect.KProperty1
 import kotlinx.coroutines.test.runTest
@@ -78,9 +78,13 @@ abstract class DomainValidationTest {
         assertEquals(message, details[field]!!.first())
     }
 
-    protected fun userWithOrganizationRole(role: SecurityOrganizationRole){
+    protected fun userWithOrganizationRole(
+        role: SecurityOrganizationRole,
+        organizationId: UUID = UUID.randomUUID(),
+    ) {
         currentUser = securityUser.copy(
             userOrganization = securityOrganization.copy(
+                organizationId = organizationId,
                 organizationRoles = setOf(role),
             ),
         )

@@ -17,7 +17,7 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementO
 import com.thomas.management.domain.mock.organizationNames
 import com.thomas.management.domain.mock.organizationNotFound
 import com.thomas.management.domain.mock.organizationProducerMock
-import com.thomas.management.domain.mock.organizationRegistration
+import com.thomas.management.domain.mock.organizationRegistrations
 import com.thomas.management.domain.mock.organizationRepositoryMock
 import com.thomas.management.domain.model.response.OrganizationResponse
 import com.thomas.management.domain.util.organizationUpsertRequest
@@ -29,8 +29,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -46,7 +44,7 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
     override fun beforeEach() {
         super.beforeEach()
         organizationNames.clear()
-        organizationRegistration.clear()
+        organizationRegistrations.clear()
         organizationNotFound.clear()
         clearContext()
     }
@@ -67,10 +65,10 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
             organizationNames.add(this)
         }
         val existentRegistrationCreate = randomRegistrationNumber().apply {
-            organizationRegistration.add(this)
+            organizationRegistrations.add(this)
         }
         val existentRegistrationUpdate = randomRegistrationNumber().apply {
-            organizationRegistration.add(this)
+            organizationRegistrations.add(this)
         }
 
         this.add(
@@ -146,7 +144,7 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
     }
 
     @Test
-    fun `User create without role`() = runTest(StandardTestDispatcher()) {
+    fun `Organization create without role`() = runTest(StandardTestDispatcher()) {
         currentUser = securityUser
         assertThrows<UnauthorizedUserException> {
             organizationService.create(organizationUpsertRequest)
@@ -154,7 +152,7 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
     }
 
     @Test
-    fun `User update without role`() = runTest(StandardTestDispatcher()) {
+    fun `Organization update without role`() = runTest(StandardTestDispatcher()) {
         currentUser = securityUser
         assertThrows<UnauthorizedUserException> {
             organizationService.update(randomUUID(), organizationUpsertRequest)
@@ -162,7 +160,7 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
     }
 
     @Test
-    fun `User one without role`() = runTest(StandardTestDispatcher()) {
+    fun `Organization one without role`() = runTest(StandardTestDispatcher()) {
         currentUser = securityUser
         assertThrows<UnauthorizedUserException> {
             organizationService.one(randomUUID())
@@ -170,7 +168,7 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
     }
 
     @Test
-    fun `User page without role`() = runTest(StandardTestDispatcher()) {
+    fun `Organization page without role`() = runTest(StandardTestDispatcher()) {
         currentUser = securityUser
         assertThrows<UnauthorizedUserException> {
             organizationService.page(null, null, pageRequestPeriod)

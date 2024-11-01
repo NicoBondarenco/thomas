@@ -1,16 +1,13 @@
-package com.thomas.management.domain.model.response
+package com.thomas.management.domain.model.request
 
 import com.thomas.management.data.entity.value.AddressState
-import java.time.OffsetDateTime
-import java.util.UUID
+import com.thomas.management.data.entity.value.UnitType
 
-data class OrganizationResponse(
-    val id: UUID,
-    val organizationName: String,
+data class UnitUpsertRequest(
+    val unitName: String,
     val fantasyName: String?,
-    val registrationNumber: String,
-    val maximumUsers: Int,
-    val maximumUnits: Int,
+    val documentNumber: String,
+    val unitType: UnitType,
     val mainEmail: String,
     val mainPhone: String,
     val addressZipcode: String,
@@ -21,6 +18,4 @@ data class OrganizationResponse(
     val addressCity: String,
     val addressState: AddressState,
     val isActive: Boolean,
-    val createdAt: OffsetDateTime,
-    val updatedAt: OffsetDateTime,
 )

@@ -9,7 +9,7 @@ interface OrganizationRepository {
 
     suspend fun hasAnotherWithName(id: UUID, organizationName: String): Boolean
 
-    suspend fun hasAnotherWithRegistration(id: UUID, registrationName: String): Boolean
+    suspend fun hasAnotherWithRegistration(id: UUID, registrationNumber: String): Boolean
 
     suspend fun one(id: UUID): OrganizationEntity?
 
