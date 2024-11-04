@@ -3,7 +3,10 @@ package com.thomas.management.domain.adapter
 import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.extension.toSnakeCase
+import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.model.security.SecurityRole
 import com.thomas.core.util.BooleanUtils.randomBoolean
 import com.thomas.core.util.StringUtils.randomDocumentNumber
@@ -40,6 +43,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -436,6 +440,73 @@ class UnitServiceAdapterTest : DomainValidationTest() {
                 unitService.one(this)
             }
             assertEquals(managementUnitSearchNotFoundErrorMessage(this), exception.message)
+        }
+    }
+
+    @Test
+    fun `All errors create`() = runTest(StandardTestDispatcher()) {
+        val existentName = randomString(numbers = false).apply { unitNames.add(this) }
+        val existentDocument = randomDocumentNumber().apply { unitDocuments.add(this) }
+        val maxUnits = randomUUID().apply { unitLimit.add(this) }
+
+        userWithOrganizationRole(MASTER_ROLE, maxUnits)
+
+        val exception = assertThrows<EntityValidationException> {
+            unitService.create(
+                unitUpsertRequest.copy(
+                    unitName = existentName,
+                    documentNumber = existentDocument,
+                    unitType = NATURAL,
+                )
+            )
+        }
+        assertEquals(managementUnitValidationUnitDataInvalidData(), exception.message)
+        val details = (exception.detail as? Map<String, List<String>>)!!
+
+        assertEquals(3, details.size, details.errorListMessage())
+        mapOf(
+            UnitEntity::unitName to managementUnitValidationUnitDataDuplicatedName(),
+            UnitEntity::documentNumber to managementUnitValidationUnitDataDuplicatedDocument(),
+            UnitEntity::unitOrganization to managementUnitValidationOrganizationDataMaxUnit(),
+        ).forEach { entry ->
+            val field = entry.key.name.toSnakeCase()
+            assertTrue(details.containsKey(field))
+            assertEquals(1, details[field]!!.size)
+            assertEquals(entry.value, details[field]!!.first())
+        }
+    }
+
+    @Test
+    fun `All errors update`() = runTest(StandardTestDispatcher()) {
+        val existentName = randomString(numbers = false).apply { unitNames.add(this) }
+        val existentDocument = randomDocumentNumber().apply { unitDocuments.add(this) }
+        val maxUnits = randomUUID().apply { unitLimit.add(this) }
+
+        userWithOrganizationRole(MASTER_ROLE, maxUnits)
+
+        val exception = assertThrows<EntityValidationException> {
+            unitService.update(
+                randomUUID(),
+                unitUpsertRequest.copy(
+                    unitName = existentName,
+                    documentNumber = existentDocument,
+                    unitType = NATURAL,
+                )
+            )
+        }
+        assertEquals(managementUnitValidationUnitDataInvalidData(), exception.message)
+        val details = (exception.detail as? Map<String, List<String>>)!!
+
+        assertEquals(3, details.size, details.errorListMessage())
+        mapOf(
+            UnitEntity::unitName to managementUnitValidationUnitDataDuplicatedName(),
+            UnitEntity::documentNumber to managementUnitValidationUnitDataDuplicatedDocument(),
+            UnitEntity::unitOrganization to managementUnitValidationOrganizationDataMaxUnit(),
+        ).forEach { entry ->
+            val field = entry.key.name.toSnakeCase()
+            assertTrue(details.containsKey(field))
+            assertEquals(1, details[field]!!.size)
+            assertEquals(entry.value, details[field]!!.first())
         }
     }
 

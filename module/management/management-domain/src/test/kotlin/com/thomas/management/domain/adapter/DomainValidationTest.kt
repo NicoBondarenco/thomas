@@ -90,7 +90,7 @@ abstract class DomainValidationTest {
         )
     }
 
-    private fun Map<String, List<String>>.errorListMessage() = this.entries.joinToString("\n") {
+    protected fun Map<String, List<String>>.errorListMessage() = this.entries.joinToString("\n") {
         "${it.key} - ${it.value.joinToString("; ")}"
     }
 
