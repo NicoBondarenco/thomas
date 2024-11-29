@@ -11,8 +11,10 @@ import com.thomas.management.domain.OrganizationService
 import com.thomas.management.domain.event.OrganizationEventProducer
 import com.thomas.management.domain.exception.OrganizationNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataInvalidData
+import com.thomas.management.domain.model.mapper.toOrganizationCreatedEvent
 import com.thomas.management.domain.model.mapper.toOrganizationEntity
 import com.thomas.management.domain.model.mapper.toOrganizationResponse
+import com.thomas.management.domain.model.mapper.toOrganizationUpdatedEvent
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.OrganizationUpsertRequest
 import com.thomas.management.domain.model.response.OrganizationResponse
@@ -55,7 +57,7 @@ class OrganizationServiceAdapter(
     ): OrganizationResponse = authorized(organizationUpsertRoles) {
         request.toOrganizationEntity().upsert(
             { organizationRepository.create(it) },
-            { organizationEventProducer.organizationCreated(it) }
+            { organizationEventProducer.organizationCreated(it.toOrganizationCreatedEvent()) }
         )
     }
 
@@ -66,7 +68,7 @@ class OrganizationServiceAdapter(
     ): OrganizationResponse = authorized(organizationUpsertRoles) {
         findOrganizationByIdOrThrows(id).updateFromRequest(request).upsert(
             { organizationRepository.update(it) },
-            { organizationEventProducer.organizationUpdated(it) }
+            { organizationEventProducer.organizationUpdated(it.toOrganizationUpdatedEvent()) }
         )
     }
 

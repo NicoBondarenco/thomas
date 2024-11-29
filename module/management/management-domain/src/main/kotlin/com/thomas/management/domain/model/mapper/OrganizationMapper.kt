@@ -1,5 +1,7 @@
 package com.thomas.management.domain.model.mapper
 
+import com.thomas.contract.messaging.management.organization.OrganizationCreatedEvent
+import com.thomas.contract.messaging.management.organization.OrganizationUpdatedEvent
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.domain.model.request.OrganizationUpsertRequest
 import com.thomas.management.domain.model.request.SignupOrganizationRequest
@@ -87,5 +89,51 @@ suspend fun OrganizationEntity.updateFromRequest(request: OrganizationUpsertRequ
         addressState = request.addressState,
         isActive = request.isActive,
         updatedAt = now(UTC)
+    )
+}
+
+suspend fun OrganizationEntity.toOrganizationCreatedEvent() = coroutineScope {
+    OrganizationCreatedEvent(
+        id = this@toOrganizationCreatedEvent.id,
+        organizationName = this@toOrganizationCreatedEvent.organizationName,
+        fantasyName = this@toOrganizationCreatedEvent.fantasyName,
+        registrationNumber = this@toOrganizationCreatedEvent.registrationNumber,
+        maximumUsers = this@toOrganizationCreatedEvent.maximumUsers,
+        maximumUnits = this@toOrganizationCreatedEvent.maximumUnits,
+        mainEmail = this@toOrganizationCreatedEvent.mainEmail,
+        mainPhone = this@toOrganizationCreatedEvent.mainPhone,
+        addressZipcode = this@toOrganizationCreatedEvent.addressZipcode,
+        addressStreet = this@toOrganizationCreatedEvent.addressStreet,
+        addressNumber = this@toOrganizationCreatedEvent.addressNumber,
+        addressComplement = this@toOrganizationCreatedEvent.addressComplement,
+        addressNeighborhood = this@toOrganizationCreatedEvent.addressNeighborhood,
+        addressCity = this@toOrganizationCreatedEvent.addressCity,
+        addressState = this@toOrganizationCreatedEvent.addressState.toAddressStateEvent(),
+        isActive = this@toOrganizationCreatedEvent.isActive,
+        createdAt = this@toOrganizationCreatedEvent.createdAt,
+        updatedAt = this@toOrganizationCreatedEvent.updatedAt,
+    )
+}
+
+suspend fun OrganizationEntity.toOrganizationUpdatedEvent() = coroutineScope {
+    OrganizationUpdatedEvent(
+        id = this@toOrganizationUpdatedEvent.id,
+        organizationName = this@toOrganizationUpdatedEvent.organizationName,
+        fantasyName = this@toOrganizationUpdatedEvent.fantasyName,
+        registrationNumber = this@toOrganizationUpdatedEvent.registrationNumber,
+        maximumUsers = this@toOrganizationUpdatedEvent.maximumUsers,
+        maximumUnits = this@toOrganizationUpdatedEvent.maximumUnits,
+        mainEmail = this@toOrganizationUpdatedEvent.mainEmail,
+        mainPhone = this@toOrganizationUpdatedEvent.mainPhone,
+        addressZipcode = this@toOrganizationUpdatedEvent.addressZipcode,
+        addressStreet = this@toOrganizationUpdatedEvent.addressStreet,
+        addressNumber = this@toOrganizationUpdatedEvent.addressNumber,
+        addressComplement = this@toOrganizationUpdatedEvent.addressComplement,
+        addressNeighborhood = this@toOrganizationUpdatedEvent.addressNeighborhood,
+        addressCity = this@toOrganizationUpdatedEvent.addressCity,
+        addressState = this@toOrganizationUpdatedEvent.addressState.toAddressStateEvent(),
+        isActive = this@toOrganizationUpdatedEvent.isActive,
+        createdAt = this@toOrganizationUpdatedEvent.createdAt,
+        updatedAt = this@toOrganizationUpdatedEvent.updatedAt,
     )
 }

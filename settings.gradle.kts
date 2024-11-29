@@ -335,6 +335,9 @@ dependencyResolutionManagement {
 
 include("core")
 
+include("infrastructure:contract:contract-messaging")
+findProject(":infrastructure:contract:contract-messaging")?.name = "contract-messaging"
+
 include("infrastructure:hasher:hasher")
 findProject(":infrastructure:hasher:hasher")?.name = "hasher"
 

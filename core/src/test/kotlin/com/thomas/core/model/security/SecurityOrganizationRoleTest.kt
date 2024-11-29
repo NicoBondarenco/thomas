@@ -101,7 +101,7 @@ class SecurityOrganizationRoleTest {
 
     @Test
     fun `Security Role by Code`() {
-        assertEquals(ORGANIZATION_ALL, SecurityOrganizationRole.byCode(0))
+        assertEquals(MASTER_ROLE, SecurityOrganizationRole.byCode(0))
     }
 
     @Test

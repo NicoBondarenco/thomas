@@ -1,11 +1,12 @@
 package com.thomas.management.domain.event
 
-import com.thomas.management.data.entity.OrganizationEntity
+import com.thomas.contract.messaging.management.organization.OrganizationCreatedEvent
+import com.thomas.contract.messaging.management.organization.OrganizationUpdatedEvent
 
 interface OrganizationEventProducer {
 
-    suspend fun organizationCreated(entity: OrganizationEntity)
+    suspend fun organizationCreated(event: OrganizationCreatedEvent)
 
-    suspend fun organizationUpdated(entity: OrganizationEntity)
+    suspend fun organizationUpdated(event: OrganizationUpdatedEvent)
 
 }

@@ -8,21 +8,21 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementU
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUnitValidationUnitDataDuplicatedDocument
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUnitValidationUnitDataDuplicatedName
 
-fun UnitRepository.sameName() = DeferredEntityValidation(
+fun UnitRepository.sameName() = DeferredEntityValidation<UnitEntity>(
     field = UnitEntity::unitName,
     message = { managementUnitValidationUnitDataDuplicatedName() },
     validate = { !this.hasAnotherWithName(it.id, it.unitOrganization.id, it.unitName) },
     context = VT,
 )
 
-fun UnitRepository.sameRegistration() = DeferredEntityValidation(
+fun UnitRepository.sameRegistration() = DeferredEntityValidation<UnitEntity>(
     field = UnitEntity::documentNumber,
     message = { managementUnitValidationUnitDataDuplicatedDocument() },
     validate = { !this.hasAnotherWithDocument(it.id, it.unitOrganization.id, it.documentNumber) },
     context = VT,
 )
 
-fun UnitRepository.maxUnits() = DeferredEntityValidation(
+fun UnitRepository.maxUnits() = DeferredEntityValidation<UnitEntity>(
     field = UnitEntity::unitOrganization,
     message = { managementUnitValidationOrganizationDataMaxUnit() },
     validate = { !this.limitReached(it.id, it.unitOrganization.id) },

@@ -40,31 +40,31 @@ class BaseEntityExtensionTest {
 
     private val validations = listOf(
         DeferredEntityValidation(
-            field = TestEntity::name.name,
+            field = TestEntity::name,
             message = { ERROR_MESSAGE_01 },
             validate = { it.name.trim().isNotEmpty() },
             context = EMPTY,
         ),
-        DeferredEntityValidation<TestEntity>(
-            field = TestEntity::name.name,
+        DeferredEntityValidation(
+            field = TestEntity::name,
             message = { ERROR_MESSAGE_02 },
             validate = { it.name.length <= 10 },
             context = IO,
         ),
-        DeferredEntityValidation<TestEntity>(
-            field = TestEntity::name.name,
+        DeferredEntityValidation(
+            field = TestEntity::name,
             message = { ERROR_MESSAGE_03 },
             validate = { it.name.length > 2 },
             context = IO,
         ),
-        DeferredEntityValidation<TestEntity>(
-            field = TestEntity::email.name,
+        DeferredEntityValidation(
+            field = TestEntity::email,
             message = { ERROR_MESSAGE_04 },
             validate = { it.email.contains("@") },
             context = VT,
         ),
-        DeferredEntityValidation<TestEntity>(
-            field = TestEntity::id.name,
+        DeferredEntityValidation(
+            field = TestEntity::id,
             message = { "" },
             validate = { it.id.toString().isNotEmpty() },
         ),

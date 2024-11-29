@@ -52,11 +52,29 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //region USER
 
+    fun managementUserValidationUserDataInvalidData() =
+        formattedMessage("management.user-validation.user-data.invalid-data")
+
     fun managementUserValidationUserDataDuplicatedDocument() =
         formattedMessage("management.user-validation.user-data.duplicated-document")
 
     fun managementUserValidationUserDataDuplicatedEmail() =
         formattedMessage("management.user-validation.user-data.duplicated-email")
+
+    fun managementUserValidationOrganizationDataMaxUser() =
+        formattedMessage("management.user-validation.organization-data.max-user")
+
+    fun managementUserValidationGroupDataNotFound(ids: Set<UUID>) =
+        formattedMessage("management.user-validation.group-data.not-found", ids.joinToString(", ") { it.toString() })
+
+    fun managementUserValidationUnitDataNotFound(ids: Set<UUID>) =
+        formattedMessage("management.user-validation.unit-data.not-found", ids.joinToString(", ") { it.toString() })
+
+    fun managementUserValidationUserDataInvalidPassword() =
+        formattedMessage("management.user-validation.user-data.invalid-password")
+
+    fun managementUserSearchNotFoundErrorMessage(id: UUID) =
+        formattedMessage("management.user-search.not-found.error-message", id)
 
     //endregion USER
 

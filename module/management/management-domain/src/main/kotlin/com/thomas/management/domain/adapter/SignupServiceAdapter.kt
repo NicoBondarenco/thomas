@@ -6,12 +6,10 @@ import com.thomas.core.extension.throws
 import com.thomas.core.extension.validate
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.DeferredEntityValidation
-import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.VT
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.hasher.Hasher
-import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.SignupEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationInvalidEntityErrorMessage
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationInvalidEntityErrorMessage
 import com.thomas.management.data.repository.OrganizationRepository
@@ -21,15 +19,15 @@ import com.thomas.management.domain.SignupService
 import com.thomas.management.domain.event.OrganizationEventProducer
 import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.exception.SignupDisabledException
-import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataDuplicatedName
-import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataDuplicatedRegistration
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementSignupValidationSignupDataInvalidData
-import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataDuplicatedEmail
+import com.thomas.management.domain.model.mapper.toOrganizationCreatedEvent
 import com.thomas.management.domain.model.mapper.toSignupEntity
 import com.thomas.management.domain.model.mapper.toSignupResponse
+import com.thomas.management.domain.model.mapper.toUserCreatedEvent
 import com.thomas.management.domain.model.request.SignupRequest
 import com.thomas.management.domain.properties.SignupProperties
 import com.thomas.management.domain.validation.sameEmail
+import com.thomas.management.domain.validation.sameEmailSignup
 import com.thomas.management.domain.validation.sameName
 import com.thomas.management.domain.validation.sameRegistration
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +50,7 @@ class SignupServiceAdapter(
     )
 
     private val userValidations = listOf(
-        userRepository.sameEmail()
+        userRepository.sameEmailSignup(),
     )
 
     @MethodLog
@@ -65,8 +63,8 @@ class SignupServiceAdapter(
             validateEntity(it)
             signupRepository.signup(it)
         }.apply {
-            organizationEventProducer.organizationCreated(this.organizationData)
-            userEventProducer.userCreated(this.userData)
+            organizationEventProducer.organizationCreated(this.organizationData.toOrganizationCreatedEvent())
+            userEventProducer.userCreated(this.userData.toUserCreatedEvent())
         }.toSignupResponse()
     } ?: throw SignupDisabledException()
 

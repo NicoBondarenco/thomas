@@ -1,14 +1,15 @@
 package com.thomas.management.domain.event
 
-import com.thomas.management.data.entity.UnitEntity
-import java.util.UUID
+import com.thomas.contract.messaging.management.unit.UnitCreatedEvent
+import com.thomas.contract.messaging.management.unit.UnitDeletedEvent
+import com.thomas.contract.messaging.management.unit.UnitUpdatedEvent
 
 interface UnitEventProducer {
 
-    suspend fun unitCreated(entity: UnitEntity)
+    suspend fun unitCreated(event: UnitCreatedEvent)
 
-    suspend fun unitUpdated(entity: UnitEntity)
+    suspend fun unitUpdated(event: UnitUpdatedEvent)
 
-    suspend fun unitDeleted(id: UUID)
+    suspend fun unitDeleted(event: UnitDeletedEvent)
 
 }

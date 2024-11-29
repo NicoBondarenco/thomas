@@ -1,9 +1,12 @@
 package com.thomas.management.domain.event
 
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.contract.messaging.management.user.UserCreatedEvent
+import com.thomas.contract.messaging.management.user.UserUpdatedEvent
 
 interface UserEventProducer {
 
-    suspend fun userCreated(entity: UserEntity)
+    suspend fun userCreated(event: UserCreatedEvent)
+
+    suspend fun userUpdated(event: UserUpdatedEvent)
 
 }

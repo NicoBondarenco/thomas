@@ -7,10 +7,6 @@ import java.util.UUID
 
 interface UnitRepository {
 
-    suspend fun hasAnotherWithName(id: UUID, organizationId: UUID, unitName: String): Boolean
-
-    suspend fun hasAnotherWithDocument(id: UUID, organizationId: UUID, documentNumber: String): Boolean
-
     suspend fun one(id: UUID, organizationId: UUID): UnitEntity?
 
     suspend fun page(organizationId: UUID, keywordText: String?, isActive: Boolean?, pageable: PageRequestPeriod): PageResponse<UnitEntity>
@@ -22,5 +18,11 @@ interface UnitRepository {
     suspend fun delete(id: UUID)
 
     suspend fun limitReached(id: UUID, organizationId: UUID): Boolean
+
+    suspend fun hasAnotherWithName(id: UUID, organizationId: UUID, unitName: String): Boolean
+
+    suspend fun hasAnotherWithDocument(id: UUID, organizationId: UUID, documentNumber: String): Boolean
+
+    suspend fun allByIds(ids: Set<UUID>, organizationId: UUID): Set<UnitEntity>
 
 }

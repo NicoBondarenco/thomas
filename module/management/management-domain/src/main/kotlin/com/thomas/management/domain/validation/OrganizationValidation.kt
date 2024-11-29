@@ -7,14 +7,14 @@ import com.thomas.management.data.repository.OrganizationRepository
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataDuplicatedName
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataDuplicatedRegistration
 
-fun OrganizationRepository.sameName() = DeferredEntityValidation(
+fun OrganizationRepository.sameName() = DeferredEntityValidation<OrganizationEntity>(
     field = OrganizationEntity::organizationName,
     message = { managementOrganizationValidationOrganizationDataDuplicatedName() },
     validate = { !this.hasAnotherWithName(it.id, it.organizationName) },
     context = VT,
 )
 
-fun OrganizationRepository.sameRegistration() = DeferredEntityValidation(
+fun OrganizationRepository.sameRegistration() = DeferredEntityValidation<OrganizationEntity>(
     field = OrganizationEntity::registrationNumber,
     message = { managementOrganizationValidationOrganizationDataDuplicatedRegistration() },
     validate = { !this.hasAnotherWithRegistration(it.id, it.registrationNumber) },

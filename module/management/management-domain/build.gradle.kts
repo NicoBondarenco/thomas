@@ -9,6 +9,7 @@ dependencies {
 
     implementation(project(":core"))
 
+    implementation(project(":infrastructure:contract:contract-messaging"))
     implementation(project(":infrastructure:hasher:hasher"))
 
     implementation(project(":module:management:management-data"))
