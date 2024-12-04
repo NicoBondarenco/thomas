@@ -2,13 +2,13 @@ package com.thomas.management.domain
 
 import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
-import com.thomas.core.model.security.SecurityOrganizationRole.USER_READ
-import com.thomas.core.model.security.SecurityOrganizationRole.USER_CREATE
-import com.thomas.core.model.security.SecurityOrganizationRole.USER_UPDATE
-import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_READ
 import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_CREATE
-import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_UPDATE
 import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_DELETE
+import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_READ
+import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_UPDATE
+import com.thomas.core.model.security.SecurityOrganizationRole.USER_CREATE
+import com.thomas.core.model.security.SecurityOrganizationRole.USER_READ
+import com.thomas.core.model.security.SecurityOrganizationRole.USER_UPDATE
 import com.thomas.core.model.security.SecurityRole
 
 val organizationUpsertRoles = arrayOf<SecurityRole<*, *, *>>(

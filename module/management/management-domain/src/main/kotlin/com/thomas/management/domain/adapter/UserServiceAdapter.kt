@@ -14,9 +14,9 @@ import com.thomas.management.data.repository.OrganizationRepository
 import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.UserService
-import com.thomas.management.domain.event.UserEventProducer
 import com.thomas.management.domain.exception.UserNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidData
+import com.thomas.management.domain.messaging.event.UserEventProducer
 import com.thomas.management.domain.model.mapper.toUserCreatedEvent
 import com.thomas.management.domain.model.mapper.toUserDetailResponse
 import com.thomas.management.domain.model.mapper.toUserEntity
@@ -45,12 +45,12 @@ import kotlinx.coroutines.coroutineScope
 
 class UserServiceAdapter(
     private val organizationRepository: OrganizationRepository,
+    private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
     private val unitRepository: UnitRepository,
     private val userProducer: UserEventProducer,
     private val hasher: Hasher,
-    userRepository: UserRepository,
-) : UserBaseAdapter(userRepository), UserService {
+) : UserService {
 
     private fun userCreateValidations(
         userGroups: Set<UUID>,

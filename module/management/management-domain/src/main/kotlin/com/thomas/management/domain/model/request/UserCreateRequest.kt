@@ -18,4 +18,4 @@ data class UserCreateRequest(
     val organizationRoles: Set<SecurityOrganizationRole>,
     override val userGroups: Set<UUID>,
     override val userUnits: Map<UUID, Set<SecurityUnitRole>>,
-): UserRequest
+) : UserRequest

@@ -8,9 +8,9 @@ import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.repository.OrganizationRepository
 import com.thomas.management.domain.OrganizationService
-import com.thomas.management.domain.event.OrganizationEventProducer
 import com.thomas.management.domain.exception.OrganizationNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataInvalidData
+import com.thomas.management.domain.messaging.event.OrganizationEventProducer
 import com.thomas.management.domain.model.mapper.toOrganizationCreatedEvent
 import com.thomas.management.domain.model.mapper.toOrganizationEntity
 import com.thomas.management.domain.model.mapper.toOrganizationResponse

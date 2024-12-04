@@ -33,7 +33,7 @@ fun UserRepository.sameEmail() = DeferredEntityValidation<UserCompleteEntity>(
 fun UserRepository.sameDocument() = DeferredEntityValidation<UserCompleteEntity>(
     field = UserEntity::documentNumber,
     message = { managementUserValidationUserDataDuplicatedDocument() },
-    validate = { !this.hasAnotherWithDocument(it.id, it.userData.userOrganization.id, it.userData.mainEmail) },
+    validate = { !this.hasAnotherWithDocument(it.id, it.userData.userOrganization.id, it.userData.documentNumber) },
     context = VT,
 )
 

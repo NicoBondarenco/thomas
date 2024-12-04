@@ -4,16 +4,28 @@ import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.UserCompleteEntity
+import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.repository.GroupRepository
 import com.thomas.management.data.repository.OrganizationRepository
+import com.thomas.management.data.repository.PasswordResetRepository
 import com.thomas.management.data.repository.SignupRepository
 import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.data.repository.UserRepository
+import com.thomas.management.domain.util.groupEntity
 import com.thomas.management.domain.util.organizationEntity
+import com.thomas.management.domain.util.passwordResetEntity
 import com.thomas.management.domain.util.unitEntity
+import com.thomas.management.domain.util.userCompleteEntity
+import com.thomas.management.domain.util.userEntity
 import io.mockk.Call
 import io.mockk.Invocation
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.mockk
+import java.time.OffsetDateTime
+import java.time.OffsetDateTime.now
+import java.time.ZoneOffset.UTC
 import java.util.UUID
 
 internal val organizationNotFound: MutableList<UUID> = mutableListOf()
@@ -25,7 +37,15 @@ internal val unitNames: MutableList<String> = mutableListOf()
 internal val unitDocuments: MutableList<String> = mutableListOf()
 internal val unitLimit: MutableList<UUID> = mutableListOf()
 
+internal val userNotFound: MutableList<UUID> = mutableListOf()
 internal val userEmails: MutableList<String> = mutableListOf()
+internal val userDocuments: MutableList<String> = mutableListOf()
+internal val userLimit: MutableList<UUID> = mutableListOf()
+internal val userGroups: MutableList<UUID> = mutableListOf()
+internal val userUnits: MutableList<UUID> = mutableListOf()
+
+internal val passwordTokens: MutableList<String> = mutableListOf()
+internal val expiredTokens: MutableList<String> = mutableListOf()
 
 internal val signupRepositoryMock: SignupRepository
     get() = mockk<SignupRepository>().apply {
@@ -85,15 +105,127 @@ internal val unitRepositoryMock: UnitRepository
         coEvery { limitReached(any(), any()) } answers {
             unitLimit.contains(secondArg())
         }
+        coEvery { allByIds(any(), any()) } answers {
+            firstArg<Set<UUID>>().filter { !userUnits.contains(it) }.map { id ->
+                unitEntity.let {
+                    it.copy(
+                        id = id,
+                        unitOrganization = it.unitOrganization.copy(id = secondArg()),
+                    )
+                }
+            }.toSet()
+        }
     }
 
 internal val userRepositoryMock: UserRepository
     get() = mockk<UserRepository>().apply {
+        coEvery { page(any<String>(), any<Boolean>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
+            val users = (1..10).map { userEntity }
+            PageResponse.of(users, it.fourthArg(), 10L)
+        }
+        coEvery { one(any(), any()) } answers {
+            userCompleteEntity.let {
+                it.copy(
+                    userData = it.userData.copy(
+                        id = firstArg(),
+                        userOrganization = it.userData.userOrganization.copy(id = secondArg()),
+                    ),
+
+                    ).takeIf { !userNotFound.contains(firstArg()) }
+            }
+        }
+        coEvery { byId(any()) } answers {
+            userEntity.let {
+                it.copy(
+                    id = firstArg(),
+                ).takeIf { !userNotFound.contains(firstArg()) }
+            }
+        }
+        coEvery { create(any()) } answers {
+            firstArg<UserCompleteEntity>().copy()
+        }
+        coEvery { update(any()) } answers {
+            firstArg<UserCompleteEntity>().copy()
+        }
+        coEvery { updateSimple(any()) } answers {
+            firstArg<UserEntity>().copy()
+        }
+        coEvery { simpleByEmail(any()) } answers {
+            userEntity.copy(mainEmail = firstArg()).takeIf { !userEmails.contains(firstArg()) }
+        }
         coEvery { hasAnotherWithEmail(any(), any()) } answers {
             userEmails.contains(secondArg() as String)
         }
-        coEvery { hasAnotherWithDocument(any(), any(), any()) } answers { false }
+        coEvery { hasAnotherWithDocument(any(), any(), any()) } answers {
+            userDocuments.contains(thirdArg() as String)
+        }
+        coEvery { limitReached(any(), any()) } answers {
+            userLimit.contains(secondArg())
+        }
+    }
+
+internal val groupRepositoryMock: GroupRepository
+    get() = mockk<GroupRepository>().apply {
+        coEvery { allByIds(any(), any()) } answers {
+            firstArg<Set<UUID>>().filter { !userGroups.contains(it) }.map { id ->
+                groupEntity.let {
+                    it.copy(
+                        id = id,
+                        groupOrganization = it.groupOrganization.copy(id = secondArg()),
+                    )
+                }
+            }.toSet()
+        }
+    }
+
+internal val passwordRepositoryMock: PasswordResetRepository
+    get() = mockk<PasswordResetRepository>().apply {
+        coEvery { upsertToken(any()) } answers {
+            firstArg()
+        }
+
+        coEvery { findByToken(any()) } answers {
+            passwordResetEntity.copy(
+                resetToken = firstArg()
+            ).takeIf {
+                !passwordTokens.contains(firstArg())
+            }?.let {
+                it.takeIf {
+                    expiredTokens.contains(firstArg())
+                }?.copy(expiresOn = now(UTC).minusHours(1)) ?: it
+            }
+        }
     }
 
 inline fun <reified T> Call.fourthArg() = invocation.fourthArg<T>()
 inline fun <reified T> Invocation.fourthArg() = args[3] as T
+
+fun clearRepositoryMocks() {
+    organizationNotFound.clear()
+    organizationNames.clear()
+    organizationRegistrations.clear()
+    unitNotFound.clear()
+    unitNames.clear()
+    unitDocuments.clear()
+    unitLimit.clear()
+    userNotFound.clear()
+    userEmails.clear()
+    userDocuments.clear()
+    userLimit.clear()
+    userGroups.clear()
+    userUnits.clear()
+    passwordTokens.clear()
+    clearMocks(
+        signupRepositoryMock,
+        organizationRepositoryMock,
+        unitRepositoryMock,
+        userRepositoryMock,
+        groupRepositoryMock,
+        passwordRepositoryMock,
+        answers = false,
+        recordedCalls = true,
+        childMocks = false,
+        verificationMarks = true,
+        exclusionRules = false,
+    )
+}

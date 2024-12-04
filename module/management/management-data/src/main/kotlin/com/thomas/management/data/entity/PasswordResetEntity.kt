@@ -11,8 +11,8 @@ import java.util.UUID.randomUUID
 data class PasswordResetEntity(
     override val id: UUID = randomUUID(),
     val userId: UUID,
-    val resetToken: String?,
-    val validUntil: OffsetDateTime,
+    val resetToken: String,
+    val expiresOn: OffsetDateTime,
     override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
 ) : BaseEntity<PasswordResetEntity>(), CreationInfo

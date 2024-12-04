@@ -1,4 +1,4 @@
-package com.thomas.management.domain.event
+package com.thomas.management.domain.messaging.event
 
 import com.thomas.contract.messaging.management.user.UserCreatedEvent
 import com.thomas.contract.messaging.management.user.UserUpdatedEvent

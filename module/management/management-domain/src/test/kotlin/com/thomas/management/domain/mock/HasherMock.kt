@@ -1,6 +1,7 @@
 package com.thomas.management.domain.mock
 
 import com.thomas.hasher.Hasher
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.mockk
 import java.util.UUID
@@ -10,3 +11,12 @@ internal val hasherMock: Hasher
         coEvery { generateSalt() } returns UUID.randomUUID().toString()
         coEvery { hash(any(), any()) } answers { "${firstArg() as String}${secondArg() as String}" }
     }
+
+fun clearHasherMocks() = clearMocks(
+    hasherMock,
+    answers = false,
+    recordedCalls = true,
+    childMocks = false,
+    verificationMarks = true,
+    exclusionRules = false,
+)

@@ -12,8 +12,6 @@ interface UserRepository {
 
     suspend fun one(id: UUID, organizationId: UUID): UserCompleteEntity?
 
-    suspend fun simple(id: UUID, organizationId: UUID): UserEntity?
-
     suspend fun create(entity: UserCompleteEntity): UserCompleteEntity
 
     suspend fun update(entity: UserCompleteEntity): UserCompleteEntity
@@ -27,5 +25,7 @@ interface UserRepository {
     suspend fun hasAnotherWithEmail(id: UUID, mainEmail: String): Boolean
 
     suspend fun limitReached(id: UUID, organizationId: UUID): Boolean
+
+    suspend fun byId(id: UUID): UserEntity?
 
 }

@@ -1,7 +1,6 @@
 package com.thomas.management.domain.adapter
 
 import com.thomas.core.authorization.UnauthorizedUserException
-import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.util.BooleanUtils.randomBoolean
@@ -29,7 +28,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -39,15 +37,6 @@ class OrganizationServiceAdapterTest : DomainValidationTest() {
         organizationRepository = organizationRepositoryMock,
         organizationEventProducer = organizationProducerMock,
     )
-
-    @BeforeEach
-    override fun beforeEach() {
-        super.beforeEach()
-        organizationNames.clear()
-        organizationRegistrations.clear()
-        organizationNotFound.clear()
-        clearContext()
-    }
 
     private val extraValidations: suspend () -> Unit = {
         coroutineScope {

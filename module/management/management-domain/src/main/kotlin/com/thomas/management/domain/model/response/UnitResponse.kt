@@ -1,6 +1,5 @@
 package com.thomas.management.domain.model.response
 
-import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.value.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import java.time.OffsetDateTime

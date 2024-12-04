@@ -78,4 +78,14 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //endregion USER
 
+    //region PASSWORD RESET
+
+    fun managementResetPasswordResetTokenInvalidToken() =
+        formattedMessage("management.reset-password.reset-token.invalid-token")
+
+    fun managementResetPasswordResetTokenExpiredToken() =
+        formattedMessage("management.reset-password.reset-token.expired-token")
+
+    //endregion PASSWORD RESET
+
 }

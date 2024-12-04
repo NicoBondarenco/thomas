@@ -10,9 +10,9 @@ import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.repository.OrganizationRepository
 import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.domain.UnitService
-import com.thomas.management.domain.event.UnitEventProducer
 import com.thomas.management.domain.exception.UnitNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUnitValidationUnitDataInvalidData
+import com.thomas.management.domain.messaging.event.UnitEventProducer
 import com.thomas.management.domain.model.mapper.toUnitCreatedEvent
 import com.thomas.management.domain.model.mapper.toUnitDeletedEvent
 import com.thomas.management.domain.model.mapper.toUnitEntity

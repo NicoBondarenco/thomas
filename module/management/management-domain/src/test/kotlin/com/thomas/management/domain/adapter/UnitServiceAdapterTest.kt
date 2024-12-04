@@ -1,7 +1,6 @@
 package com.thomas.management.domain.adapter
 
 import com.thomas.core.authorization.UnauthorizedUserException
-import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
@@ -44,7 +43,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -82,15 +80,6 @@ class UnitServiceAdapterTest : DomainValidationTest() {
         unitRepository = unitRepositoryMock,
         unitEventProducer = unitProducerMock,
     )
-
-    @BeforeEach
-    override fun beforeEach() {
-        super.beforeEach()
-        unitNames.clear()
-        unitDocuments.clear()
-        unitNotFound.clear()
-        clearContext()
-    }
 
     private val extraValidations: suspend () -> Unit = {
         coroutineScope {

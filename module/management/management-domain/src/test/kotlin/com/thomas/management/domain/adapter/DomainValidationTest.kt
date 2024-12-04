@@ -1,14 +1,15 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
-import com.thomas.management.domain.mock.organizationProducerMock
-import com.thomas.management.domain.mock.userProducerMock
+import com.thomas.management.domain.mock.clearHasherMocks
+import com.thomas.management.domain.mock.clearProducerMocks
+import com.thomas.management.domain.mock.clearRepositoryMocks
 import com.thomas.management.domain.util.securityOrganization
 import com.thomas.management.domain.util.securityUser
-import io.mockk.clearMocks
 import java.util.UUID
 import java.util.stream.Stream
 import kotlin.reflect.KProperty1
@@ -22,21 +23,16 @@ import org.junit.jupiter.api.assertThrows
 
 abstract class DomainValidationTest {
 
-    protected abstract fun executions(): List<InvalidDataInput<*, *>>
+    protected open fun executions(): List<InvalidDataInput<*, *>> = listOf()
 
-    protected abstract fun errorMessage(): String
+    protected open fun errorMessage(): String = ""
 
     @BeforeEach
     protected open fun beforeEach() {
-        clearMocks(
-            organizationProducerMock,
-            userProducerMock,
-            answers = false,
-            recordedCalls = true,
-            childMocks = false,
-            verificationMarks = true,
-            exclusionRules = false,
-        )
+        clearHasherMocks()
+        clearProducerMocks()
+        clearRepositoryMocks()
+        clearContext()
     }
 
     @TestFactory

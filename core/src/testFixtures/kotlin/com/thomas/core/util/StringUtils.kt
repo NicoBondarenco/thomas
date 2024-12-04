@@ -2,17 +2,20 @@ package com.thomas.core.util
 
 object StringUtils {
 
-    private val CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".toList()
+    private val CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toList()
     private val NUMBERS = "0123456789".toList()
     private val DOCUMENT_WEIGHTS = (10 downTo 2).toList()
     private val REGISTRATION_WEIGHTS = (5 downTo 2).toList() + (9 downTo 2).toList()
-
+    private val PASSWORD_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toList()
+    private val PASSWORD_LOWER = "abcdefghijklmnopqrstuvwxyz".toList()
+    private val PASSWORD_SYMBOLS = "!@#$%&* ".toList()
 
     fun randomString(
         length: Int = 10,
         numbers: Boolean = true,
+        spaces: Boolean = true,
     ): String = (1..length).map {
-        ((NUMBERS.takeIf { numbers } ?: listOf()) + CHARS).shuffled().first()
+        ((NUMBERS.takeIf { numbers } ?: listOf()) + (listOf(" ").takeIf { spaces } ?: listOf()) + CHARS).shuffled().first()
     }.joinToString("")
 
     fun randomZipcode(): String = (1000000..99999999).random().toString().padStart(8, '0')
@@ -28,6 +31,11 @@ object StringUtils {
     fun randomRegistrationNumber(): String = "${(1..8).joinToString("") { NUMBERS.random().toString() }}0001".let {
         "$it${it.calculateDigits(REGISTRATION_WEIGHTS)}"
     }
+
+    fun randomPassword(): String = PASSWORD_UPPER.random().toString() +
+            (1..3).map { PASSWORD_LOWER.random() }.joinToString(separator = "") +
+            PASSWORD_SYMBOLS.random().toString() +
+            (1..3).map { NUMBERS.random() }.joinToString(separator = "")
 
     private fun String.calculateDigits(
         weights: List<Int>,
