@@ -88,4 +88,20 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //endregion PASSWORD RESET
 
+    //region GROUP
+
+    fun managementGroupValidationGroupDataInvalidData() =
+        formattedMessage("management.group-validation.group-data.invalid-data")
+
+    fun managementGroupValidationGroupDataDuplicatedName() =
+        formattedMessage("management.group-validation.group-data.duplicated-name")
+
+    fun managementGroupValidationUnitDataNotFound(ids: Set<UUID>) =
+        formattedMessage("management.group-validation.unit-data.not-found", ids.joinToString(", ") { it.toString() })
+
+    fun managementGroupSearchNotFoundErrorMessage(id: UUID) =
+        formattedMessage("management.group-search.not-found.error-message", id)
+
+    //endregion GROUP
+
 }

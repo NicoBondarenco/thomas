@@ -1,5 +1,9 @@
 package com.thomas.management.domain
 
+import com.thomas.core.model.security.SecurityOrganizationRole.GROUP_CREATE
+import com.thomas.core.model.security.SecurityOrganizationRole.GROUP_DELETE
+import com.thomas.core.model.security.SecurityOrganizationRole.GROUP_READ
+import com.thomas.core.model.security.SecurityOrganizationRole.GROUP_UPDATE
 import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.model.security.SecurityOrganizationRole.UNIT_CREATE
@@ -55,4 +59,28 @@ val userUpdateRoles = arrayOf<SecurityRole<*, *, *>>(
     MASTER_ROLE,
     ORGANIZATION_ALL,
     USER_UPDATE,
+)
+
+val groupReadRoles = arrayOf<SecurityRole<*, *, *>>(
+    MASTER_ROLE,
+    ORGANIZATION_ALL,
+    GROUP_READ,
+)
+
+val groupCreateRoles = arrayOf<SecurityRole<*, *, *>>(
+    MASTER_ROLE,
+    ORGANIZATION_ALL,
+    GROUP_CREATE,
+)
+
+val groupUpdateRoles = arrayOf<SecurityRole<*, *, *>>(
+    MASTER_ROLE,
+    ORGANIZATION_ALL,
+    GROUP_UPDATE,
+)
+
+val groupDeleteRoles = arrayOf<SecurityRole<*, *, *>>(
+    MASTER_ROLE,
+    ORGANIZATION_ALL,
+    GROUP_DELETE,
 )

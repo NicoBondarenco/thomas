@@ -1,6 +1,7 @@
 package com.thomas.management.domain.mock
 
 import com.thomas.management.domain.messaging.command.NotificationCommandProducer
+import com.thomas.management.domain.messaging.event.GroupEventProducer
 import com.thomas.management.domain.messaging.event.OrganizationEventProducer
 import com.thomas.management.domain.messaging.event.UnitEventProducer
 import com.thomas.management.domain.messaging.event.UserEventProducer
@@ -24,6 +25,12 @@ internal val userProducerMock = spyk<UserEventProducer>().apply {
     coEvery { userUpdated(any()) } returns Unit
 }
 
+internal val groupProducerMock = spyk<GroupEventProducer>().apply {
+    coEvery { groupCreated(any()) } returns Unit
+    coEvery { groupUpdated(any()) } returns Unit
+    coEvery { groupDeleted(any()) } returns Unit
+}
+
 internal val notificationProducerMock = spyk<NotificationCommandProducer>().apply {
     coEvery { sendEmail(any()) } returns Unit
 }
@@ -32,6 +39,7 @@ fun clearProducerMocks() = clearMocks(
     organizationProducerMock,
     unitProducerMock,
     userProducerMock,
+    groupProducerMock,
     notificationProducerMock,
     answers = false,
     recordedCalls = true,

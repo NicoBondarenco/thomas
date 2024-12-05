@@ -31,11 +31,11 @@ import com.thomas.management.domain.model.response.UserSimpleResponse
 import com.thomas.management.domain.userCreateRoles
 import com.thomas.management.domain.userReadRoles
 import com.thomas.management.domain.userUpdateRoles
-import com.thomas.management.domain.validation.groupsFound
 import com.thomas.management.domain.validation.maxUsers
 import com.thomas.management.domain.validation.sameDocument
 import com.thomas.management.domain.validation.sameEmail
-import com.thomas.management.domain.validation.unitsFound
+import com.thomas.management.domain.validation.userGroupsFound
+import com.thomas.management.domain.validation.userUnitsFound
 import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,8 +63,8 @@ class UserServiceAdapter(
     ) = listOf(
         userRepository.sameEmail(),
         userRepository.sameDocument(),
-        groupsFound(userGroups),
-        unitsFound(userUnits),
+        userGroupsFound(userGroups),
+        userUnitsFound(userUnits),
     )
 
     private fun CoroutineScope.organizationDeferred() = async {

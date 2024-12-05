@@ -2,6 +2,7 @@ package com.thomas.management.domain.mock
 
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
+import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.entity.UserCompleteEntity
@@ -12,6 +13,7 @@ import com.thomas.management.data.repository.PasswordResetRepository
 import com.thomas.management.data.repository.SignupRepository
 import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.data.repository.UserRepository
+import com.thomas.management.domain.util.groupCompleteEntity
 import com.thomas.management.domain.util.groupEntity
 import com.thomas.management.domain.util.organizationEntity
 import com.thomas.management.domain.util.passwordResetEntity
@@ -46,6 +48,10 @@ internal val userUnits: MutableList<UUID> = mutableListOf()
 
 internal val passwordTokens: MutableList<String> = mutableListOf()
 internal val expiredTokens: MutableList<String> = mutableListOf()
+
+internal val groupNames: MutableList<String> = mutableListOf()
+internal val groupUnits: MutableList<UUID> = mutableListOf()
+internal val groupNotFound: MutableList<UUID> = mutableListOf()
 
 internal val signupRepositoryMock: SignupRepository
     get() = mockk<SignupRepository>().apply {
@@ -106,7 +112,7 @@ internal val unitRepositoryMock: UnitRepository
             unitLimit.contains(secondArg())
         }
         coEvery { allByIds(any(), any()) } answers {
-            firstArg<Set<UUID>>().filter { !userUnits.contains(it) }.map { id ->
+            firstArg<Set<UUID>>().filter { !userUnits.contains(it) && !groupUnits.contains(it)}.map { id ->
                 unitEntity.let {
                     it.copy(
                         id = id,
@@ -166,6 +172,31 @@ internal val userRepositoryMock: UserRepository
 
 internal val groupRepositoryMock: GroupRepository
     get() = mockk<GroupRepository>().apply {
+        coEvery { page(any<String>(), any<Boolean>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
+            val groups = (1..10).map { groupEntity }
+            PageResponse.of(groups, it.fourthArg(), 10L)
+        }
+        coEvery { one(any(), any()) } answers {
+            groupCompleteEntity.let {
+                it.copy(
+                    groupData = it.groupData.copy(
+                        id = firstArg(),
+                        groupOrganization = it.groupData.groupOrganization.copy(id = secondArg()),
+                    ),
+
+                    ).takeIf { !groupNotFound.contains(firstArg()) }
+            }
+        }
+        coEvery { create(any()) } answers {
+            firstArg<GroupCompleteEntity>().copy()
+        }
+        coEvery { update(any()) } answers {
+            firstArg<GroupCompleteEntity>().copy()
+        }
+        coEvery { delete(any()) } returns Unit
+        coEvery { hasAnotherWithName(any(), any(), any()) } answers {
+            groupNames.contains(thirdArg() as String)
+        }
         coEvery { allByIds(any(), any()) } answers {
             firstArg<Set<UUID>>().filter { !userGroups.contains(it) }.map { id ->
                 groupEntity.let {

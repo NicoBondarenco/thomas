@@ -5,10 +5,66 @@ import com.thomas.contract.messaging.management.group.GroupDeletedEvent
 import com.thomas.contract.messaging.management.group.GroupUpdatedEvent
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.GroupCompleteEntity
+import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.domain.model.request.GroupUpsertRequest
+import com.thomas.management.domain.model.response.GroupDetailResponse
+import com.thomas.management.domain.model.response.GroupSimpleResponse
 import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
+import java.util.UUID
 import kotlinx.coroutines.coroutineScope
+
+suspend fun GroupEntity.toGroupSimpleResponse() = coroutineScope {
+    GroupSimpleResponse(
+        id = this@toGroupSimpleResponse.id,
+        groupName = this@toGroupSimpleResponse.groupName,
+        groupDescription = this@toGroupSimpleResponse.groupDescription,
+        groupOrganization = this@toGroupSimpleResponse.groupOrganization.toOrganizationResponse(),
+        isActive = this@toGroupSimpleResponse.isActive,
+        createdAt = this@toGroupSimpleResponse.createdAt,
+        updatedAt = this@toGroupSimpleResponse.updatedAt,
+    )
+}
+
+suspend fun GroupCompleteEntity.toGroupDetailResponse() = coroutineScope {
+    GroupDetailResponse(
+        id = this@toGroupDetailResponse.groupData.id,
+        groupName = this@toGroupDetailResponse.groupData.groupName,
+        groupDescription = this@toGroupDetailResponse.groupData.groupDescription,
+        groupOrganization = this@toGroupDetailResponse.groupData.groupOrganization.toOrganizationResponse(),
+        organizationRoles = this@toGroupDetailResponse.groupData.organizationRoles,
+        groupUnits = this@toGroupDetailResponse.groupUnits.mapKeys { it.key.id },
+        isActive = this@toGroupDetailResponse.groupData.isActive,
+        createdAt = this@toGroupDetailResponse.groupData.createdAt,
+        updatedAt = this@toGroupDetailResponse.groupData.updatedAt,
+    )
+}
+
+suspend fun GroupUpsertRequest.toGroupEntity(
+    organization: OrganizationEntity
+) = coroutineScope {
+    GroupEntity(
+        groupName = this@toGroupEntity.groupName,
+        groupDescription = this@toGroupEntity.groupDescription,
+        groupOrganization = organization,
+        organizationRoles = this@toGroupEntity.organizationRoles,
+        isActive = this@toGroupEntity.isActive,
+    )
+}
+
+suspend fun GroupEntity.updateFromRequest(
+    request: GroupUpsertRequest
+) = coroutineScope {
+    this@updateFromRequest.copy(
+        groupName = request.groupName,
+        groupDescription = request.groupDescription,
+        organizationRoles = request.organizationRoles,
+        isActive = request.isActive,
+        updatedAt = now(UTC),
+    )
+}
 
 suspend fun GroupCompleteEntity.toGroupCreatedEvent() = coroutineScope {
     GroupCreatedEvent(
@@ -38,9 +94,9 @@ suspend fun GroupCompleteEntity.toGroupUpdatedEvent() = coroutineScope {
     )
 }
 
-suspend fun GroupCompleteEntity.toGroupDeletedEvent() = coroutineScope {
+suspend fun UUID.toGroupDeletedEvent() = coroutineScope {
     GroupDeletedEvent(
-        id = this@toGroupDeletedEvent.id,
+        id = this@toGroupDeletedEvent,
         deletedAt = now(UTC),
     )
 }

@@ -44,7 +44,7 @@ fun UserRepository.maxUsers() = DeferredEntityValidation<UserCompleteEntity>(
     context = VT,
 )
 
-fun groupsFound(
+fun userGroupsFound(
     userGroups: Set<UUID>,
 ) = DeferredEntityValidation<UserCompleteEntity>(
     field = UserCompleteEntity::userGroups,
@@ -56,7 +56,7 @@ fun groupsFound(
     validate = { it.userGroups.size == userGroups.size },
 )
 
-fun unitsFound(
+fun userUnitsFound(
     userUnits: Map<UUID, Set<SecurityUnitRole>>,
 ) = DeferredEntityValidation<UserCompleteEntity>(
     field = UserCompleteEntity::userUnits,
