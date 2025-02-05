@@ -28,4 +28,6 @@ interface UserRepository {
 
     suspend fun byId(id: UUID): UserEntity?
 
+    suspend fun findByUsername(username: String): UserCompleteEntity?
+
 }

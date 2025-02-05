@@ -1,5 +1,6 @@
 package com.thomas.management.data.entity.info
 
+import com.thomas.core.extension.EMAIL_REGEX
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
@@ -9,7 +10,6 @@ import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementConta
 interface ContactInfo {
 
     companion object {
-        private val EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$".toRegex()
         private val PHONE_NUMBER_REGEX = "[0-9]{10,11}".toRegex()
     }
 

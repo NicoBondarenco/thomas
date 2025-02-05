@@ -72,13 +72,16 @@ class UserServiceAdapter(
     }
 
     private fun CoroutineScope.passwordDeferred(request: UserCreateRequest) = async {
+        val initialPassword = request.let {
+            "${it.firstName.trim().first()}${it.lastName.trim().first()}@${it.documentNumber.substring(0, 6)}"
+        }
         hasher.generateSalt().let {
-            it to hasher.hash(request.documentNumber.substring(0, 6), it)
+            it to hasher.hash(initialPassword, it)
         }
     }
 
     private fun CoroutineScope.groupsDeferred(request: UserRequest) = async {
-        groupRepository.allByIds(request.userGroups, currentOrganization)
+        groupRepository.allFullByIds(request.userGroups, currentOrganization)
     }
 
     private fun CoroutineScope.unitsDeferred(request: UserRequest) = async {

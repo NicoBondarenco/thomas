@@ -50,6 +50,49 @@ class PasswordServiceAdapterTest : DomainValidationTest() {
             Arguments.of("iuhdfasi"),
             Arguments.of("AIDHJIUQ"),
             Arguments.of("%#$@%!**"),
+            Arguments.of("3i3V\"6k"),
+            Arguments.of("y62^I%2"),
+            Arguments.of("NyhO##P"),
+            Arguments.of(",.CbRXB"),
+            Arguments.of("m*]<aW$"),
+            Arguments.of("|@1ZAnz"),
+            Arguments.of("o]T:37f"),
+            Arguments.of("F4127.4["),
+            Arguments.of(";{W1):[D"),
+            Arguments.of("}!8;HD+&"),
+            Arguments.of("b>,n+*fo"),
+            Arguments.of("{:l|:p@&"),
+            Arguments.of("|3]&q[4f"),
+            Arguments.of("&U{azx:z"),
+            Arguments.of("r\$tpBmBG"),
+            Arguments.of("^p*DEfUT"),
+            Arguments.of("6xd6DJYB"),
+            Arguments.of("8bfIlzoS"),
+            Arguments.of("ZkTseyho"),
+        )
+
+        @JvmStatic
+        fun validPasswords() = listOf(
+            Arguments.of("y|em[isWbtA{oK9"),
+            Arguments.of("S<2lPYnnn]*al:R"),
+            Arguments.of("In}&0aH?"),
+            Arguments.of("*2eJ3D+[Af"),
+            Arguments.of("L6y7YZ0w."),
+            Arguments.of(",n64UMf[-"),
+            Arguments.of("oQO|NCRpMpe0lec"),
+            Arguments.of("ghc7GN)Z,osmLJR"),
+            Arguments.of("{ARR8J%YspuhD"),
+            Arguments.of("+LDXuG&5TyMa]Sh"),
+            Arguments.of("92QBk(J5O^dXd@m"),
+            Arguments.of("h1YhWCg#6-(.P3f"),
+            Arguments.of("CCWm2-8KOM^"),
+            Arguments.of("-7FdQSfN}(G5JMp"),
+            Arguments.of("HP|rC,Y9+y{ZesT"),
+            Arguments.of("gl3}}|2G21("),
+            Arguments.of("m*Mh4IxU"),
+            Arguments.of("edD4e+8C}uy[e(,"),
+            Arguments.of("o!PATZ-3&2"),
+            Arguments.of("9UU:c){FiTxb>,H"),
         )
 
     }
@@ -69,10 +112,15 @@ class PasswordServiceAdapterTest : DomainValidationTest() {
         notificationProducer = notificationProducerMock,
     )
 
-    @Test
-    fun `Change password`() = runTest(StandardTestDispatcher()) {
+    @ParameterizedTest
+    @MethodSource("validPasswords")
+    fun `Change password`(
+        password: String
+    ) = runTest(StandardTestDispatcher()) {
         currentUser = securityUser
-        assertDoesNotThrow { passwordService.changePassword(changePasswordRequest) }
+        assertDoesNotThrow {
+            passwordService.changePassword(changePasswordRequest.copy(newPassword = password))
+        }
     }
 
     @Test

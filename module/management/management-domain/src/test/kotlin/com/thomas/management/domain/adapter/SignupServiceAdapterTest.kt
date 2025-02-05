@@ -27,8 +27,6 @@ import com.thomas.management.domain.model.response.SignupResponse
 import com.thomas.management.domain.properties.SignupProperties
 import com.thomas.management.domain.util.signupRequest
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -43,19 +41,19 @@ class SignupServiceAdapterTest : DomainValidationTest() {
         private var SIGNUP_ENABLED = true
     }
 
-    private val signupProperties: SignupProperties = mockk<SignupProperties>().apply {
-        every { signupEnabled } answers { SIGNUP_ENABLED }
-    }
+    private val signupProperties: SignupProperties
+        get() = SignupProperties(SIGNUP_ENABLED)
 
-    private val signupService: SignupService = SignupServiceAdapter(
-        signupRepository = signupRepositoryMock,
-        organizationRepository = organizationRepositoryMock,
-        userRepository = userRepositoryMock,
-        signupProperties = signupProperties,
-        hasher = hasherMock,
-        organizationEventProducer = organizationProducerMock,
-        userEventProducer = userProducerMock,
-    )
+    private val signupService: SignupService
+        get() = SignupServiceAdapter(
+            signupRepository = signupRepositoryMock,
+            organizationRepository = organizationRepositoryMock,
+            userRepository = userRepositoryMock,
+            signupProperties = signupProperties,
+            hasher = hasherMock,
+            organizationEventProducer = organizationProducerMock,
+            userEventProducer = userProducerMock,
+        )
 
     private val extraValidations: suspend () -> Unit = {
         coroutineScope {

@@ -2,6 +2,7 @@ package com.thomas.management.domain.mock
 
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
+import com.thomas.core.util.StringUtils.randomPassword
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
@@ -25,7 +26,6 @@ import io.mockk.Invocation
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.mockk
-import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
 import java.util.UUID
@@ -45,6 +45,10 @@ internal val userDocuments: MutableList<String> = mutableListOf()
 internal val userLimit: MutableList<UUID> = mutableListOf()
 internal val userGroups: MutableList<UUID> = mutableListOf()
 internal val userUnits: MutableList<UUID> = mutableListOf()
+internal val userInactiveStatus: MutableList<String> = mutableListOf()
+internal val userInactiveOrganization: MutableList<String> = mutableListOf()
+internal val userInvalidCredential: MutableList<String> = mutableListOf()
+internal val userLogin: MutableList<UserCompleteEntity> = mutableListOf()
 
 internal val passwordTokens: MutableList<String> = mutableListOf()
 internal val expiredTokens: MutableList<String> = mutableListOf()
@@ -112,7 +116,7 @@ internal val unitRepositoryMock: UnitRepository
             unitLimit.contains(secondArg())
         }
         coEvery { allByIds(any(), any()) } answers {
-            firstArg<Set<UUID>>().filter { !userUnits.contains(it) && !groupUnits.contains(it)}.map { id ->
+            firstArg<Set<UUID>>().filter { !userUnits.contains(it) && !groupUnits.contains(it) }.map { id ->
                 unitEntity.let {
                     it.copy(
                         id = id,
@@ -168,6 +172,25 @@ internal val userRepositoryMock: UserRepository
         coEvery { limitReached(any(), any()) } answers {
             userLimit.contains(secondArg())
         }
+        coEvery { findByUsername(any()) } answers {
+            val username = firstArg() as String
+            (userLogin.firstOrNull { it.userData.mainEmail == username } ?: userCompleteEntity).let {
+                it.copy(
+                    userData = it.userData.copy(
+                        mainEmail = username,
+                        isActive = !userInactiveStatus.contains(username),
+                        userOrganization = organizationEntity.copy(
+                            isActive = !userInactiveOrganization.contains(username),
+                        ),
+                        passwordHash = "${it.userData.passwordHash}${it.userData.passwordSalt}".takeIf {
+                            !userInvalidCredential.contains(username)
+                        } ?: randomPassword(),
+                    ),
+                )
+            }.takeIf {
+                !userNotFound.contains(it.id)
+            }
+        }
     }
 
 internal val groupRepositoryMock: GroupRepository
@@ -203,6 +226,20 @@ internal val groupRepositoryMock: GroupRepository
                     it.copy(
                         id = id,
                         groupOrganization = it.groupOrganization.copy(id = secondArg()),
+                    )
+                }
+            }.toSet()
+        }
+        coEvery { allFullByIds(any(), any()) } answers {
+            firstArg<Set<UUID>>().filter { !userGroups.contains(it) }.map { id ->
+                groupCompleteEntity.let { complete ->
+                    complete.copy(
+                        groupData = groupEntity.let {
+                            it.copy(
+                                id = id,
+                                groupOrganization = it.groupOrganization.copy(id = secondArg()),
+                            )
+                        },
                     )
                 }
             }.toSet()

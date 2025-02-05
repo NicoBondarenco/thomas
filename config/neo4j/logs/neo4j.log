@@ -1,0 +1,16 @@
+2024-12-06 20:13:51.784+0000 INFO  Logging config in use: Embedded default config 'default-user-logs.xml'
+2024-12-06 20:13:51.790+0000 INFO  Starting...
+2024-12-06 20:13:52.365+0000 INFO  This instance is ServerId{a5067908} (a5067908-2ba5-4c9f-93df-5e1d71a7bf24)
+2024-12-06 20:13:53.000+0000 INFO  ======== Neo4j 5.25.1 ========
+2024-12-06 20:13:58.786+0000 INFO  Anonymous Usage Data is being sent to Neo4j, see https://neo4j.com/docs/usage-data/
+2024-12-06 20:13:58.815+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2024-12-06 20:13:59.203+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+2024-12-06 20:13:59.204+0000 INFO  Remote interface available at http://localhost:7474/
+2024-12-06 20:13:59.211+0000 INFO  id: 6B46AC3A17E7C611815C62D5B530D20021FE9B83F6E992F4A0EBB76FD5E4262F
+2024-12-06 20:13:59.211+0000 INFO  name: system
+2024-12-06 20:13:59.212+0000 INFO  creationDate: 2024-12-06T20:13:54.004Z
+2024-12-06 20:13:59.213+0000 INFO  Started.
+2024-12-07 01:31:39.199+0000 ERROR Client triggered an unexpected error [Neo.DatabaseError.Schema.ConstraintCreationFailed]: Unable to create Constraint( name='tpk_organization', type='NODE PROPERTY TYPE', schema=(:Organization {id}), propertyType=STRING ):
+Property type constraint requires Neo4j Enterprise Edition. Note that only the first found violation is shown., reference ba90d33b-c890-4977-93a9-56043b23a7c7.
+2024-12-10 20:25:35.271+0000 INFO  Neo4j Server shutdown initiated by request
+2024-12-10 20:25:35.296+0000 INFO  Stopping...

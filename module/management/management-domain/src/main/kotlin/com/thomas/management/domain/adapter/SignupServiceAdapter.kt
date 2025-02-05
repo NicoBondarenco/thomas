@@ -54,9 +54,7 @@ class SignupServiceAdapter(
     @MethodLog
     override suspend fun signup(
         request: SignupRequest
-    ) = signupProperties.takeIf {
-        it.signupEnabled
-    }?.let {
+    ) = signupProperties.signupEnabled.takeIf { it }?.let {
         request.toSignupEntity(hasher).let {
             validateEntity(it)
             signupRepository.signup(it)

@@ -20,6 +20,8 @@ interface GroupRepository {
 
     suspend fun allByIds(ids: Set<UUID>, organizationId: UUID): Set<GroupEntity>
 
+    suspend fun allFullByIds(ids: Set<UUID>, organizationId: UUID): Set<GroupCompleteEntity>
+
     suspend fun hasAnotherWithName(id: UUID, organizationId: UUID, groupName: String): Boolean
 
 }

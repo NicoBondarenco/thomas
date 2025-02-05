@@ -104,4 +104,20 @@ object ManagementDomainMessageI18N : BundleResolver("strings/management-domain")
 
     //endregion GROUP
 
+    //region AUTHENTICATION
+
+    fun managementAuthenticationLoginCredentialDataInvalidCredentials() =
+        formattedMessage("management.authentication-login.credential-data.invalid-credentials")
+
+    fun managementAuthenticationLoginOrganizationDataInactiveOrganization() =
+        formattedMessage("management.authentication-login.organization-data.inactive-organization")
+
+    fun managementAuthenticationLoginUserDataInactiveUser() =
+        formattedMessage("management.authentication-login.user-data.inactive-user")
+
+    fun managementAuthenticationRefreshRefreshTokenInvalidToken() =
+        formattedMessage("management.authentication-refresh.refresh-token.invalid-token")
+
+    //endregion AUTHENTICATION
+
 }

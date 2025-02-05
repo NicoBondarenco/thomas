@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class UserCompleteEntity(
     val userData: UserEntity,
-    val userGroups: Set<GroupEntity>,
+    val userGroups: Set<GroupCompleteEntity>,
     val userUnits: Map<UnitEntity, Set<SecurityUnitRole>>,
 ) : BaseEntity<UserCompleteEntity>() {
 

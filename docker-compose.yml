@@ -5,12 +5,30 @@ services:
   neo4j:
     image: neo4j:latest
     volumes:
-      - thomas-neo4j-logs:/logs
-      - thomas-neo4j-config:/config
-      - thomas-neo4j-data:/data
-      - thomas-neo4j-plugins:/plugins
+      - type: bind
+        source: ./config/neo4j/plugins
+        target: /plugins
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/logs
+        target: /logs
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/conf
+        target: /conf
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/data
+        target: /data
+        read_only: false
     environment:
       - NEO4J_AUTH=neo4j/Meruss@453822
+      - NEO4J_dbms_security_procedures_unrestricted=*
+      - NEO4J_dbms_security_procedures_allowlist=*
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -95,6 +113,10 @@ volumes:
   thomas-neo4j-config:
   thomas-neo4j-data:
   thomas-neo4j-plugins:
+  thomas-neo4je-logs:
+  thomas-neo4je-config:
+  thomas-neo4je-data:
+  thomas-neo4je-plugins:
 
 networks:
   thomas-network:

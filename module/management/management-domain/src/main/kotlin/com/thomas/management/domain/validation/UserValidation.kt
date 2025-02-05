@@ -14,7 +14,17 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementU
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidPassword
 import java.util.UUID
 
-private val PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&_-])[A-Za-z\\d@$!%*?&_-]{8,}$".toRegex()
+private const val PASSWORD_LENGTH = 8
+private val PASSWORD_UPPER = ".*[A-Z].*".toRegex()
+private val PASSWORD_LOWER = ".*[a-z].*".toRegex()
+private val PASSWORD_SYMBOLS = "\"'!@#$%&*()_-+=§`´[]{}^~,.<>;:/?|\\".toSet()
+private val PASSWORD_NUMBERS = ".*[0-9].*".toRegex()
+
+private fun String.isValidPassword(): Boolean = length >= PASSWORD_LENGTH &&
+        PASSWORD_UPPER.matches(this) &&
+        PASSWORD_LOWER.matches(this) &&
+        PASSWORD_NUMBERS.matches(this) &&
+        this.toList().intersect(PASSWORD_SYMBOLS).isNotEmpty()
 
 fun UserRepository.sameEmailSignup() = DeferredEntityValidation<UserEntity>(
     field = UserEntity::mainEmail,
@@ -71,6 +81,6 @@ fun userUnitsFound(
 fun validPassword(password: String) = DeferredEntityValidation<UserEntity>(
     field = UserEntity::passwordHash,
     message = { managementUserValidationUserDataInvalidPassword() },
-    validate = { PASSWORD_REGEX.matches(password) },
+    validate = { password.isValidPassword() },
 )
 

@@ -8,7 +8,7 @@ object StringUtils {
     private val REGISTRATION_WEIGHTS = (5 downTo 2).toList() + (9 downTo 2).toList()
     private val PASSWORD_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toList()
     private val PASSWORD_LOWER = "abcdefghijklmnopqrstuvwxyz".toList()
-    private val PASSWORD_SYMBOLS = "!@#$%&* ".toList()
+    private val PASSWORD_SYMBOLS = "\"'!@#$%&*()_-+=§`´[]{}^~,.<>;:/?|\\".toList()
 
     fun randomString(
         length: Int = 10,

@@ -5,6 +5,7 @@ import com.thomas.contract.messaging.management.user.UserUpdatedEvent
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.hasher.Hasher
+import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
@@ -203,7 +204,7 @@ suspend fun UserCompleteEntity.toUserUpdatedEvent() = coroutineScope {
     )
 }
 
-private suspend fun Set<GroupEntity>.toUserGroupsEvent() = coroutineScope {
+private suspend fun Set<GroupCompleteEntity>.toUserGroupsEvent() = coroutineScope {
     this@toUserGroupsEvent.map { it.id }.toSet()
 }
 

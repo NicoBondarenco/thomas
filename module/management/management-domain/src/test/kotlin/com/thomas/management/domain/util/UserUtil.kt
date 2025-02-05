@@ -1,5 +1,7 @@
 package com.thomas.management.domain.util
 
+import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.util.StringUtils.randomDocumentNumber
 import com.thomas.core.util.StringUtils.randomEmail
 import com.thomas.core.util.StringUtils.randomPhone
@@ -23,11 +25,25 @@ internal val userEntity: UserEntity
         mainPhone = randomPhone(),
     )
 
+internal val userRolesEntity: UserEntity
+    get() = userEntity.copy(
+        organizationRoles = SecurityOrganizationRole.entries.shuffled().subList(0, 3).toSet(),
+    )
+
 internal val userCompleteEntity: UserCompleteEntity
     get() = UserCompleteEntity(
         userData = userEntity,
         userGroups = setOf(),
         userUnits = mapOf(),
+    )
+
+internal val userFullEntity: UserCompleteEntity
+    get() = UserCompleteEntity(
+        userData = userRolesEntity,
+        userGroups = (1..3).map { groupFullEntity }.toSet(),
+        userUnits = (1..3).associate {
+            unitEntity to SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
+        },
     )
 
 internal val signupUserRequest: SignupUserRequest
