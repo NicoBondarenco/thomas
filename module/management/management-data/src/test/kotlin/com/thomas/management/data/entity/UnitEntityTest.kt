@@ -6,7 +6,6 @@ import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.util.StringUtils.randomZipcode
-import com.thomas.management.data.entity.generator.OrganizationGenerator.generateOrganizationEntity
 import com.thomas.management.data.entity.value.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import com.thomas.management.data.entity.value.UnitType.LEGAL
@@ -42,7 +41,7 @@ class UnitEntityTest : EntityValidationTest() {
                     description = "$INVALID_CHARACTER $LEGAL",
                     value = it,
                     execution = {
-                        entity.copy(
+                        unitEntity.copy(
                             unitType = LEGAL,
                             unitName = "${randomString(MAX_NAME_SIZE - 5)}$it",
                             documentNumber = randomRegistrationNumber(),
@@ -56,7 +55,7 @@ class UnitEntityTest : EntityValidationTest() {
                 InvalidDataInput(
                     description = INVALID_CHARACTER,
                     value = it,
-                    execution = { entity.copy(fantasyName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
+                    execution = { unitEntity.copy(fantasyName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
                     property = UnitEntity::fantasyName,
                     message = managementUnitValidationFantasyNameInvalidValue(),
                 )
@@ -70,7 +69,7 @@ class UnitEntityTest : EntityValidationTest() {
             description = "$INVALID_CHARACTER $NATURAL",
             value = it.toString(),
             execution = {
-                entity.copy(
+                unitEntity.copy(
                     unitType = NATURAL,
                     unitName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
                     documentNumber = randomDocumentNumber(),
@@ -87,7 +86,7 @@ class UnitEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    unitEntity.copy(
                         unitType = LEGAL,
                         unitName = randomString(MIN_NAME_SIZE - 1),
                         documentNumber = randomRegistrationNumber(),
@@ -102,7 +101,7 @@ class UnitEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    unitEntity.copy(
                         unitType = NATURAL,
                         unitName = randomString(MIN_NAME_SIZE - 1, false),
                         documentNumber = randomDocumentNumber(),
@@ -116,7 +115,7 @@ class UnitEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
-                execution = { entity.copy(fantasyName = randomString(MIN_NAME_SIZE - 1)) },
+                execution = { unitEntity.copy(fantasyName = randomString(MIN_NAME_SIZE - 1)) },
                 property = UnitEntity::fantasyName,
                 message = managementUnitValidationFantasyNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -129,7 +128,7 @@ class UnitEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    unitEntity.copy(
                         unitType = LEGAL,
                         unitName = randomString(MAX_NAME_SIZE + 1),
                         documentNumber = randomRegistrationNumber(),
@@ -144,7 +143,7 @@ class UnitEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    unitEntity.copy(
                         unitType = NATURAL,
                         unitName = randomString(MAX_NAME_SIZE + 1, false),
                         documentNumber = randomDocumentNumber(),
@@ -158,7 +157,7 @@ class UnitEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
-                execution = { entity.copy(fantasyName = randomString(MAX_NAME_SIZE + 1)) },
+                execution = { unitEntity.copy(fantasyName = randomString(MAX_NAME_SIZE + 1)) },
                 property = UnitEntity::fantasyName,
                 message = managementUnitValidationFantasyNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -183,7 +182,7 @@ class UnitEntityTest : EntityValidationTest() {
             description = INVALID_REGISTRATION,
             value = it,
             execution = {
-                entity.copy(
+                unitEntity.copy(
                     unitType = LEGAL,
                     documentNumber = it,
                 )
@@ -211,7 +210,7 @@ class UnitEntityTest : EntityValidationTest() {
             description = INVALID_DOCUMENT,
             value = it,
             execution = {
-                entity.copy(
+                unitEntity.copy(
                     unitName = randomString(numbers = false),
                     unitType = NATURAL,
                     documentNumber = it,
@@ -230,34 +229,10 @@ class UnitEntityTest : EntityValidationTest() {
                 invalidRegistrationExecutions +
                 invalidDocumentExecutions
 
-    private val entity: UnitEntity
-        get() = UnitType.entries.random().let {
-            UnitEntity(
-                id = randomUUID(),
-                unitName = if (it == NATURAL) randomString(numbers = false) else randomString(),
-                fantasyName = listOf(null, randomString()).random(),
-                documentNumber = if (it == NATURAL) randomDocumentNumber() else randomRegistrationNumber(),
-                unitType = it,
-                unitOrganization = generateOrganizationEntity(),
-                mainEmail = randomEmail(),
-                mainPhone = randomPhone(),
-                addressZipcode = randomZipcode(),
-                addressStreet = randomString(),
-                addressNumber = randomString(),
-                addressComplement = listOf(null, randomString()).random(),
-                addressNeighborhood = randomString(),
-                addressCity = randomString(numbers = false),
-                addressState = AddressState.entries.random(),
-                isActive = listOf(true, false).random(),
-                createdAt = now(UTC),
-                updatedAt = now(UTC),
-            )
-        }
-
     @Test
     fun `Valid Unit Entity`() {
         (1..50).forEach { _ ->
-            assertDoesNotThrow { entity }
+            assertDoesNotThrow { unitEntity }
         }
     }
 

@@ -15,5 +15,6 @@ dependencies {
     implementation(project(":module:management:management-data"))
 
     testImplementation(testFixtures(project(":core")))
+    testImplementation(testFixtures(project(":module:management:management-data")))
 
 }

@@ -1,19 +1,11 @@
 package com.thomas.management.data.entity
 
-import com.thomas.core.util.StringUtils.randomEmail
-import com.thomas.core.util.StringUtils.randomPhone
-import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
-import com.thomas.core.util.StringUtils.randomZipcode
-import com.thomas.management.data.entity.value.AddressState
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationFantasyNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationFantasyNameInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationOrganizationNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationOrganizationNameInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationRegistrationNumberInvalidValue
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
@@ -35,7 +27,7 @@ class OrganizationEntityTest : EntityValidationTest() {
                 InvalidDataInput(
                     description = INVALID_CHARACTER,
                     value = it,
-                    execution = { entity.copy(organizationName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
+                    execution = { organizationEntity.copy(organizationName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
                     property = OrganizationEntity::organizationName,
                     message = managementOrganizationValidationOrganizationNameInvalidValue(),
                 )
@@ -44,7 +36,7 @@ class OrganizationEntityTest : EntityValidationTest() {
                 InvalidDataInput(
                     description = INVALID_CHARACTER,
                     value = it,
-                    execution = { entity.copy(fantasyName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
+                    execution = { organizationEntity.copy(fantasyName = "${randomString(MAX_NAME_SIZE - 5)}$it") },
                     property = OrganizationEntity::fantasyName,
                     message = managementOrganizationValidationFantasyNameInvalidValue(),
                 )
@@ -58,7 +50,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
-                execution = { entity.copy(organizationName = randomString(MIN_NAME_SIZE - 1)) },
+                execution = { organizationEntity.copy(organizationName = randomString(MIN_NAME_SIZE - 1)) },
                 property = OrganizationEntity::organizationName,
                 message = managementOrganizationValidationOrganizationNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -67,7 +59,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
-                execution = { entity.copy(fantasyName = randomString(MIN_NAME_SIZE - 1)) },
+                execution = { organizationEntity.copy(fantasyName = randomString(MIN_NAME_SIZE - 1)) },
                 property = OrganizationEntity::fantasyName,
                 message = managementOrganizationValidationFantasyNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -79,7 +71,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
-                execution = { entity.copy(organizationName = randomString(MAX_NAME_SIZE + 1)) },
+                execution = { organizationEntity.copy(organizationName = randomString(MAX_NAME_SIZE + 1)) },
                 property = OrganizationEntity::organizationName,
                 message = managementOrganizationValidationOrganizationNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -88,7 +80,7 @@ class OrganizationEntityTest : EntityValidationTest() {
             InvalidDataInput(
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
-                execution = { entity.copy(fantasyName = randomString(MAX_NAME_SIZE + 1)) },
+                execution = { organizationEntity.copy(fantasyName = randomString(MAX_NAME_SIZE + 1)) },
                 property = OrganizationEntity::fantasyName,
                 message = managementOrganizationValidationFantasyNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
@@ -112,7 +104,7 @@ class OrganizationEntityTest : EntityValidationTest() {
         InvalidDataInput(
             description = INVALID_REGISTRATION,
             value = it,
-            execution = { entity.copy(registrationNumber = it) },
+            execution = { organizationEntity.copy(registrationNumber = it) },
             property = OrganizationEntity::registrationNumber,
             message = managementOrganizationValidationRegistrationNumberInvalidValue(),
         )
@@ -120,31 +112,10 @@ class OrganizationEntityTest : EntityValidationTest() {
 
     override fun executions(): List<InvalidDataInput<*, *>> = invalidCharacterExecutions + minSizeExecutions + maxSizeExecutions + invalidRegistrationExecutions
 
-    private val entity: OrganizationEntity
-        get() = OrganizationEntity(
-            id = randomUUID(),
-            organizationName = randomString(),
-            fantasyName = listOf(null, randomString()).random(),
-            registrationNumber = randomRegistrationNumber(),
-            maximumUsers = 10,
-            mainEmail = randomEmail(),
-            mainPhone = randomPhone(),
-            addressZipcode = randomZipcode(),
-            addressStreet = randomString(),
-            addressNumber = randomString(),
-            addressComplement = listOf(null, randomString()).random(),
-            addressNeighborhood = randomString(),
-            addressCity = randomString(numbers = false),
-            addressState = AddressState.entries.random(),
-            isActive = listOf(true, false).random(),
-            createdAt = now(UTC),
-            updatedAt = now(UTC),
-        )
-
     @Test
     fun `Valid Organization Entity`() {
         (1..50).forEach { _ ->
-            assertDoesNotThrow { entity }
+            assertDoesNotThrow { organizationEntity }
         }
     }
 

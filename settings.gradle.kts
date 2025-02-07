@@ -9,6 +9,13 @@ dependencyResolutionManagement {
         mavenCentral()
         mavenLocal()
         maven(url = "https://repo.typedb.com/public/public-release/maven/")
+        maven {
+            url = uri("https://repo.repsy.io/mvn/${System.getenv("REPSY_USERNAME")}/thomas-neo4j-plugin")
+            credentials {
+                username = System.getenv("REPSY_USERNAME")
+                password = System.getenv("REPSY_PASSWORD")
+            }
+        }
     }
     versionCatalogs {
         create("libs") {
@@ -344,6 +351,8 @@ findProject(":infrastructure:hasher:hasher")?.name = "hasher"
 include("module:management:management-data")
 findProject(":module:management:management-data")?.name = "management-data"
 
+include("module:management:management-data-neo4j")
+findProject(":module:management:management-data-neo4j")?.name = "management-data-neo4j"
+
 include("module:management:management-domain")
 findProject(":module:management:management-domain")?.name = "management-domain"
-

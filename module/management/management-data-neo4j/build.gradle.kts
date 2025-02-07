@@ -3,15 +3,16 @@ val libs = rootProject.libs
 @Suppress("DSL_SCOPE_VIOLATION") // workaround for IntelliJ bug with Gradle Version Catalogs DSL in plugins
 plugins {
     alias(libs.plugins.kotlin.lang)
-    id("java-test-fixtures")
 }
 
 dependencies {
 
     implementation(project(":core"))
+    implementation(project(":module:management:management-data"))
+
+    implementation("org.neo4j:neo4j-ogm-core:4.0.15")
+    implementation("org.neo4j:neo4j-ogm-bolt-driver:4.0.15")
 
     testImplementation(testFixtures(project(":core")))
-
-    testFixturesImplementation(testFixtures(project(":core")))
 
 }

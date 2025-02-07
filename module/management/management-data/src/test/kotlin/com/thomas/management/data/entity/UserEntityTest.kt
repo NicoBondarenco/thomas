@@ -1,20 +1,11 @@
 package com.thomas.management.data.entity
 
-import com.thomas.core.model.general.Gender
-import com.thomas.core.util.StringUtils.randomDocumentNumber
-import com.thomas.core.util.StringUtils.randomEmail
-import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomString
-import com.thomas.management.data.entity.generator.OrganizationGenerator.generateOrganizationEntity
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationDocumentNumberInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationFirstNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationFirstNameInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidValue
-import java.time.LocalDate
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
@@ -39,7 +30,7 @@ class UserEntityTest : EntityValidationTest() {
                     description = INVALID_CHARACTER,
                     value = it,
                     execution = {
-                        entity.copy(
+                        userEntity.copy(
                             firstName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
                         )
                     },
@@ -52,7 +43,7 @@ class UserEntityTest : EntityValidationTest() {
                     description = INVALID_CHARACTER,
                     value = it,
                     execution = {
-                        entity.copy(
+                        userEntity.copy(
                             lastName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
                         )
                     },
@@ -69,7 +60,7 @@ class UserEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    userEntity.copy(
                         firstName = randomString(MIN_NAME_SIZE - 1, false),
                     )
                 },
@@ -82,7 +73,7 @@ class UserEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    userEntity.copy(
                         lastName = randomString(MIN_NAME_SIZE - 1, false),
                     )
                 },
@@ -98,7 +89,7 @@ class UserEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    userEntity.copy(
                         firstName = randomString(MAX_NAME_SIZE + 1, false),
                     )
                 },
@@ -111,7 +102,7 @@ class UserEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    userEntity.copy(
                         lastName = randomString(MAX_NAME_SIZE + 1, false),
                     )
                 },
@@ -139,7 +130,7 @@ class UserEntityTest : EntityValidationTest() {
             description = INVALID_DOCUMENT,
             value = it,
             execution = {
-                entity.copy(
+                userEntity.copy(
                     documentNumber = it,
                 )
             },
@@ -154,30 +145,10 @@ class UserEntityTest : EntityValidationTest() {
                 maxSizeExecutions +
                 invalidDocumentExecutions
 
-    private val entity: UserEntity
-        get() = UserEntity(
-            id = randomUUID(),
-            firstName = randomString(numbers = false),
-            lastName = randomString(numbers = false),
-            documentNumber = randomDocumentNumber(),
-            profilePhoto = listOf(null, "https://profile-photo.com").random(),
-            userGender = Gender.entries.random(),
-            birthDate = LocalDate.now(),
-            passwordSalt = randomString(),
-            passwordHash = randomString(),
-            userOrganization = generateOrganizationEntity(),
-            organizationRoles = setOf(),
-            mainEmail = randomEmail(),
-            mainPhone = randomPhone(),
-            isActive = listOf(true, false).random(),
-            createdAt = now(UTC),
-            updatedAt = now(UTC),
-        )
-
     @Test
     fun `Valid User Entity`() {
         (1..50).forEach { _ ->
-            assertDoesNotThrow { entity }
+            assertDoesNotThrow { userEntity }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.thomas.management.domain.util
+package com.thomas.management.data.entity
 
 import com.thomas.core.model.pagination.PageRequestPeriod
 

@@ -2,14 +2,14 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.core.context.SessionContextHolder.clearContext
 import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.data.securityOrganization
+import com.thomas.core.data.securityUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.management.domain.mock.clearHasherMocks
 import com.thomas.management.domain.mock.clearProducerMocks
 import com.thomas.management.domain.mock.clearRepositoryMocks
-import com.thomas.management.domain.util.securityOrganization
-import com.thomas.management.domain.util.securityUser
 import java.util.UUID
 import java.util.stream.Stream
 import kotlin.reflect.KProperty1

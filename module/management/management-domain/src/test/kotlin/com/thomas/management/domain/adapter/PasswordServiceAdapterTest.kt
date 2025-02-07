@@ -2,6 +2,7 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.context.UnauthenticatedUserException
+import com.thomas.core.data.securityUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.management.data.entity.UserEntity
@@ -22,7 +23,6 @@ import com.thomas.management.domain.properties.PasswordProperties
 import com.thomas.management.domain.util.changePasswordRequest
 import com.thomas.management.domain.util.forgotPasswordRequest
 import com.thomas.management.domain.util.resetPasswordRequest
-import com.thomas.management.domain.util.securityUser
 import io.mockk.coVerify
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest

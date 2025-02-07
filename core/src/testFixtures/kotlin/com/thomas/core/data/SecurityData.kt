@@ -1,4 +1,4 @@
-package com.thomas.management.domain.util
+package com.thomas.core.data
 
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.security.SecurityOrganization
@@ -9,7 +9,7 @@ import com.thomas.core.util.StringUtils.randomString
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
-internal val securityUser: SecurityUser
+val securityUser: SecurityUser
     get() = SecurityUser(
         userId = randomUUID(),
         firstName = randomString(numbers = false),
@@ -25,7 +25,7 @@ internal val securityUser: SecurityUser
         userUnits = setOf(),
     )
 
-internal val securityOrganization: SecurityOrganization
+val securityOrganization: SecurityOrganization
     get() = SecurityOrganization(
         organizationId = randomUUID(),
         organizationName = randomString(),

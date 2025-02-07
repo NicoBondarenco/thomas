@@ -1,14 +1,10 @@
 package com.thomas.management.data.entity
 
 import com.thomas.core.util.StringUtils.randomString
-import com.thomas.management.data.entity.generator.OrganizationGenerator.generateOrganizationEntity
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupDescriptionInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupDescriptionInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupNameInvalidValue
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
@@ -32,7 +28,7 @@ class GroupEntityTest : EntityValidationTest() {
                     description = INVALID_CHARACTER,
                     value = it,
                     execution = {
-                        entity.copy(
+                        groupEntity.copy(
                             groupName = "${randomString(MAX_NAME_SIZE - 5)}$it",
                         )
                     },
@@ -45,7 +41,7 @@ class GroupEntityTest : EntityValidationTest() {
                     description = INVALID_CHARACTER,
                     value = it,
                     execution = {
-                        entity.copy(
+                        groupEntity.copy(
                             groupDescription = "${randomString(MAX_DESCRIPTION_SIZE - 5)}$it",
                         )
                     },
@@ -62,7 +58,7 @@ class GroupEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    groupEntity.copy(
                         groupName = randomString(MIN_NAME_SIZE - 1),
                     )
                 },
@@ -75,7 +71,7 @@ class GroupEntityTest : EntityValidationTest() {
                 description = MIN_SIZE,
                 value = "MIN_NAME_SIZE ($MIN_DESCRIPTION_SIZE)",
                 execution = {
-                    entity.copy(
+                    groupEntity.copy(
                         groupDescription = randomString(MIN_DESCRIPTION_SIZE - 1),
                     )
                 },
@@ -91,7 +87,7 @@ class GroupEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
                 execution = {
-                    entity.copy(
+                    groupEntity.copy(
                         groupName = randomString(MAX_NAME_SIZE + 1),
                     )
                 },
@@ -104,7 +100,7 @@ class GroupEntityTest : EntityValidationTest() {
                 description = MAX_SIZE,
                 value = "MAX_NAME_SIZE ($MAX_DESCRIPTION_SIZE)",
                 execution = {
-                    entity.copy(
+                    groupEntity.copy(
                         groupDescription = randomString(MAX_DESCRIPTION_SIZE + 1),
                     )
                 },
@@ -119,22 +115,10 @@ class GroupEntityTest : EntityValidationTest() {
                 minSizeExecutions +
                 maxSizeExecutions
 
-    private val entity: GroupEntity
-        get() = GroupEntity(
-            id = randomUUID(),
-            groupName = randomString(),
-            groupDescription = listOf(null, randomString(500)).random(),
-            groupOrganization = generateOrganizationEntity(),
-            organizationRoles = setOf(),
-            isActive = listOf(true, false).random(),
-            createdAt = now(UTC),
-            updatedAt = now(UTC),
-        )
-
     @Test
     fun `Valid Group Entity`() {
         (1..50).forEach { _ ->
-            assertDoesNotThrow { entity }
+            assertDoesNotThrow { groupEntity }
         }
     }
 }

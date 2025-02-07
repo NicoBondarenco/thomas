@@ -2,6 +2,7 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.data.securityUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
@@ -11,6 +12,7 @@ import com.thomas.core.util.BooleanUtils.randomBoolean
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.pageRequestPeriod
 import com.thomas.management.domain.GroupService
 import com.thomas.management.domain.exception.GroupNotFoundException
 import com.thomas.management.domain.groupCreateRoles
@@ -29,8 +31,6 @@ import com.thomas.management.domain.mock.groupUnits
 import com.thomas.management.domain.mock.organizationRepositoryMock
 import com.thomas.management.domain.mock.unitRepositoryMock
 import com.thomas.management.domain.util.groupUpsertRequest
-import com.thomas.management.domain.util.pageRequestPeriod
-import com.thomas.management.domain.util.securityUser
 import io.mockk.coVerify
 import java.util.UUID.randomUUID
 import kotlinx.coroutines.coroutineScope

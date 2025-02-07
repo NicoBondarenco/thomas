@@ -1,5 +1,7 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.management.data.entity.userCompleteEntity
+import com.thomas.management.data.entity.userFullEntity
 import com.thomas.management.domain.AuthenticationService
 import com.thomas.management.domain.exception.InactiveOrganizationException
 import com.thomas.management.domain.exception.InactiveUserException
@@ -16,8 +18,6 @@ import com.thomas.management.domain.mock.userRepositoryMock
 import com.thomas.management.domain.model.request.LoginRequest
 import com.thomas.management.domain.model.request.RefreshTokenRequest
 import com.thomas.management.domain.properties.AuthenticationProperties
-import com.thomas.management.domain.util.userCompleteEntity
-import com.thomas.management.domain.util.userFullEntity
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

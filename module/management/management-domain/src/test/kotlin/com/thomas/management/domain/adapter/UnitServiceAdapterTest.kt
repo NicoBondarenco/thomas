@@ -2,6 +2,7 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.core.context.SessionContextHolder.currentUser
+import com.thomas.core.data.securityUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.model.security.SecurityOrganizationRole
@@ -12,6 +13,7 @@ import com.thomas.core.util.StringUtils.randomDocumentNumber
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.pageRequestPeriod
 import com.thomas.management.data.entity.value.UnitType.LEGAL
 import com.thomas.management.data.entity.value.UnitType.NATURAL
 import com.thomas.management.domain.UnitService
@@ -33,8 +35,6 @@ import com.thomas.management.domain.unitCreateRoles
 import com.thomas.management.domain.unitDeleteRoles
 import com.thomas.management.domain.unitReadRoles
 import com.thomas.management.domain.unitUpdateRoles
-import com.thomas.management.domain.util.pageRequestPeriod
-import com.thomas.management.domain.util.securityUser
 import com.thomas.management.domain.util.unitUpsertRequest
 import io.mockk.coVerify
 import java.util.UUID.randomUUID
