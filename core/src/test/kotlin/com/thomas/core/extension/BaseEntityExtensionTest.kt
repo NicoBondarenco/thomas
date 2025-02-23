@@ -39,7 +39,7 @@ class BaseEntityExtensionTest {
     }
 
     private val validations = listOf(
-        DeferredEntityValidation(
+        DeferredEntityValidation<TestEntity>(
             field = TestEntity::name,
             message = { ERROR_MESSAGE_01 },
             validate = { it.name.trim().isNotEmpty() },

@@ -36,3 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 /nico.iml
+/config/neo4j/plugins/
+/config/neo4j/conf/
+/config/neo4j/logs/
+/config/neo4j/data/

@@ -78,6 +78,9 @@ dependencyResolutionManagement {
 
             version("exposed", "0.49.0")
 
+            version("neo4j", "5.26.0")
+            version("neo4j-driver", "5.27.0")
+
             version("typedb", "2.28.0")
 
             version("auth0", "4.4.0")
@@ -248,6 +251,25 @@ dependencyResolutionManagement {
                 ),
             )
 
+            library("neo4j-lib-core", "org.neo4j", "neo4j").versionRef("neo4j")
+            library("neo4j-test-harness", "org.neo4j.test", "neo4j-harness").versionRef("neo4j")
+            library("neo4j-java-driver", "org.neo4j.driver", "neo4j-java-driver").versionRef("neo4j-driver")
+
+            bundle(
+                "neo4j-standard-bundle",
+                listOf(
+                    "neo4j-lib-core",
+                ),
+            )
+
+            bundle(
+                "neo4j-test-bundle",
+                listOf(
+                    "neo4j-test-harness",
+                    "neo4j-java-driver",
+                ),
+            )
+
             //endregion DATABASES
 
             //region JWT
@@ -344,6 +366,9 @@ include("core")
 
 include("infrastructure:contract:contract-messaging")
 findProject(":infrastructure:contract:contract-messaging")?.name = "contract-messaging"
+
+include("infrastructure:database:neo4j")
+findProject(":infrastructure:database:neo4j")?.name = "neo4j"
 
 include("infrastructure:hasher:hasher")
 findProject(":infrastructure:hasher:hasher")?.name = "hasher"

@@ -1,0 +1,3 @@
+DROP CONSTRAINT upk_string_props IF EXISTS
+DROP CONSTRAINT upk_number_props IF EXISTS
+DROP CONSTRAINT upk_datetime_props IF EXISTS
