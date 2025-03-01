@@ -17,21 +17,21 @@ class SimpleNodeTest {
         assertEquals(
             "BooleanProps",
             BooleanPropsNode(
-                id = randomUUID().toString(),
+                id = randomUUID(),
                 propBoolean = true
             ).nodeName()
         )
         assertEquals(
             "StringProps",
             StringPropsNode(
-                id = randomUUID().toString(),
+                id = randomUUID(),
                 propName = randomString()
             ).nodeName()
         )
         assertEquals(
             "NumberProps",
             NumberPropsNode(
-                id = randomUUID().toString(),
+                id = randomUUID(),
                 propInteger = randomInteger(),
                 propLong = randomLong(),
                 propBiginteger = randomBigInteger(),

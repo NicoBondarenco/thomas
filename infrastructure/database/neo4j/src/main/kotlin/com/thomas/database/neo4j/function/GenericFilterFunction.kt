@@ -1,6 +1,7 @@
 package com.thomas.database.neo4j.function
 
 import com.thomas.database.neo4j.operator.FunctionOperator
+import com.thomas.database.neo4j.transformer.GenericValueTransformer
 import java.util.function.UnaryOperator
 import org.neo4j.ogm.cypher.PropertyValueTransformer
 import org.neo4j.ogm.cypher.function.FilterFunction
@@ -11,7 +12,9 @@ open class GenericFilterFunction<V : Any>(
 ) : FilterFunction<Any> {
 
     companion object {
+
         private const val PARAMETER_NAME = "property"
+
     }
 
     override fun getValue(): V = value
@@ -31,7 +34,8 @@ open class GenericFilterFunction<V : Any>(
     ): Map<String, Any> = operator.parametersMap(
         createUniqueParameterName.apply(PARAMETER_NAME),
         getValue(),
-        valueTransformer
+//        valueTransformer,
+        GenericValueTransformer(valueTransformer),
     )
 
 }

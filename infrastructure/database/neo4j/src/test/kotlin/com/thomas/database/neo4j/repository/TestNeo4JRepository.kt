@@ -7,6 +7,7 @@ import com.thomas.core.model.pagination.PageSort
 import com.thomas.database.neo4j.filter.and
 import com.thomas.database.neo4j.filter.between
 import com.thomas.database.neo4j.filter.betweenEquals
+import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.endsWith
 import com.thomas.database.neo4j.filter.endsWithUnaccentedLower
 import com.thomas.database.neo4j.filter.equals
@@ -39,15 +40,23 @@ import com.thomas.database.neo4j.filter.page
 import com.thomas.database.neo4j.filter.startsWith
 import com.thomas.database.neo4j.filter.startsWithUnaccentedLower
 import com.thomas.database.neo4j.filter.toSortOrder
+import com.thomas.database.neo4j.node.BooleanNestedPropsNode
 import com.thomas.database.neo4j.node.BooleanPropsNode
 import com.thomas.database.neo4j.node.ComplexPropsNode
+import com.thomas.database.neo4j.node.DatetimeNestedPropsNode
 import com.thomas.database.neo4j.node.DatetimePropsNode
+import com.thomas.database.neo4j.node.GenericNestedPropsNode
 import com.thomas.database.neo4j.node.GenericPropsNode
+import com.thomas.database.neo4j.node.Neo4JNode
+import com.thomas.database.neo4j.node.NumberNestedPropsNode
 import com.thomas.database.neo4j.node.NumberPropsNode
 import com.thomas.database.neo4j.node.PagePropsNode
 import com.thomas.database.neo4j.node.SavePropsNode
+import com.thomas.database.neo4j.node.StringNestedPropsNode
 import com.thomas.database.neo4j.node.StringPropsNode
 import java.time.temporal.Temporal
+import java.util.UUID
+import kotlin.reflect.KProperty
 import org.neo4j.ogm.cypher.Filter
 import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.cypher.query.SortOrder
@@ -57,81 +66,438 @@ class TestNeo4JRepository(
     sessionFactory: SessionFactory,
 ) : Neo4JRepository(sessionFactory) {
 
-    suspend fun stringEquals(name: String) = stringSearch(equals("prop_name", name))
+    //region BOOLEAN PROPS
 
-    suspend fun stringNotEquals(name: String) = stringSearch(notEquals("prop_name", name))
+    suspend fun <T : Any> booleanIsTrue(
+        property: KProperty<T>
+    ): List<BooleanPropsNode> = booleanSearch(isTrue(property))
 
-    suspend fun stringEqualsUnaccentedLower(name: String) = stringSearch(equalsUnaccentedLower("prop_name", name))
+    suspend fun <T : Any> booleanIsFalse(
+        property: KProperty<T>
+    ): List<BooleanPropsNode> = booleanSearch(isFalse(property))
 
-    suspend fun stringNotEqualsUnaccentedLower(name: String) = stringSearch(notEqualsUnaccentedLower("prop_name", name))
+    //endregion BOOLEAN PROPS
 
-    suspend fun stringLike(name: String) = stringSearch(like("prop_name", name))
+    //region BOOLEAN NESTED PROPS
 
-    suspend fun stringNotLike(name: String) = stringSearch(notLike("prop_name", name))
+    suspend fun <K : Any, T : Neo4JNode> booleanNestedIs(
+        propName: KProperty<K>,
+        propValue: Boolean,
+        nestedName: String,
+        nestedProp: KProperty<T>,
+        nestedValue: Boolean
+    ): List<BooleanNestedPropsNode> = booleanNestedSearch(
+        (propValue.takeIf { it }?.let { isTrue(propName) } ?: isFalse(propName))
+            .and(nestedValue.takeIf { it }?.let {
+                isTrue(nestedName, nestedProp)
+            } ?: isFalse(nestedName, nestedProp))
+    )
 
-    suspend fun stringLikeUnaccentedLower(name: String) = stringSearch(likeUnaccentedLower("prop_name", name))
+    //endregion BOOLEAN NESTED PROPS
 
-    suspend fun stringNotLikeUnaccentedLower(name: String) = stringSearch(notLikeUnaccentedLower("prop_name", name))
+    //region DATETIME PROPS
 
-    suspend fun stringStartsWith(name: String) = stringSearch(startsWith("prop_name", name))
+    suspend fun <T : Any> datetimeGreaterThan(
+        property: KProperty<T?>,
+        value: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(greaterThan(property, value))
 
-    suspend fun stringNotStartsWith(name: String) = stringSearch(notStartsWith("prop_name", name))
+    suspend fun <T : Any> datetimeGreaterThanEquals(
+        property: KProperty<T?>,
+        value: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(greaterThanEquals(property, value))
 
-    suspend fun stringStartsWithUnaccentedLower(name: String) = stringSearch(startsWithUnaccentedLower("prop_name", name))
+    suspend fun <T : Any> datetimeLessThan(
+        property: KProperty<T?>,
+        value: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(lessThan(property, value))
 
-    suspend fun stringNotStartsWithUnaccentedLower(name: String) = stringSearch(notStartsWithUnaccentedLower("prop_name", name))
+    suspend fun <T : Any> datetimeLessThanEquals(
+        property: KProperty<T?>,
+        value: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(lessThanEquals(property, value))
 
-    suspend fun stringEndsWith(name: String) = stringSearch(endsWith("prop_name", name))
+    suspend fun <T : Any> datetimeBetween(
+        property: KProperty<T?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(between(property, min, max))
 
-    suspend fun stringNotEndsWith(name: String) = stringSearch(notEndsWith("prop_name", name))
+    suspend fun <T : Any> datetimeBetweenEquals(
+        property: KProperty<T?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(betweenEquals(property, min, max))
 
-    suspend fun stringEndsWithUnaccentedLower(name: String) = stringSearch(endsWithUnaccentedLower("prop_name", name))
+    suspend fun <T : Any> datetimeNotBetween(
+        property: KProperty<T?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(notBetween(property, min, max))
 
-    suspend fun stringNotEndsWithUnaccentedLower(name: String) = stringSearch(notEndsWithUnaccentedLower("prop_name", name))
+    suspend fun <T : Any> datetimeNotBetweenEquals(
+        property: KProperty<T?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimePropsNode> = datetimeSearch(notBetweenEquals(property, min, max))
 
-    suspend fun numberGreaterThan(property: String, value: Number) = numberSearch(greaterThan(property, value))
+    //endregion DATETIME PROPS
 
-    suspend fun numberGreaterThanEquals(property: String, value: Number) = numberSearch(greaterThanEquals(property, value))
+    //region DATETIME NESTED PROPS
 
-    suspend fun numberLessThan(property: String, value: Number) = numberSearch(lessThan(property, value))
+    suspend fun <K : Any> datetimeNestedGreaterThan(
+        property: KProperty<K?>,
+        value: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(greaterThan(property, DatetimeNestedPropsNode::nestedNode, value))
 
-    suspend fun numberLessThanEquals(property: String, value: Number) = numberSearch(lessThanEquals(property, value))
+    suspend fun <K : Any> datetimeNestedGreaterThanEquals(
+        property: KProperty<K?>,
+        value: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(greaterThanEquals(property, DatetimeNestedPropsNode::nestedNode, value))
 
-    suspend fun numberBetween(property: String, min: Number, max: Number) = numberSearch(between(property, min, max))
+    suspend fun <K : Any> datetimeNestedLessThan(
+        property: KProperty<K?>,
+        value: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(lessThan(property, DatetimeNestedPropsNode::nestedNode, value))
 
-    suspend fun numberBetweenEquals(property: String, min: Number, max: Number) = numberSearch(betweenEquals(property, min, max))
+    suspend fun <K : Any> datetimeNestedLessThanEquals(
+        property: KProperty<K?>,
+        value: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(lessThanEquals(property, DatetimeNestedPropsNode::nestedNode, value))
 
-    suspend fun numberNotBetween(property: String, min: Number, max: Number) = numberSearch(notBetween(property, min, max))
+    suspend fun <K : Any> datetimeNestedBetween(
+        property: KProperty<K?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(between(property, DatetimeNestedPropsNode::nestedNode, min, max))
 
-    suspend fun numberNotBetweenEquals(property: String, min: Number, max: Number) = numberSearch(notBetweenEquals(property, min, max))
+    suspend fun <K : Any> datetimeNestedBetweenEquals(
+        property: KProperty<K?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(betweenEquals(property, DatetimeNestedPropsNode::nestedNode, min, max))
 
-    suspend fun datetimeGreaterThan(property: String, value: Temporal) = datetimeSearch(greaterThan(property, value))
+    suspend fun <K : Any> datetimeNestedNotBetween(
+        property: KProperty<K?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(notBetween(property, DatetimeNestedPropsNode::nestedNode, min, max))
 
-    suspend fun datetimeGreaterThanEquals(property: String, value: Temporal) = datetimeSearch(greaterThanEquals(property, value))
+    suspend fun <K : Any> datetimeNestedNotBetweenEquals(
+        property: KProperty<K?>,
+        min: Temporal,
+        max: Temporal
+    ): List<DatetimeNestedPropsNode> = datetimeNestedSearch(notBetweenEquals(property, DatetimeNestedPropsNode::nestedNode, min, max))
 
-    suspend fun datetimeLessThan(property: String, value: Temporal) = datetimeSearch(lessThan(property, value))
+    //endregion DATETIME NESTED PROPS
 
-    suspend fun datetimeLessThanEquals(property: String, value: Temporal) = datetimeSearch(lessThanEquals(property, value))
+    //region GENERICS
 
-    suspend fun datetimeBetween(property: String, min: Temporal, max: Temporal) = datetimeSearch(between(property, min, max))
+    suspend fun <K : Any> propertyIsNull(
+        property: KProperty<K?>
+    ): List<GenericPropsNode> = propertySearch(isNull(property))
 
-    suspend fun datetimeBetweenEquals(property: String, min: Temporal, max: Temporal) = datetimeSearch(betweenEquals(property, min, max))
+    suspend fun <K : Any> propertyIsNotNull(
+        property: KProperty<K?>
+    ): List<GenericPropsNode> = propertySearch(isNotNull(property))
 
-    suspend fun datetimeNotBetween(property: String, min: Temporal, max: Temporal) = datetimeSearch(notBetween(property, min, max))
+    suspend fun <K : Any> propertyInValues(
+        property: KProperty<K?>,
+        values: Collection<Any>
+    ): List<GenericPropsNode> = propertySearch(inValues(property, values))
 
-    suspend fun datetimeNotBetweenEquals(property: String, min: Temporal, max: Temporal) = datetimeSearch(notBetweenEquals(property, min, max))
+    suspend fun <K : Any> propertyNotInValues(
+        property: KProperty<K?>,
+        values: Collection<Any>
+    ): List<GenericPropsNode> = propertySearch(notInValues(property, values))
 
-    suspend fun booleanIsTrue(property: String) = booleanSearch(isTrue(property))
+    //endregion GENERICS
 
-    suspend fun booleanIsFalse(property: String) = booleanSearch(isFalse(property))
+    //region GENERICS NESTED
 
-    suspend fun propertyIsNull(property: String) = propertySearch(isNull(property))
+    suspend fun <K : Any> propertyIsNullNested(
+        property: KProperty<K?>
+    ): List<GenericNestedPropsNode> = propertySearchNested(isNull(property, GenericNestedPropsNode::nestedNode))
 
-    suspend fun propertyIsNotNull(property: String) = propertySearch(isNotNull(property))
+    suspend fun <K : Any> propertyIsNotNullNested(
+        property: KProperty<K?>
+    ): List<GenericNestedPropsNode> = propertySearchNested(isNotNull(property, GenericNestedPropsNode::nestedNode))
 
-    suspend fun propertyInValues(property: String, values: Collection<Any>) = propertySearch(inValues(property, values))
+    suspend fun <K : Any> propertyInValuesNested(
+        property: KProperty<K?>,
+        values: Collection<Any>
+    ): List<GenericNestedPropsNode> = propertySearchNested(inValues(property, GenericNestedPropsNode::nestedNode, values))
 
-    suspend fun propertyNotInValues(property: String, values: Collection<Any>) = propertySearch(notInValues(property, values))
+    suspend fun <K : Any> propertyNotInValuesNested(
+        property: KProperty<K?>,
+        values: Collection<Any>
+    ): List<GenericNestedPropsNode> = propertySearchNested(notInValues(property, GenericNestedPropsNode::nestedNode, values))
+
+    //endregion GENERICS NESTED
+
+    //region NUMBER
+
+    suspend fun <K : Any> numberGreaterThan(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberPropsNode> = numberSearch(greaterThan(property, value))
+
+    suspend fun <K : Any> numberGreaterThanEquals(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberPropsNode> = numberSearch(greaterThanEquals(property, value))
+
+    suspend fun <K : Any> numberLessThan(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberPropsNode> = numberSearch(lessThan(property, value))
+
+    suspend fun <K : Any> numberLessThanEquals(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberPropsNode> = numberSearch(lessThanEquals(property, value))
+
+    suspend fun <K : Any> numberBetween(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberPropsNode> = numberSearch(between(property, min, max))
+
+    suspend fun <K : Any> numberBetweenEquals(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberPropsNode> = numberSearch(betweenEquals(property, min, max))
+
+    suspend fun <K : Any> numberNotBetween(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberPropsNode> = numberSearch(notBetween(property, min, max))
+
+    suspend fun <K : Any> numberNotBetweenEquals(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberPropsNode> = numberSearch(notBetweenEquals(property, min, max))
+
+    //endregion NUMBER
+
+    //region NUMBER NESTED
+
+    suspend fun <K : Any> numberGreaterThanNested(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(greaterThan(property, NumberNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> numberGreaterThanEqualsNested(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(greaterThanEquals(property, NumberNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> numberLessThanNested(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(lessThan(property, NumberNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> numberLessThanEqualsNested(
+        property: KProperty<K?>,
+        value: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(lessThanEquals(property, NumberNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> numberBetweenNested(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(between(property, NumberNestedPropsNode::nestedNode, min, max))
+
+    suspend fun <K : Any> numberBetweenEqualsNested(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(betweenEquals(property, NumberNestedPropsNode::nestedNode, min, max))
+
+    suspend fun <K : Any> numberNotBetweenNested(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(notBetween(property, NumberNestedPropsNode::nestedNode, min, max))
+
+    suspend fun <K : Any> numberNotBetweenEqualsNested(
+        property: KProperty<K?>,
+        min: Number,
+        max: Number
+    ): List<NumberNestedPropsNode> = numberSearchNested(notBetweenEquals(property, NumberNestedPropsNode::nestedNode, min, max))
+
+    //endregion NUMBER NESTED
+
+    //region STRING
+
+    suspend fun <K : Any> stringEquals(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(equals(property, value))
+
+    suspend fun <K : Any> stringNotEquals(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notEquals(property, value))
+
+    suspend fun <K : Any> stringEqualsUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(equalsUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringNotEqualsUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notEqualsUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringLike(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(like(property, value))
+
+    suspend fun <K : Any> stringNotLike(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notLike(property, value))
+
+    suspend fun <K : Any> stringLikeUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(likeUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringNotLikeUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notLikeUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringStartsWith(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(startsWith(property, value))
+
+    suspend fun <K : Any> stringNotStartsWith(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notStartsWith(property, value))
+
+    suspend fun <K : Any> stringStartsWithUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(startsWithUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringNotStartsWithUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notStartsWithUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringEndsWith(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(endsWith(property, value))
+
+    suspend fun <K : Any> stringNotEndsWith(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notEndsWith(property, value))
+
+    suspend fun <K : Any> stringEndsWithUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(endsWithUnaccentedLower(property, value))
+
+    suspend fun <K : Any> stringNotEndsWithUnaccentedLower(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringPropsNode> = stringSearch(notEndsWithUnaccentedLower(property, value))
+
+    //endregion STRING
+
+    //region STRING NESTED
+
+    suspend fun <K : Any> stringEqualsNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(equals(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotEqualsNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notEquals(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringEqualsUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(equalsUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotEqualsUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notEqualsUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringLikeNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(like(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotLikeNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notLike(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringLikeUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(likeUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotLikeUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notLikeUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringStartsWithNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(startsWith(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotStartsWithNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notStartsWith(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringStartsWithUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(startsWithUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotStartsWithUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notStartsWithUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringEndsWithNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(endsWith(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotEndsWithNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notEndsWith(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringEndsWithUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(endsWithUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    suspend fun <K : Any> stringNotEndsWithUnaccentedLowerNested(
+        property: KProperty<K?>,
+        value: String
+    ): List<StringNestedPropsNode> = stringSearchNested(notEndsWithUnaccentedLower(property, StringNestedPropsNode::nestedNode, value))
+
+    //endregion STRING NESTED
 
     suspend fun complexFilterSearch(filters: List<Filter>) = complexSearch(and(filters))
 
@@ -139,9 +505,11 @@ class TestNeo4JRepository(
 
     suspend fun sortPageSearch(sorts: List<PageSort>): List<PagePropsNode> = pageSearch(sorts.toSortOrder()).toList()
 
-    suspend fun findById(id: String): PagePropsNode? = sessionFactory.one(id)
+    suspend fun findById(id: UUID): PagePropsNode? = sessionFactory.one(id)
 
     suspend fun findList(filters: List<Filter>, sorts: List<PageSort>): List<PagePropsNode> = sessionFactory.list(filters, sorts)
+
+    suspend fun countTotal(filters: List<Filter>): Long = sessionFactory.count<PagePropsNode>(filters)
 
     suspend fun findPage(filters: List<Filter>, pageable: PageRequest): PageResponse<PagePropsNode> = sessionFactory.page(filters, pageable)
 
@@ -153,27 +521,19 @@ class TestNeo4JRepository(
         session.delete(entity)
     }
 
-    private suspend fun stringSearch(
+    private suspend fun booleanSearch(
         filter: Filter
-    ): List<StringPropsNode> = withSessionContextIO {
+    ): List<BooleanPropsNode> = withSessionContextIO {
         sessionFactory.openSession()
-            .loadAll(StringPropsNode::class.java, filter)
+            .loadAll(BooleanPropsNode::class.java, filter)
             .toList()
     }
 
-    private suspend fun numberSearch(
-        filter: Filter
-    ): List<NumberPropsNode> = withSessionContextIO {
+    private suspend fun booleanNestedSearch(
+        filter: Filters
+    ): List<BooleanNestedPropsNode> = withSessionContextIO {
         sessionFactory.openSession()
-            .loadAll(NumberPropsNode::class.java, filter)
-            .toList()
-    }
-
-    private suspend fun numberSearch(
-        filters: Filters
-    ): List<NumberPropsNode> = withSessionContextIO {
-        sessionFactory.openSession()
-            .loadAll(NumberPropsNode::class.java, filters)
+            .loadAll(BooleanNestedPropsNode::class.java, filter)
             .toList()
     }
 
@@ -185,19 +545,11 @@ class TestNeo4JRepository(
             .toList()
     }
 
-    private suspend fun datetimeSearch(
-        filters: Filters
-    ): List<DatetimePropsNode> = withSessionContextIO {
-        sessionFactory.openSession()
-            .loadAll(DatetimePropsNode::class.java, filters)
-            .toList()
-    }
-
-    private suspend fun booleanSearch(
+    private suspend fun datetimeNestedSearch(
         filter: Filter
-    ): List<BooleanPropsNode> = withSessionContextIO {
+    ): List<DatetimeNestedPropsNode> = withSessionContextIO {
         sessionFactory.openSession()
-            .loadAll(BooleanPropsNode::class.java, filter)
+            .loadAll(DatetimeNestedPropsNode::class.java, filter)
             .toList()
     }
 
@@ -209,11 +561,43 @@ class TestNeo4JRepository(
             .toList()
     }
 
-    private suspend fun propertySearch(
-        filters: Filters
-    ): List<GenericPropsNode> = withSessionContextIO {
+    private suspend fun propertySearchNested(
+        filter: Filter
+    ): List<GenericNestedPropsNode> = withSessionContextIO {
         sessionFactory.openSession()
-            .loadAll(GenericPropsNode::class.java, filters)
+            .loadAll(GenericNestedPropsNode::class.java, filter)
+            .toList()
+    }
+
+    private suspend fun numberSearch(
+        filter: Filter
+    ): List<NumberPropsNode> = withSessionContextIO {
+        sessionFactory.openSession()
+            .loadAll(NumberPropsNode::class.java, filter)
+            .toList()
+    }
+
+    private suspend fun numberSearchNested(
+        filter: Filter
+    ): List<NumberNestedPropsNode> = withSessionContextIO {
+        sessionFactory.openSession()
+            .loadAll(NumberNestedPropsNode::class.java, filter)
+            .toList()
+    }
+
+    private suspend fun stringSearch(
+        filter: Filter
+    ): List<StringPropsNode> = withSessionContextIO {
+        sessionFactory.openSession()
+            .loadAll(StringPropsNode::class.java, filter)
+            .toList()
+    }
+
+    private suspend fun stringSearchNested(
+        filter: Filter
+    ): List<StringNestedPropsNode> = withSessionContextIO {
+        sessionFactory.openSession()
+            .loadAll(StringNestedPropsNode::class.java, filter)
             .toList()
     }
 

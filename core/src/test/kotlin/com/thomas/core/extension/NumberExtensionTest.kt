@@ -22,4 +22,24 @@ internal class NumberExtensionTest {
         assertFalse(10.isBetween(11, 9))
     }
 
+    @Test
+    fun `Long is higher`(){
+        assertTrue(10L.isHigher(-1L))
+        assertTrue(10L.isHigher(0L))
+        assertTrue(10L.isHigher(1L))
+        assertFalse(10L.isHigher(10L))
+        assertFalse(10L.isHigher(90L))
+    }
+
+    @Test
+    fun `Long is lower`(){
+        assertFalse(10L.isLower(-1L))
+        assertFalse(10L.isLower(0L))
+        assertFalse(10L.isLower(1L))
+        assertFalse(10L.isLower(10L))
+        assertTrue(10L.isLower(90L))
+        assertTrue(10L.isLower(11L))
+        assertTrue(10L.isLower(100L))
+    }
+
 }

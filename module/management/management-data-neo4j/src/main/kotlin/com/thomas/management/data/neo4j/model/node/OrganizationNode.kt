@@ -1,7 +1,8 @@
 package com.thomas.management.data.neo4j.model.node
 
+import com.thomas.database.neo4j.node.Neo4JNode
+import com.thomas.database.neo4j.node.NoArgsConstructor
 import com.thomas.management.data.entity.value.AddressState
-import com.thomas.management.data.neo4j.NoArgsConstructor
 import java.time.ZonedDateTime
 import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.NodeEntity
@@ -12,7 +13,7 @@ import org.neo4j.ogm.annotation.Property
 data class OrganizationNode(
     @Id
     @Property(name = "id")
-    var id: String,
+    override var id: UUID,
 
     @Property(name = "organization_name")
     var organizationName: String,
@@ -64,4 +65,4 @@ data class OrganizationNode(
 
     @Property(name = "updated_at")
     var updatedAt: ZonedDateTime,
-): Neo4jNode
+) : Neo4JNode

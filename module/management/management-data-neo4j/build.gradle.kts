@@ -7,7 +7,7 @@ plugins {
 }
 
 noArg {
-    annotation("com.thomas.management.data.neo4j.NoArgsConstructor")
+    annotation("com.thomas.database.neo4j.node.NoArgsConstructor")
 }
 
 dependencies {
@@ -19,9 +19,10 @@ dependencies {
     implementation("org.neo4j:neo4j-ogm-core:4.0.15")
     implementation("org.neo4j:neo4j-ogm-bolt-driver:4.0.15")
 
+    testImplementation(libs.bundles.jackson.all.bundle)
+
     testImplementation(testFixtures(project(":core")))
     testImplementation(testFixtures(project(":module:management:management-data")))
-
-    testImplementation(libs.bundles.jackson.all.bundle)
+    testImplementation(testFixtures(project(":infrastructure:database:neo4j")))
 
 }

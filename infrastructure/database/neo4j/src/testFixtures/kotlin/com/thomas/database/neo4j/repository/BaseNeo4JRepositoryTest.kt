@@ -30,6 +30,8 @@ abstract class BaseNeo4JRepositoryTest<R : Neo4JRepository>(
 
     abstract fun createRepository(sessionFactory: SessionFactory): R
 
+    open fun createConfiguration(): Configuration = embeddedDatabaseServer.ogmConfiguration()
+
     private fun Neo4j.ogmConfiguration() = Configuration.Builder()
         .uri(this.boltURI().toString())
         .database(this.defaultDatabaseService().databaseName())
@@ -47,7 +49,7 @@ abstract class BaseNeo4JRepositoryTest<R : Neo4JRepository>(
             .withFunction(ZonedDateTimeFunctions::class.java)
             .build()
 
-        sessionFactory = SessionFactory(embeddedDatabaseServer.ogmConfiguration(), *nodesPackages.toTypedArray())
+        sessionFactory = SessionFactory(createConfiguration(), *nodesPackages.toTypedArray())
         repository = createRepository(sessionFactory)
         setupScript?.apply { runScript(file = this) }
     }

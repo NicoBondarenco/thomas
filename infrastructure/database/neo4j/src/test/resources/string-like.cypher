@@ -1,35 +1,69 @@
-CREATE (e:StringProps {id: '8190ea93-7a86-4b73-8cad-80fbe997c4b5', prop_name: 'José Teixeira'})
-CREATE (e:StringProps {id: '63490ff1-b531-4405-9ee6-6c2a2c286ba9', prop_name: 'Josefa Dias'})
-CREATE (e:StringProps {id: 'f10f988d-f714-4cbc-9d0c-d29a98af1b6b', prop_name: 'Jôseane Moreira'})
-CREATE (e:StringProps {id: '95ba9651-ff2e-469f-9202-e9a5e7abbc63', prop_name: 'Joseas Gomes'})
-CREATE (e:StringProps {id: '3dca88ed-ce60-4adb-9f4a-fe87d074685d', prop_name: 'Josefína Ribeiro'})
-CREATE (e:StringProps {id: '9f2ee658-956b-4d50-8ded-49fd04edd81a', prop_name: 'Maria José'})
-CREATE (e:StringProps {id: 'fb0421ba-1b92-4722-92aa-de0591ad2ec1', prop_name: 'Leandro Joséas'})
-CREATE (e:StringProps {id: 'ee3a2202-de4a-4847-aa83-aacb83e15b59', prop_name: 'Rejose Farias'})
-CREATE (e:StringProps {id: '6fd12324-eaa8-4736-a99b-2c5ed3d7b474', prop_name: 'Sojôseas Monteiro'})
+CREATE (e:StringProps {id: '8190ea93-7a86-4b73-8cad-80fbe997c4b5', prop_name: 'José Teixeira'});
+CREATE (e:StringProps {id: '63490ff1-b531-4405-9ee6-6c2a2c286ba9', prop_name: 'Josefa Dias'});
+CREATE (e:StringProps {id: 'f10f988d-f714-4cbc-9d0c-d29a98af1b6b', prop_name: 'Jôseane Moreira'});
+CREATE (e:StringProps {id: '95ba9651-ff2e-469f-9202-e9a5e7abbc63', prop_name: 'Joseas Gomes'});
+CREATE (e:StringProps {id: '3dca88ed-ce60-4adb-9f4a-fe87d074685d', prop_name: 'Josefína Ribeiro'});
+CREATE (e:StringProps {id: '9f2ee658-956b-4d50-8ded-49fd04edd81a', prop_name: 'Maria José'});
+CREATE (e:StringProps {id: 'fb0421ba-1b92-4722-92aa-de0591ad2ec1', prop_name: 'Leandro Joséas'});
+CREATE (e:StringProps {id: 'ee3a2202-de4a-4847-aa83-aacb83e15b59', prop_name: 'Rejose Farias'});
+CREATE (e:StringProps {id: '6fd12324-eaa8-4736-a99b-2c5ed3d7b474', prop_name: 'Sojôseas Monteiro'});
 
-CREATE (e:StringProps {id: 'f2a7c423-e20a-41c1-ab17-3a54a4333347', prop_name: 'josé teixeira'})
-CREATE (e:StringProps {id: '4fa86910-6424-4b53-8444-e8e5297f2707', prop_name: 'josefa dias'})
-CREATE (e:StringProps {id: '9c715ea4-0110-4016-9f93-6c34d796f92a', prop_name: 'jôseane moreira'})
-CREATE (e:StringProps {id: 'fa5415df-7df9-4183-93f3-4c2f9b4e0ced', prop_name: 'joseas gomes'})
-CREATE (e:StringProps {id: 'f781adab-d361-46e4-97ca-3a5fecaf80da', prop_name: 'josefína ribeiro'})
-CREATE (e:StringProps {id: '333556a1-38ee-413e-b9c6-73494cf40ea0', prop_name: 'maria josé'})
-CREATE (e:StringProps {id: '46016e93-a496-4252-8d88-4e05d86f3cbc', prop_name: 'leandro joséas'})
-CREATE (e:StringProps {id: '10f62941-be96-40aa-943b-0045ed7d71d6', prop_name: 'rejose farias'})
-CREATE (e:StringProps {id: '321a0267-2f21-4948-8048-d037b09662fd', prop_name: 'sojôseas monteiro'})
+CREATE (e:StringProps {id: 'f2a7c423-e20a-41c1-ab17-3a54a4333347', prop_name: 'josé teixeira'});
+CREATE (e:StringProps {id: '4fa86910-6424-4b53-8444-e8e5297f2707', prop_name: 'josefa dias'});
+CREATE (e:StringProps {id: '9c715ea4-0110-4016-9f93-6c34d796f92a', prop_name: 'jôseane moreira'});
+CREATE (e:StringProps {id: 'fa5415df-7df9-4183-93f3-4c2f9b4e0ced', prop_name: 'joseas gomes'});
+CREATE (e:StringProps {id: 'f781adab-d361-46e4-97ca-3a5fecaf80da', prop_name: 'josefína ribeiro'});
+CREATE (e:StringProps {id: '333556a1-38ee-413e-b9c6-73494cf40ea0', prop_name: 'maria josé'});
+CREATE (e:StringProps {id: '46016e93-a496-4252-8d88-4e05d86f3cbc', prop_name: 'leandro joséas'});
+CREATE (e:StringProps {id: '10f62941-be96-40aa-943b-0045ed7d71d6', prop_name: 'rejose farias'});
+CREATE (e:StringProps {id: '321a0267-2f21-4948-8048-d037b09662fd', prop_name: 'sojôseas monteiro'});
 
-CREATE (e:StringProps {id: '35c84255-542c-4ec4-a872-45b1c89dfcb7', prop_name: 'Aparecida Lima'})
-CREATE (e:StringProps {id: 'f78f7495-eaf7-4e16-a9b5-7ca86e42aedc', prop_name: 'Beatriz dos Santos'})
-CREATE (e:StringProps {id: '5257f535-712f-4939-aa75-a08b879aa5b2', prop_name: 'Bruna Dias'})
-CREATE (e:StringProps {id: '10e91a84-e4ea-4114-83e1-4b1cc8e2d3bc', prop_name: 'Bruna Pereira'})
-CREATE (e:StringProps {id: '9fa5e064-c087-4183-96b5-d10d79788f49', prop_name: 'Camila Rodrigues'})
-CREATE (e:StringProps {id: 'b5da7930-4e2d-48e4-a6f1-a615be294ec2', prop_name: 'Carla Alves'})
-CREATE (e:StringProps {id: '25012683-83c1-40b8-9c58-2237b7f785e4', prop_name: 'Cláudia Machado'})
-CREATE (e:StringProps {id: 'cec55f5c-4efa-45c4-a606-e6867b433117', prop_name: 'Cristiane Gonçalves'})
-CREATE (e:StringProps {id: 'e6e43c95-7557-47a5-8082-85bb5c7926d0', prop_name: 'Cristiane Santos'})
-CREATE (e:StringProps {id: '2023abfa-1622-400b-ba37-a164912e27c4', prop_name: 'Daniela Batista'})
-CREATE (e:StringProps {id: 'b6a1d7d0-a602-42c2-9336-04f4cb1c9c04', prop_name: 'Luana de Souza'})
-CREATE (e:StringProps {id: 'beb466be-f338-4a7a-9bb0-8f76d5f2d5b3', prop_name: 'Lúcia Fernandes'})
-CREATE (e:StringProps {id: 'a5b0a4ad-6799-4ec7-9952-88c7aaedd363', prop_name: 'Vera Nunes'})
-CREATE (e:StringProps {id: '836b827f-986a-4fef-85da-55acb7a94698', prop_name: 'Vitória Batista'})
-CREATE (e:StringProps {id: 'd703e421-3a88-4d27-830b-51a6b65281e2', prop_name: 'Patrícia Soares'})
+CREATE (e:StringProps {id: '35c84255-542c-4ec4-a872-45b1c89dfcb7', prop_name: 'Aparecida Lima'});
+CREATE (e:StringProps {id: 'f78f7495-eaf7-4e16-a9b5-7ca86e42aedc', prop_name: 'Beatriz dos Santos'});
+CREATE (e:StringProps {id: '5257f535-712f-4939-aa75-a08b879aa5b2', prop_name: 'Bruna Dias'});
+CREATE (e:StringProps {id: '10e91a84-e4ea-4114-83e1-4b1cc8e2d3bc', prop_name: 'Bruna Pereira'});
+CREATE (e:StringProps {id: '9fa5e064-c087-4183-96b5-d10d79788f49', prop_name: 'Camila Rodrigues'});
+CREATE (e:StringProps {id: 'b5da7930-4e2d-48e4-a6f1-a615be294ec2', prop_name: 'Carla Alves'});
+CREATE (e:StringProps {id: '25012683-83c1-40b8-9c58-2237b7f785e4', prop_name: 'Cláudia Machado'});
+CREATE (e:StringProps {id: 'cec55f5c-4efa-45c4-a606-e6867b433117', prop_name: 'Cristiane Gonçalves'});
+CREATE (e:StringProps {id: 'e6e43c95-7557-47a5-8082-85bb5c7926d0', prop_name: 'Cristiane Santos'});
+CREATE (e:StringProps {id: '2023abfa-1622-400b-ba37-a164912e27c4', prop_name: 'Daniela Batista'});
+CREATE (e:StringProps {id: 'b6a1d7d0-a602-42c2-9336-04f4cb1c9c04', prop_name: 'Luana de Souza'});
+CREATE (e:StringProps {id: 'beb466be-f338-4a7a-9bb0-8f76d5f2d5b3', prop_name: 'Lúcia Fernandes'});
+CREATE (e:StringProps {id: 'a5b0a4ad-6799-4ec7-9952-88c7aaedd363', prop_name: 'Vera Nunes'});
+CREATE (e:StringProps {id: '836b827f-986a-4fef-85da-55acb7a94698', prop_name: 'Vitória Batista'});
+CREATE (e:StringProps {id: 'd703e421-3a88-4d27-830b-51a6b65281e2', prop_name: 'Patrícia Soares'});
+
+MATCH (o:StringProps {id: '8190ea93-7a86-4b73-8cad-80fbe997c4b5'}) CREATE (e:StringNestedProps {id: '81e3aa04-f895-4177-b623-7a1612ed382d'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '63490ff1-b531-4405-9ee6-6c2a2c286ba9'}) CREATE (e:StringNestedProps {id: '3c73b9c1-bf8f-4d2d-bf9e-cfd1de8e4755'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'f10f988d-f714-4cbc-9d0c-d29a98af1b6b'}) CREATE (e:StringNestedProps {id: '3937fa51-9ec6-46a5-81b5-c62a0609b5aa'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '95ba9651-ff2e-469f-9202-e9a5e7abbc63'}) CREATE (e:StringNestedProps {id: '21d9ecf1-eaca-42cf-8e1d-42c664a98859'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '3dca88ed-ce60-4adb-9f4a-fe87d074685d'}) CREATE (e:StringNestedProps {id: '8074540a-b9c1-4072-bacc-2ed78750fd05'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '9f2ee658-956b-4d50-8ded-49fd04edd81a'}) CREATE (e:StringNestedProps {id: 'fdf2af54-2a69-4013-a253-953c387c9bba'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'fb0421ba-1b92-4722-92aa-de0591ad2ec1'}) CREATE (e:StringNestedProps {id: '22dffacd-2d4b-420f-9fd4-ca811bb4185a'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'ee3a2202-de4a-4847-aa83-aacb83e15b59'}) CREATE (e:StringNestedProps {id: 'e4b38d7a-5ab5-4531-8c4f-91bc5538bdb5'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '6fd12324-eaa8-4736-a99b-2c5ed3d7b474'}) CREATE (e:StringNestedProps {id: '9d6d9d8d-d7f9-4cc1-a10b-862eb4dad8b9'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'f2a7c423-e20a-41c1-ab17-3a54a4333347'}) CREATE (e:StringNestedProps {id: 'fb2ebb1a-1b90-4808-85c9-e5c571e2829b'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '4fa86910-6424-4b53-8444-e8e5297f2707'}) CREATE (e:StringNestedProps {id: '67cb7ed4-2db3-43cf-87b2-bd799cdca146'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '9c715ea4-0110-4016-9f93-6c34d796f92a'}) CREATE (e:StringNestedProps {id: 'c2d1c580-a020-466d-b605-a2dc39ee784d'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'fa5415df-7df9-4183-93f3-4c2f9b4e0ced'}) CREATE (e:StringNestedProps {id: '37f2fa9d-2b81-4a27-a8ce-b6609c55bf83'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'f781adab-d361-46e4-97ca-3a5fecaf80da'}) CREATE (e:StringNestedProps {id: '8148bdf9-a378-4b4b-b682-17252d99a0a1'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '333556a1-38ee-413e-b9c6-73494cf40ea0'}) CREATE (e:StringNestedProps {id: '86c85973-090e-4fd8-bd64-be986361a7f0'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '46016e93-a496-4252-8d88-4e05d86f3cbc'}) CREATE (e:StringNestedProps {id: '768eb187-d95a-4600-b345-cbcf28c4e308'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '10f62941-be96-40aa-943b-0045ed7d71d6'}) CREATE (e:StringNestedProps {id: '19ff6270-4b8d-4cde-b01d-380d080f821c'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '321a0267-2f21-4948-8048-d037b09662fd'}) CREATE (e:StringNestedProps {id: '824544ba-bdbe-4465-8ee1-af6c971cbf58'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '35c84255-542c-4ec4-a872-45b1c89dfcb7'}) CREATE (e:StringNestedProps {id: '2ba92c43-d4fa-419f-92f3-47152b503197'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'f78f7495-eaf7-4e16-a9b5-7ca86e42aedc'}) CREATE (e:StringNestedProps {id: 'e3c5d2c4-036c-49af-80ac-489afbc7a619'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '5257f535-712f-4939-aa75-a08b879aa5b2'}) CREATE (e:StringNestedProps {id: '5f0734b0-0d1d-44b9-83eb-9554d298b892'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '10e91a84-e4ea-4114-83e1-4b1cc8e2d3bc'}) CREATE (e:StringNestedProps {id: 'af6d71c0-3c42-4793-ac50-c9bfa379a638'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '9fa5e064-c087-4183-96b5-d10d79788f49'}) CREATE (e:StringNestedProps {id: '8a3ac199-22ee-4b30-813e-5f028c93f5bc'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'b5da7930-4e2d-48e4-a6f1-a615be294ec2'}) CREATE (e:StringNestedProps {id: 'cc97497e-dd4f-40ee-830d-56ebfc6b84ce'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '25012683-83c1-40b8-9c58-2237b7f785e4'}) CREATE (e:StringNestedProps {id: '392752ea-faeb-469e-9e77-d731364c2347'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'cec55f5c-4efa-45c4-a606-e6867b433117'}) CREATE (e:StringNestedProps {id: '1627345e-fbf9-42dd-a991-f3c8b1cdf5fd'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'e6e43c95-7557-47a5-8082-85bb5c7926d0'}) CREATE (e:StringNestedProps {id: '68d73830-cc41-4fd7-b478-3f79eacb5dd5'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '2023abfa-1622-400b-ba37-a164912e27c4'}) CREATE (e:StringNestedProps {id: '5753a67f-e145-4691-9153-826dee0e1dac'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'b6a1d7d0-a602-42c2-9336-04f4cb1c9c04'}) CREATE (e:StringNestedProps {id: '04f99654-e585-45d6-9bfd-a1cb93901d05'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'beb466be-f338-4a7a-9bb0-8f76d5f2d5b3'}) CREATE (e:StringNestedProps {id: '49bb77ed-a944-4a06-b891-c20ef1aa43c9'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'a5b0a4ad-6799-4ec7-9952-88c7aaedd363'}) CREATE (e:StringNestedProps {id: '5ed34ca6-a278-42fd-9718-e6bc6102dc42'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: '836b827f-986a-4fef-85da-55acb7a94698'}) CREATE (e:StringNestedProps {id: '3b979ccf-5ad4-4958-b885-b345a43facc1'})-[:STRING_NESTED]->(o);
+MATCH (o:StringProps {id: 'd703e421-3a88-4d27-830b-51a6b65281e2'}) CREATE (e:StringNestedProps {id: 'e5c88f32-ae51-457c-9be1-3abafdce91f3'})-[:STRING_NESTED]->(o);

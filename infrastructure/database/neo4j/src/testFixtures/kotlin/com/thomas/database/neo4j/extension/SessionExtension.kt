@@ -8,13 +8,9 @@ fun SessionFactory.purge(): Session = this.runQueries { this.purgeDatabase() }
 
 fun SessionFactory.runScript(
     file: String,
-): Session = this::class.java.getResourceAsStream(file).bufferedReader().readLines().filter {
-    it.trim().isNotEmpty()
-}.let { lines ->
+): Session = this::class.java.getResourceAsStream(file).bufferedReader().readText().let { script ->
     this.runQueries {
-        lines.forEach { line ->
-            this.query(line, mapOf<String, Any>())
-        }
+        this.query(script, mapOf<String, Any>())
     }
 }
 

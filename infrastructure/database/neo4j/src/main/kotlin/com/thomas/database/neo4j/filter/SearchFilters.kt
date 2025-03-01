@@ -5,77 +5,31 @@ import com.thomas.core.model.pagination.PageRequestData
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection
-import com.thomas.database.neo4j.function.ConditionalFilterFunction
-import com.thomas.database.neo4j.function.GenericFilterFunction
 import com.thomas.database.neo4j.node.Neo4JNode
-import com.thomas.database.neo4j.operator.InOperator.IN
-import com.thomas.database.neo4j.operator.InOperator.IN_INCLUDE_NULL
-import com.thomas.database.neo4j.operator.InOperator.NOT_IN
-import com.thomas.database.neo4j.operator.InOperator.NOT_IN_INCLUDE_NULL
-import java.io.Serializable
-import org.neo4j.ogm.cypher.BooleanOperator
-import org.neo4j.ogm.cypher.ComparisonOperator.EQUALS
-import org.neo4j.ogm.cypher.ComparisonOperator.IS_NULL
 import org.neo4j.ogm.cypher.Filter
-import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.cypher.query.Pagination
 import org.neo4j.ogm.cypher.query.SortOrder
 import org.neo4j.ogm.session.SessionFactory
 import org.neo4j.ogm.session.count
 
-fun equals(
-    property: String,
-    value: Any,
-): Filter = Filter(property, EQUALS, value)
-
-fun notEquals(
-    property: String,
-    value: Any,
-): Filter = equals(property, value).apply { isNegated = true }
-
-fun isNull(
-    property: String,
-): Filter = Filter(property, IS_NULL)
-
-fun isNotNull(
-    property: String,
-): Filter = isNull(property).apply { isNegated = true }
-
-fun inValues(
-    property: String,
-    values: Collection<Any?>,
-): Filter = Filter(property, GenericFilterFunction(values, (values.contains(null).takeIf { it }?.let { IN_INCLUDE_NULL } ?: IN)))
-
-fun notInValues(
-    property: String,
-    values: Collection<Any?>,
-): Filter = Filter(property, GenericFilterFunction(values, (values.contains(null).takeIf { it }?.let { NOT_IN_INCLUDE_NULL } ?: NOT_IN)))
-
-fun or(
-    vararg filters: Filter,
-) = Filter("", ConditionalFilterFunction(filters.toList(), BooleanOperator.OR))
-
-fun and(
-    filters: List<Filter> = listOf(),
-) = Filters().apply {
-    filters.forEach { filter -> this.and(filter) }
-}
-
-suspend inline fun <reified T : Neo4JNode> SessionFactory.one(
-    id: Serializable,
-): T? = withSessionContextIO {
-    this@one.openSession().load(T::class.java, id)
-}
-
 suspend inline fun <reified T : Neo4JNode> SessionFactory.list(
     filters: List<Filter> = listOf(),
-    sorts: List<PageSort>,
+    sorts: List<PageSort> = listOf(),
 ): List<T> = withSessionContextIO {
     this@list.openSession().loadAll(
         T::class.java,
         and(filters),
         sorts.toSortOrder(),
     ).toList()
+}
+
+suspend inline fun <reified T : Neo4JNode> SessionFactory.count(
+    filters: List<Filter> = listOf(),
+): Long = withSessionContextIO {
+    this@count.openSession().count(
+        T::class.java,
+        and(filters),
+    )
 }
 
 suspend inline fun <reified T : Neo4JNode> SessionFactory.page(

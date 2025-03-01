@@ -1,55 +1,134 @@
 package com.thomas.database.neo4j.filter
 
 import com.thomas.database.neo4j.function.GenericFilterFunction
+import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.operator.BetweenOperator.BETWEEN
 import com.thomas.database.neo4j.operator.BetweenOperator.BETWEEN_EQUALS
 import com.thomas.database.neo4j.operator.BetweenOperator.NOT_BETWEEN
 import com.thomas.database.neo4j.operator.BetweenOperator.NOT_BETWEEN_EQUALS
-import com.thomas.database.neo4j.operator.SingleOperator
+import com.thomas.database.neo4j.operator.SingleOperator.GREATER_THAN
 import com.thomas.database.neo4j.operator.SingleOperator.GREATER_THAN_EQUALS
+import com.thomas.database.neo4j.operator.SingleOperator.LESS_THAN
 import com.thomas.database.neo4j.operator.SingleOperator.LESS_THAN_EQUALS
+import kotlin.reflect.KProperty
 import org.neo4j.ogm.cypher.Filter
 
-fun greaterThan(
-    property: String,
+fun <T : Any> greaterThan(
+    property: KProperty<T?>,
     value: Number,
-): Filter = Filter(property, GenericFilterFunction(value, SingleOperator.GREATER_THAN))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, GREATER_THAN))
 
-fun greaterThanEquals(
-    property: String,
+fun <T : Any> greaterThanEquals(
+    property: KProperty<T?>,
     value: Number,
-): Filter = Filter(property, GenericFilterFunction(value, GREATER_THAN_EQUALS))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, GREATER_THAN_EQUALS))
 
-fun lessThan(
-    property: String,
+fun <T : Any> lessThan(
+    property: KProperty<T?>,
     value: Number,
-): Filter = Filter(property, GenericFilterFunction(value, SingleOperator.LESS_THAN))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, LESS_THAN))
 
-fun lessThanEquals(
-    property: String,
+fun <T : Any> lessThanEquals(
+    property: KProperty<T?>,
     value: Number,
-): Filter = Filter(property, GenericFilterFunction(value, LESS_THAN_EQUALS))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, LESS_THAN_EQUALS))
 
-fun between(
-    property: String,
+fun <T : Any> between(
+    property: KProperty<T?>,
     min: Number,
     max: Number,
-): Filter = Filter(property, GenericFilterFunction(Pair(min, max), BETWEEN))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(Pair(min, max), BETWEEN))
 
-fun betweenEquals(
-    property: String,
+fun <T : Any> betweenEquals(
+    property: KProperty<T?>,
     min: Number,
     max: Number,
-): Filter = Filter(property, GenericFilterFunction(Pair(min, max), BETWEEN_EQUALS))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(Pair(min, max), BETWEEN_EQUALS))
 
-fun notBetween(
-    property: String,
+fun <T : Any> notBetween(
+    property: KProperty<T?>,
     min: Number,
     max: Number,
-): Filter = Filter(property, GenericFilterFunction(Pair(min, max), NOT_BETWEEN))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(Pair(min, max), NOT_BETWEEN))
 
-fun notBetweenEquals(
-    property: String,
+fun <T : Any> notBetweenEquals(
+    property: KProperty<T?>,
     min: Number,
     max: Number,
-): Filter = Filter(property, GenericFilterFunction(Pair(min, max), NOT_BETWEEN_EQUALS))
+): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(Pair(min, max), NOT_BETWEEN_EQUALS))
+
+fun <K : Any, T : Neo4JNode> greaterThan(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    value: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(value, GREATER_THAN)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> greaterThanEquals(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    value: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(value, GREATER_THAN_EQUALS)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> lessThan(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    value: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(value, LESS_THAN)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> lessThanEquals(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    value: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(value, LESS_THAN_EQUALS)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> between(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    min: Number,
+    max: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(Pair(min, max), BETWEEN)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> betweenEquals(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    min: Number,
+    max: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(Pair(min, max), BETWEEN_EQUALS)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> notBetween(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    min: Number,
+    max: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(Pair(min, max), NOT_BETWEEN)
+).applyNested(nestedProperty)
+
+fun <K : Any, T : Neo4JNode> notBetweenEquals(
+    property: KProperty<K?>,
+    nestedProperty: KProperty<T?>,
+    min: Number,
+    max: Number,
+): Filter = Filter(
+    property.nodePropertyName(),
+    GenericFilterFunction(Pair(min, max), NOT_BETWEEN_EQUALS)
+).applyNested(nestedProperty)

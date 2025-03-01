@@ -26,6 +26,7 @@ abstract class BaseEntity<T : BaseEntity<T>> {
         { it.field },
         { it.message(entity) }
     )?.throws {
+        println("ERROR ENTITY --------------------------> ${this@BaseEntity}")
         EntityValidationException(errorMessage, it)
     }
 

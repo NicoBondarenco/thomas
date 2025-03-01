@@ -1,12 +1,14 @@
 package com.thomas.database.neo4j.node
 
 import com.thomas.database.neo4j.converter.OffsetDateTimeConverter
+import com.thomas.database.neo4j.converter.UUIDConverter
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.time.ZonedDateTime
+import java.util.UUID
 import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Property
@@ -18,7 +20,8 @@ data class DatetimePropsNode(
 
     @Id
     @Property(name = "id")
-    var id: String,
+    @Convert(UUIDConverter::class)
+    override var id: UUID,
 
     @Property(name = "offset_datetime")
     @Convert(OffsetDateTimeConverter::class)

@@ -1,15 +1,31 @@
-CREATE (e:NumberProps {id: '96f46101-90ea-46f2-acc5-4e3c388ddd16', prop_integer: 42, prop_long: 907, prop_biginteger: 5500, prop_double: 5.75,   prop_bigdecimal: 17.734})
-CREATE (e:NumberProps {id: '95807ea5-ac39-4541-8d0d-73f433dab847', prop_integer: 39, prop_long: 283, prop_biginteger: 6712, prop_double: 47.844, prop_bigdecimal: 90.80})
-CREATE (e:NumberProps {id: 'bffdcfe2-03a6-4264-a84b-1018635697e2', prop_integer: 87, prop_long: 355, prop_biginteger: 7924, prop_double: 9.8852, prop_bigdecimal: 4105.4})
-CREATE (e:NumberProps {id: 'f0015df4-ed37-4751-a110-c271c21c8914', prop_integer: 46, prop_long: 291, prop_biginteger: 7681, prop_double: 958.64, prop_bigdecimal: 62.70})
-CREATE (e:NumberProps {id: 'b02de741-485d-4782-aea0-ff319a8545c1', prop_integer: 35, prop_long: 841, prop_biginteger: 5183, prop_double: 395.73, prop_bigdecimal: 62.52})
-CREATE (e:NumberProps {id: '3e4f1a96-ce6a-4f83-b5c5-937f99f0ce8b', prop_integer: 13, prop_long: 149, prop_biginteger: 8477, prop_double: 40.71,  prop_bigdecimal: 188.00})
-CREATE (e:NumberProps {id: 'ae410e61-09d6-422f-ac71-9db285cb419a', prop_integer: 99, prop_long: 784, prop_biginteger: 4810, prop_double: 790.34, prop_bigdecimal: 0.08})
-CREATE (e:NumberProps {id: 'fb9aa4ab-71a5-4178-8529-24697ebe6508', prop_integer: 80, prop_long: 117, prop_biginteger: 7245, prop_double: 32,     prop_bigdecimal: 6.9642})
-CREATE (e:NumberProps {id: '741f7742-dad6-48c5-a618-c5f8d8a866ef', prop_integer: 28, prop_long: 507, prop_biginteger: 5381, prop_double: 922.82, prop_bigdecimal: 305.86})
-CREATE (e:NumberProps {id: '48b9f7bd-e619-4a0a-b854-9c8896c50de5', prop_integer: 47, prop_long: 320, prop_biginteger: 6573, prop_double: 409.71, prop_bigdecimal: 382.53})
-CREATE (e:NumberProps {id: '868387b5-8a4d-4f28-ba55-bc332143291d', prop_integer: 32, prop_long: 613, prop_biginteger: 9054, prop_double: 707.00, prop_bigdecimal: 527.82})
-CREATE (e:NumberProps {id: '396901c3-695b-4c5c-8757-d17cfdb17a8f', prop_integer: 45, prop_long: 947, prop_biginteger: 7914, prop_double: 682.26, prop_bigdecimal: 905.07})
-CREATE (e:NumberProps {id: '3024bc15-8682-43af-9c9b-9791953c515b', prop_integer: 78, prop_long: 827, prop_biginteger: 2715, prop_double: 69.898, prop_bigdecimal: 551.311})
-CREATE (e:NumberProps {id: '3cecf044-e6fd-4af4-a50d-e791c0ceac48', prop_integer: 30, prop_long: 456, prop_biginteger: 5757, prop_double: 805.79, prop_bigdecimal: 3.58125})
-CREATE (e:NumberProps {id: 'cb49ed13-fdad-4a1e-8ab0-b5fa28945978', prop_integer: 74, prop_long: 313, prop_biginteger: 8071, prop_double: 0.04,   prop_bigdecimal: 730.47})
+CREATE (e:NumberProps {id: '96f46101-90ea-46f2-acc5-4e3c388ddd16', prop_integer: 42, prop_long: 907, prop_biginteger: 5500, prop_double: 5.75,   prop_bigdecimal: 17.734});
+CREATE (e:NumberProps {id: '95807ea5-ac39-4541-8d0d-73f433dab847', prop_integer: 39, prop_long: 283, prop_biginteger: 6712, prop_double: 47.844, prop_bigdecimal: 90.80});
+CREATE (e:NumberProps {id: 'bffdcfe2-03a6-4264-a84b-1018635697e2', prop_integer: 87, prop_long: 355, prop_biginteger: 7924, prop_double: 9.8852, prop_bigdecimal: 4105.4});
+CREATE (e:NumberProps {id: 'f0015df4-ed37-4751-a110-c271c21c8914', prop_integer: 46, prop_long: 291, prop_biginteger: 7681, prop_double: 958.64, prop_bigdecimal: 62.70});
+CREATE (e:NumberProps {id: 'b02de741-485d-4782-aea0-ff319a8545c1', prop_integer: 35, prop_long: 841, prop_biginteger: 5183, prop_double: 395.73, prop_bigdecimal: 62.52});
+CREATE (e:NumberProps {id: '3e4f1a96-ce6a-4f83-b5c5-937f99f0ce8b', prop_integer: 13, prop_long: 149, prop_biginteger: 8477, prop_double: 40.71,  prop_bigdecimal: 188.00});
+CREATE (e:NumberProps {id: 'ae410e61-09d6-422f-ac71-9db285cb419a', prop_integer: 99, prop_long: 784, prop_biginteger: 4810, prop_double: 790.34, prop_bigdecimal: 0.08});
+CREATE (e:NumberProps {id: 'fb9aa4ab-71a5-4178-8529-24697ebe6508', prop_integer: 80, prop_long: 117, prop_biginteger: 7245, prop_double: 32,     prop_bigdecimal: 6.9642});
+CREATE (e:NumberProps {id: '741f7742-dad6-48c5-a618-c5f8d8a866ef', prop_integer: 28, prop_long: 507, prop_biginteger: 5381, prop_double: 922.82, prop_bigdecimal: 305.86});
+CREATE (e:NumberProps {id: '48b9f7bd-e619-4a0a-b854-9c8896c50de5', prop_integer: 47, prop_long: 320, prop_biginteger: 6573, prop_double: 409.71, prop_bigdecimal: 382.53});
+CREATE (e:NumberProps {id: '868387b5-8a4d-4f28-ba55-bc332143291d', prop_integer: 32, prop_long: 613, prop_biginteger: 9054, prop_double: 707.00, prop_bigdecimal: 527.82});
+CREATE (e:NumberProps {id: '396901c3-695b-4c5c-8757-d17cfdb17a8f', prop_integer: 45, prop_long: 947, prop_biginteger: 7914, prop_double: 682.26, prop_bigdecimal: 905.07});
+CREATE (e:NumberProps {id: '3024bc15-8682-43af-9c9b-9791953c515b', prop_integer: 78, prop_long: 827, prop_biginteger: 2715, prop_double: 69.898, prop_bigdecimal: 551.311});
+CREATE (e:NumberProps {id: '3cecf044-e6fd-4af4-a50d-e791c0ceac48', prop_integer: 30, prop_long: 456, prop_biginteger: 5757, prop_double: 805.79, prop_bigdecimal: 3.58125});
+CREATE (e:NumberProps {id: 'cb49ed13-fdad-4a1e-8ab0-b5fa28945978', prop_integer: 74, prop_long: 313, prop_biginteger: 8071, prop_double: 0.04,   prop_bigdecimal: 730.47});
+
+MATCH (o:NumberProps {id: '96f46101-90ea-46f2-acc5-4e3c388ddd16'}) CREATE (e:NumberNestedProps {id: 'e5d69629-59b2-4cd0-8cf9-85224cab7b25'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '95807ea5-ac39-4541-8d0d-73f433dab847'}) CREATE (e:NumberNestedProps {id: '78165684-3ba7-4eb3-8b1f-71d9809b2ce3'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'bffdcfe2-03a6-4264-a84b-1018635697e2'}) CREATE (e:NumberNestedProps {id: '6f3acd03-f345-4c82-8699-9b8285e6f4c4'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'f0015df4-ed37-4751-a110-c271c21c8914'}) CREATE (e:NumberNestedProps {id: 'cd6adf5d-080e-497a-b962-d8b69ea08f53'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'b02de741-485d-4782-aea0-ff319a8545c1'}) CREATE (e:NumberNestedProps {id: 'be0a3326-b3fa-4213-b857-fe8af4cb8641'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '3e4f1a96-ce6a-4f83-b5c5-937f99f0ce8b'}) CREATE (e:NumberNestedProps {id: '34395fbc-8e5c-4ccd-92b9-a0dd32c4a467'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'ae410e61-09d6-422f-ac71-9db285cb419a'}) CREATE (e:NumberNestedProps {id: 'd8e98e64-42fe-45ed-a187-218842564d7c'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'fb9aa4ab-71a5-4178-8529-24697ebe6508'}) CREATE (e:NumberNestedProps {id: 'ee2525a6-44aa-41df-898e-27fe065e9124'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '741f7742-dad6-48c5-a618-c5f8d8a866ef'}) CREATE (e:NumberNestedProps {id: 'd27599bf-584e-4533-91b4-34f0ba768fdf'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '48b9f7bd-e619-4a0a-b854-9c8896c50de5'}) CREATE (e:NumberNestedProps {id: 'dd5484af-ee81-4748-a2a8-aa33fc343741'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '868387b5-8a4d-4f28-ba55-bc332143291d'}) CREATE (e:NumberNestedProps {id: 'aa2b6854-44d3-4ce6-b8b3-0d42dec3793e'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '396901c3-695b-4c5c-8757-d17cfdb17a8f'}) CREATE (e:NumberNestedProps {id: '50af89eb-7138-473c-9ec9-8fe9dbea1a00'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '3024bc15-8682-43af-9c9b-9791953c515b'}) CREATE (e:NumberNestedProps {id: 'b2ddffa7-6b70-4d47-a32e-d9f9a831a0e2'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: '3cecf044-e6fd-4af4-a50d-e791c0ceac48'}) CREATE (e:NumberNestedProps {id: 'c95b4627-6a1c-4ae9-89fd-bc8bcefcef07'})-[:NUMBER_NESTED]->(o);
+MATCH (o:NumberProps {id: 'cb49ed13-fdad-4a1e-8ab0-b5fa28945978'}) CREATE (e:NumberNestedProps {id: 'f2deee88-abb8-453a-8587-d764ff5d1453'})-[:NUMBER_NESTED]->(o);

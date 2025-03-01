@@ -1,0 +1,5 @@
+Nos campos de endereço
+- Rua
+- Bairro
+- Complemento
+Aceitar os caracteres ()-/ºª
