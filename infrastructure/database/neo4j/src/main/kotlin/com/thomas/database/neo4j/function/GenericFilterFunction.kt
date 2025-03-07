@@ -34,7 +34,6 @@ open class GenericFilterFunction<V : Any>(
     ): Map<String, Any> = operator.parametersMap(
         createUniqueParameterName.apply(PARAMETER_NAME),
         getValue(),
-//        valueTransformer,
         GenericValueTransformer(valueTransformer),
     )
 

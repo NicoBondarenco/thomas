@@ -4,47 +4,32 @@ import com.thomas.database.neo4j.extension.purge
 import com.thomas.database.neo4j.extension.runQueries
 import com.thomas.neo4j.StringFunctions
 import com.thomas.neo4j.ZonedDateTimeFunctions
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import io.kotest.core.names.TestName
+import io.kotest.core.spec.Spec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.scopes.FunSpecContainerScope
+import io.kotest.core.spec.style.scopes.addContainer
 import org.neo4j.harness.Neo4j
 import org.neo4j.harness.Neo4jBuilders
 import org.neo4j.ogm.config.Configuration
 import org.neo4j.ogm.session.Session
 import org.neo4j.ogm.session.SessionFactory
 
-@TestInstance(PER_CLASS)
-abstract class BaseNeo4JRepositoryTest<R : Neo4JRepository>(
+abstract class Neo4JFunSpec<R : Neo4JRepository>(
     protected val nodesPackages: List<String>,
     protected val setupScript: String? = null,
     protected val teardownScript: String? = null,
-) {
-    companion object {
-        @JvmStatic
-        protected lateinit var sessionFactory: SessionFactory
+    body: Neo4JFunSpec<R>.() -> Unit = {}
+) : FunSpec(body as FunSpec.() -> Unit) {
 
-        @JvmStatic
-        protected fun runScript(
-            file: String,
-        ): Session = this::class.java.getResourceAsStream(file).bufferedReader().readLines().filter {
-            it.trim().isNotEmpty()
-        }.let { lines ->
-            sessionFactory.runQueries {
-                lines.forEach { line ->
-                    this.query(line, mapOf<String, Any>())
-                }
-            }
-        }
-
+    init {
+        coroutineTestScope = true
+        coroutineTestScope = true
     }
 
-    protected var embeddedDatabaseServer: Neo4j? = null
-
-
-    protected lateinit var repository: R
+    var embeddedDatabaseServer: Neo4j? = null
+    lateinit var sessionFactory: SessionFactory
+    lateinit var repository: R
 
     abstract fun createRepository(sessionFactory: SessionFactory): R
 
@@ -66,38 +51,44 @@ abstract class BaseNeo4JRepositoryTest<R : Neo4JRepository>(
         .useNativeTypes()
         .build()
 
-    open fun setUp() {}
+    protected fun runScript(
+        file: String,
+    ): Session = this::class.java.getResourceAsStream(file).bufferedReader().readLines().filter {
+        it.trim().isNotEmpty() && !it.startsWith("//")
+    }.let { lines ->
+        sessionFactory.runQueries {
+            lines.forEach { line ->
+                this.query(line, mapOf<String, Any>())
+            }
+        }
+    }
 
-    open fun tearDown() {}
-
-    open fun setUpEach() {}
-
-    open fun tearDownEach() {}
-
-    @BeforeAll
-    fun beforeAll() {
+    override suspend fun beforeSpec(spec: Spec) {
         sessionFactory = SessionFactory(createConfiguration(), *nodesPackages.toTypedArray())
         repository = createRepository(sessionFactory)
         setupScript?.apply { runScript(file = this) }
-        setUp()
     }
 
-    @AfterAll
-    fun afterAll() {
-        tearDown()
+    override suspend fun afterSpec(spec: Spec) {
         teardownScript?.apply { runScript(file = this) }
         embeddedDatabaseServer?.close()
     }
 
-    @BeforeEach
-    open fun beforeEach() {
-        setUpEach()
-    }
-
-    @AfterEach
-    open fun afterEach() {
-        tearDownEach()
-        sessionFactory.purge()
+    fun context(
+        name: String,
+        script: String? = null,
+        before: () -> Unit = {},
+        after: () -> Unit = {},
+        test: suspend FunSpecContainerScope.() -> Unit
+    ) = addContainer(TestName("context ", name, false), false, null) {
+        try {
+            script?.apply { runScript(this) }
+            before()
+            FunSpecContainerScope(this).test()
+            after()
+        } finally {
+            sessionFactory.purge()
+        }
     }
 
 }

@@ -5,7 +5,7 @@ import com.thomas.management.data.neo4j.model.node.UnitNode
 import java.util.UUID
 
 fun UnitEntity.toUnitNode() = UnitNode(
-    id = this.id.toString(),
+    id = this.id,
     unitName = this.unitName,
     fantasyName = this.fantasyName,
     documentNumber = this.documentNumber,
@@ -26,7 +26,7 @@ fun UnitEntity.toUnitNode() = UnitNode(
 )
 
 fun UnitNode.toUnitEntity() = UnitEntity(
-    id = UUID.fromString(this.id),
+    id = this.id,
     unitName = this.unitName,
     fantasyName = this.fantasyName,
     documentNumber = this.documentNumber,

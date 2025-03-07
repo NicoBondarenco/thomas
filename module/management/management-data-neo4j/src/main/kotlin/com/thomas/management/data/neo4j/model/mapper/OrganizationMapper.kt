@@ -5,7 +5,7 @@ import com.thomas.management.data.neo4j.model.node.OrganizationNode
 import java.util.UUID
 
 fun OrganizationEntity.toOrganizationNode() = OrganizationNode(
-    id = this.id.toString(),
+    id = this.id,
     organizationName = this.organizationName,
     fantasyName = this.fantasyName,
     registrationNumber = this.registrationNumber,
@@ -26,7 +26,7 @@ fun OrganizationEntity.toOrganizationNode() = OrganizationNode(
 )
 
 fun OrganizationNode.toOrganizationEntity() = OrganizationEntity(
-    id = UUID.fromString(this.id),
+    id = this.id,
     organizationName = this.organizationName,
     fantasyName = this.fantasyName,
     registrationNumber = this.registrationNumber,

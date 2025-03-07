@@ -31,8 +31,8 @@ class OrganizationNeo4JRepository(
         organizationName: String
     ): Boolean = sessionFactory.count<OrganizationNode>(
         listOf(
-            notEquals("id", id.toString()),
-            equalsUnaccentedLower("organization_name", organizationName),
+            notEquals(OrganizationNode::id, id),
+            equalsUnaccentedLower(OrganizationNode::organizationName, organizationName),
         )
     ).isHigher(0)
 
@@ -41,8 +41,8 @@ class OrganizationNeo4JRepository(
         registrationNumber: String
     ): Boolean = sessionFactory.count<OrganizationNode>(
         listOf(
-            notEquals("id", id.toString()),
-            equalsUnaccentedLower("registration_number", registrationNumber),
+            notEquals(OrganizationNode::id, id),
+            equalsUnaccentedLower(OrganizationNode::registrationNumber, registrationNumber),
         )
     ).isHigher(0)
 
@@ -50,7 +50,7 @@ class OrganizationNeo4JRepository(
         id: UUID
     ): OrganizationEntity? = sessionFactory
         .openSession()
-        .load(OrganizationNode::class.java, id.toString())
+        .load(OrganizationNode::class.java, id)
         ?.toOrganizationEntity()
 
     override suspend fun page(
@@ -61,26 +61,26 @@ class OrganizationNeo4JRepository(
         listOfNotNull(
             keywordText?.let {
                 or(
-                    likeUnaccentedLower("organization_name", it.unaccentedLower()),
-                    likeUnaccentedLower("fantasy_name", it.unaccentedLower()),
-                    likeUnaccentedLower("registration_number", it),
-                    likeUnaccentedLower("main_email", it.unaccentedLower()),
+                    likeUnaccentedLower(OrganizationNode::organizationName, it.unaccentedLower()),
+                    likeUnaccentedLower(OrganizationNode::fantasyName, it.unaccentedLower()),
+                    likeUnaccentedLower(OrganizationNode::registrationNumber, it),
+                    likeUnaccentedLower(OrganizationNode::mainEmail, it.unaccentedLower()),
                 )
             },
             isActive?.let {
-                isTrue("is_active")
+                isTrue(OrganizationNode::isActive)
             },
             pageable.createdStart?.let {
-                greaterThanEquals("created_at", it.toZonedDateTime())
+                greaterThanEquals(OrganizationNode::createdAt, it.toZonedDateTime())
             },
             pageable.createdEnd?.let {
-                lessThanEquals("created_at", it.toZonedDateTime())
+                lessThanEquals(OrganizationNode::createdAt, it.toZonedDateTime())
             },
             pageable.updatedStart?.let {
-                greaterThanEquals("updated_at", it.toZonedDateTime())
+                greaterThanEquals(OrganizationNode::updatedAt, it.toZonedDateTime())
             },
             pageable.updatedEnd?.let {
-                lessThanEquals("updated_at", it.toZonedDateTime())
+                lessThanEquals(OrganizationNode::updatedAt, it.toZonedDateTime())
             },
         ),
         pageable

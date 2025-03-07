@@ -9,11 +9,11 @@ data class OrganizationSearchData(
     val keyword: String?,
     val isActive: Boolean?,
     val pageable: PageRequestPeriod,
+    val comparator: Comparator<OrganizationEntity>
 ) {
 
     fun page(
-        entities: List<OrganizationEntity>,
-        comparator: Comparator<OrganizationEntity>
+        entities: List<OrganizationEntity>
     ): PageResponse<OrganizationEntity> = PageResponse
         .of(contentList(entities, comparator), this.pageable, count(entities))
 

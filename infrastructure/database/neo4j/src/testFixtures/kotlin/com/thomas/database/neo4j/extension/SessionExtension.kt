@@ -10,9 +10,15 @@ fun SessionFactory.runScript(
     file: String,
 ): Session = this::class.java.getResourceAsStream(file).bufferedReader().readText().let { script ->
     this.runQueries {
-        this.query(script, mapOf<String, Any>())
+        this.query(script.clearScript(), mapOf<String, Any>())
     }
 }
+
+private fun String.clearScript() = this
+    .replace(Regex("\r\n\r\n"), "\r\n")
+    .replace(Regex("//.*\r\n"), "")
+    .replace(Regex("//.*\n"), "")
+    .replace(Regex("\n\n"), "\n")
 
 fun SessionFactory.runQueries(
     queries: Session.() -> Unit
