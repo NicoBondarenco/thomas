@@ -36,7 +36,7 @@ data class NumberPropsNode(
     @Property(name = "prop_bigdecimal")
     @Convert(BigDecimalConverter::class)
     var propBigdecimal: BigDecimal,
-) : Neo4JNode {
+) : Neo4JNode<UUID> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

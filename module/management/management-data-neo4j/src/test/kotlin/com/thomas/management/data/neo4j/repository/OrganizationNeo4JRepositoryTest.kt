@@ -9,7 +9,7 @@ import com.thomas.management.data.entity.organizationEntity
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationEntity
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationNode
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
-import com.thomas.management.data.neo4j.util.OrganizationSameData
+import com.thomas.management.data.neo4j.util.EntitySameData
 import com.thomas.management.data.neo4j.util.OrganizationSearchData
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -48,10 +48,10 @@ class OrganizationNeo4JRepositoryTest : ManagementFunSpec<OrganizationNeo4JRepos
         context(name = "Exists same", script = "/scripts/organization/one-with.cypher") {
             val organization = entities(OrganizationEntity::class).random()
             val data = mapOf(
-                "Organization same name true" to OrganizationSameData(true, action = { repository.hasAnotherWithName(randomUUID(), organization.organizationName) }),
-                "Organization same name false" to OrganizationSameData(false, action = { repository.hasAnotherWithName(organization.id, organization.organizationName) }),
-                "Organization same registration true" to OrganizationSameData(true, action = { repository.hasAnotherWithRegistration(randomUUID(), organization.registrationNumber) }),
-                "Organization same registration false" to OrganizationSameData(false, action = { repository.hasAnotherWithRegistration(organization.id, organization.registrationNumber) }),
+                "Organization same name true" to EntitySameData(true, action = { repository.hasAnotherWithName(randomUUID(), organization.organizationName) }),
+                "Organization same name false" to EntitySameData(false, action = { repository.hasAnotherWithName(organization.id, organization.organizationName) }),
+                "Organization same registration true" to EntitySameData(true, action = { repository.hasAnotherWithRegistration(randomUUID(), organization.registrationNumber) }),
+                "Organization same registration false" to EntitySameData(false, action = { repository.hasAnotherWithRegistration(organization.id, organization.registrationNumber) }),
             )
             withData(data) {
                 it.action() shouldBe it.result

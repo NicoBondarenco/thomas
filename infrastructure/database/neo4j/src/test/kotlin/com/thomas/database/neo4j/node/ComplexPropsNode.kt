@@ -29,4 +29,4 @@ data class ComplexPropsNode(
     @Property(name = "prop_boolean")
     var propBoolean: Boolean?,
 
-    ) : Neo4JNode
+    ) : Neo4JNode<UUID>

@@ -19,15 +19,15 @@ import org.neo4j.ogm.cypher.Filter
 import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.session.SessionFactory
 
-fun <T : Any> equals(
+fun <T : Any> isEquals(
     property: KProperty<T?>,
     value: Any,
 ): Filter = Filter(property.nodePropertyName(), EQUALS, value)
 
-fun <T : Any> notEquals(
+fun <T : Any> isNotEquals(
     property: KProperty<T?>,
     value: Any,
-): Filter = equals(property, value).apply { isNegated = true }
+): Filter = isEquals(property, value).apply { isNegated = true }
 
 fun <T : Any> isNull(
     property: KProperty<T?>,
@@ -51,29 +51,29 @@ fun <T : Any> notInValues(
     Filter(property.nodePropertyName(), GenericFilterFunction(values, it))
 }
 
-fun <K : Any, T : Neo4JNode> equals(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Any,
 ): Filter = Filter(property.nodePropertyName(), EQUALS, value).applyNested(nestedProperty)
 
-fun <K : Any, T : Neo4JNode> notEquals(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNotEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Any,
-): Filter = equals(property, value).apply { isNegated = true }.applyNested(nestedProperty)
+): Filter = isEquals(property, value).apply { isNegated = true }.applyNested(nestedProperty)
 
-fun <K : Any, T : Neo4JNode> isNull(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNull(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
 ): Filter = Filter(property.nodePropertyName(), IS_NULL).applyNested(nestedProperty)
 
-fun <K : Any, T : Neo4JNode> isNotNull(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNotNull(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
 ): Filter = isNull(property).apply { isNegated = true }.applyNested(nestedProperty)
 
-fun <K : Any, T : Neo4JNode> inValues(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> inValues(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     values: Collection<Any?>,
@@ -81,7 +81,7 @@ fun <K : Any, T : Neo4JNode> inValues(
     Filter(property.nodePropertyName(), GenericFilterFunction(values, it)).applyNested(nestedProperty)
 }
 
-fun <K : Any, T : Neo4JNode> notInValues(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notInValues(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     values: Collection<Any?>,
@@ -99,7 +99,7 @@ fun and(
     filters.forEach { filter -> this.and(filter) }
 }
 
-suspend inline fun <reified T : Neo4JNode> SessionFactory.one(
+suspend inline fun <reified ID : Serializable, reified T : Neo4JNode<ID>> SessionFactory.one(
     id: Serializable,
 ): T? = withSessionContextIO {
     this@one.openSession().load(T::class.java, id)
@@ -109,7 +109,7 @@ fun <T : Any> KProperty<T?>.nodePropertyName() = this.javaField?.takeIf {
     it.isAnnotationPresent(Property::class.java)
 }?.getAnnotation(Property::class.java)?.name ?: this.name
 
-fun <T : Neo4JNode> Filter.applyNested(
+fun <ID : Serializable, T : Neo4JNode<ID>> Filter.applyNested(
     property: KProperty<T?>
 ): Filter = this.apply {
     nestedPropertyType = property.javaField!!.type

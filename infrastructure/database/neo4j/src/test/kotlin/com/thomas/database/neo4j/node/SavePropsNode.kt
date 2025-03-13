@@ -26,4 +26,4 @@ data class SavePropsNode(
     @Property(name = "prop_datetime")
     var propDatetime: ZonedDateTime,
 
-    ) : Neo4JNode
+    ) : Neo4JNode<UUID>

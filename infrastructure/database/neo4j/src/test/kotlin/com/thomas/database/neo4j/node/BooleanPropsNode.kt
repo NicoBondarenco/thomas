@@ -19,4 +19,4 @@ data class BooleanPropsNode(
     @Property(name = "prop_boolean")
     var propBoolean: Boolean
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

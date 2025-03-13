@@ -10,10 +10,9 @@ import com.thomas.database.neo4j.filter.greaterThanEquals
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
 import com.thomas.database.neo4j.filter.likeUnaccentedLower
-import com.thomas.database.neo4j.filter.notEquals
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.or
 import com.thomas.database.neo4j.filter.page
-import com.thomas.database.neo4j.repository.Neo4JRepository
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationEntity
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationNode
@@ -24,14 +23,14 @@ import org.neo4j.ogm.session.SessionFactory
 
 class OrganizationNeo4JRepository(
     sessionFactory: SessionFactory
-) : Neo4JRepository(sessionFactory), OrganizationRepository {
+) : ManagementNeo4JRepository(sessionFactory), OrganizationRepository {
 
     override suspend fun hasAnotherWithName(
         id: UUID,
         organizationName: String
     ): Boolean = sessionFactory.count<OrganizationNode>(
         listOf(
-            notEquals(OrganizationNode::id, id),
+            isNotEquals(OrganizationNode::id, id),
             equalsUnaccentedLower(OrganizationNode::organizationName, organizationName),
         )
     ).isHigher(0)
@@ -41,7 +40,7 @@ class OrganizationNeo4JRepository(
         registrationNumber: String
     ): Boolean = sessionFactory.count<OrganizationNode>(
         listOf(
-            notEquals(OrganizationNode::id, id),
+            isNotEquals(OrganizationNode::id, id),
             equalsUnaccentedLower(OrganizationNode::registrationNumber, registrationNumber),
         )
     ).isHigher(0)

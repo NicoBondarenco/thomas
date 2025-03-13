@@ -19,4 +19,4 @@ data class StringPropsNode(
     @Property(name = "prop_name")
     var propName: String
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

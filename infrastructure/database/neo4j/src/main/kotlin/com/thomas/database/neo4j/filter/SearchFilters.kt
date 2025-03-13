@@ -12,18 +12,20 @@ import org.neo4j.ogm.cypher.query.SortOrder
 import org.neo4j.ogm.session.SessionFactory
 import org.neo4j.ogm.session.count
 
-suspend inline fun <reified T : Neo4JNode> SessionFactory.list(
+suspend inline fun <reified T : Neo4JNode<*>> SessionFactory.list(
     filters: List<Filter> = listOf(),
     sorts: List<PageSort> = listOf(),
+    depth: Int = 1
 ): List<T> = withSessionContextIO {
     this@list.openSession().loadAll(
         T::class.java,
         and(filters),
         sorts.toSortOrder(),
+        depth
     ).toList()
 }
 
-suspend inline fun <reified T : Neo4JNode> SessionFactory.count(
+suspend inline fun <reified T : Neo4JNode<*>> SessionFactory.count(
     filters: List<Filter> = listOf(),
 ): Long = withSessionContextIO {
     this@count.openSession().count(
@@ -32,15 +34,17 @@ suspend inline fun <reified T : Neo4JNode> SessionFactory.count(
     )
 }
 
-suspend inline fun <reified T : Neo4JNode> SessionFactory.page(
+suspend inline fun <reified T : Neo4JNode<*>> SessionFactory.page(
     filters: List<Filter> = listOf(),
     pagination: PageRequestData,
+    depth: Int = 1
 ): PageResponse<T> = withSessionContextIO {
     val result: List<T> = this@page.openSession().loadAll(
         T::class.java,
         and(filters),
         pagination.toSortOrder(),
-        pagination.toPagination()
+        pagination.toPagination(),
+        depth
     ).toList()
     val total = this@page.openSession().count<T>(and(filters))
     PageResponse.of(result, pagination, total)

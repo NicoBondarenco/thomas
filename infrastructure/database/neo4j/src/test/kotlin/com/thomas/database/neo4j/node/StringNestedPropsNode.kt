@@ -21,4 +21,4 @@ data class StringNestedPropsNode(
     @Relationship(type = "STRING_NESTED", direction = OUTGOING)
     var nestedNode: StringPropsNode
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

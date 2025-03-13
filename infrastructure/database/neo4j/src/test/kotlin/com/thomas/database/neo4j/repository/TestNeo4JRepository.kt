@@ -10,7 +10,7 @@ import com.thomas.database.neo4j.filter.betweenEquals
 import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.endsWith
 import com.thomas.database.neo4j.filter.endsWithUnaccentedLower
-import com.thomas.database.neo4j.filter.equals
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThan
 import com.thomas.database.neo4j.filter.greaterThanEquals
@@ -28,7 +28,7 @@ import com.thomas.database.neo4j.filter.notBetween
 import com.thomas.database.neo4j.filter.notBetweenEquals
 import com.thomas.database.neo4j.filter.notEndsWith
 import com.thomas.database.neo4j.filter.notEndsWithUnaccentedLower
-import com.thomas.database.neo4j.filter.notEquals
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.notEqualsUnaccentedLower
 import com.thomas.database.neo4j.filter.notInValues
 import com.thomas.database.neo4j.filter.notLike
@@ -80,7 +80,7 @@ class TestNeo4JRepository(
 
     //region BOOLEAN NESTED PROPS
 
-    suspend fun <K : Any, T : Neo4JNode> booleanNestedIs(
+    suspend fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> booleanNestedIs(
         propName: KProperty<K>,
         propValue: Boolean,
         nestedName: String,
@@ -336,12 +336,12 @@ class TestNeo4JRepository(
     suspend fun <K : Any> stringEquals(
         property: KProperty<K?>,
         value: String
-    ): List<StringPropsNode> = stringSearch(equals(property, value))
+    ): List<StringPropsNode> = stringSearch(isEquals(property, value))
 
     suspend fun <K : Any> stringNotEquals(
         property: KProperty<K?>,
         value: String
-    ): List<StringPropsNode> = stringSearch(notEquals(property, value))
+    ): List<StringPropsNode> = stringSearch(isNotEquals(property, value))
 
     suspend fun <K : Any> stringEqualsUnaccentedLower(
         property: KProperty<K?>,
@@ -420,12 +420,12 @@ class TestNeo4JRepository(
     suspend fun <K : Any> stringEqualsNested(
         property: KProperty<K?>,
         value: String
-    ): List<StringNestedPropsNode> = stringSearchNested(equals(property, StringNestedPropsNode::nestedNode, value))
+    ): List<StringNestedPropsNode> = stringSearchNested(isEquals(property, StringNestedPropsNode::nestedNode, value))
 
     suspend fun <K : Any> stringNotEqualsNested(
         property: KProperty<K?>,
         value: String
-    ): List<StringNestedPropsNode> = stringSearchNested(notEquals(property, StringNestedPropsNode::nestedNode, value))
+    ): List<StringNestedPropsNode> = stringSearchNested(isNotEquals(property, StringNestedPropsNode::nestedNode, value))
 
     suspend fun <K : Any> stringEqualsUnaccentedLowerNested(
         property: KProperty<K?>,

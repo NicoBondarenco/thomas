@@ -21,4 +21,4 @@ data class NumberNestedPropsNode(
     @Relationship(type = "NUMBER_NESTED", direction = OUTGOING)
     val nestedNode: NumberPropsNode
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

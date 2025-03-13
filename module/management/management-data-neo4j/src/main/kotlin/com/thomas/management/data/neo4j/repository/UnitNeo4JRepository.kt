@@ -5,20 +5,20 @@ import com.thomas.core.extension.unaccentedLower
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.database.neo4j.filter.count
-import com.thomas.database.neo4j.filter.equals
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThanEquals
 import com.thomas.database.neo4j.filter.inValues
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
 import com.thomas.database.neo4j.filter.likeUnaccentedLower
-import com.thomas.database.neo4j.filter.notEquals
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.or
 import com.thomas.database.neo4j.filter.page
-import com.thomas.database.neo4j.repository.Neo4JRepository
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.neo4j.model.mapper.toUnitEntity
 import com.thomas.management.data.neo4j.model.mapper.toUnitNode
+import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
 import com.thomas.management.data.neo4j.model.node.UnitNode
 import com.thomas.management.data.repository.UnitRepository
@@ -28,14 +28,14 @@ import org.neo4j.ogm.session.SessionFactory
 
 class UnitNeo4JRepository(
     sessionFactory: SessionFactory
-) : Neo4JRepository(sessionFactory), UnitRepository {
+) : ManagementNeo4JRepository(sessionFactory), UnitRepository {
 
     override suspend fun one(
         id: UUID,
         organizationId: UUID
     ): UnitEntity? = sessionFactory.openSession().loadAll(
         UnitNode::class.java,
-        equals(UnitNode::id, id).and(equals(OrganizationNode::id, UnitNode::unitOrganization, organizationId))
+        isEquals(UnitNode::id, id).and(isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId))
     ).firstOrNull()?.toUnitEntity()
 
     override suspend fun page(
@@ -45,7 +45,7 @@ class UnitNeo4JRepository(
         pageable: PageRequestPeriod
     ): PageResponse<UnitEntity> = sessionFactory.page<UnitNode>(
         listOfNotNull(
-            equals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
+            isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
             keywordText?.let {
                 or(
                     likeUnaccentedLower(UnitNode::unitName, it.unaccentedLower()),
@@ -85,12 +85,9 @@ class UnitNeo4JRepository(
 
     override suspend fun delete(
         id: UUID
-    ): Unit = transaction {
-        sessionFactory.openSession().delete(
-            UnitNode::class.java,
-            Filters(equals(UnitNode::id, id)),
-            false
-        )
+    ): Unit = transaction { session ->
+        session.delete(GroupUnitNode::class.java, Filters(isEquals(GroupUnitNode::unitId, id)), false)
+        session.delete(UnitNode::class.java,Filters(isEquals(UnitNode::id, id)),false)
     }
 
     override suspend fun limitReached(
@@ -120,8 +117,8 @@ class UnitNeo4JRepository(
         unitName: String
     ): Boolean = sessionFactory.count<UnitNode>(
         listOf(
-            notEquals(UnitNode::id, id),
-            equals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
+            isNotEquals(UnitNode::id, id),
+            isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
             equalsUnaccentedLower(UnitNode::unitName, unitName),
         )
     ).isHigher(0)
@@ -132,8 +129,8 @@ class UnitNeo4JRepository(
         documentNumber: String
     ): Boolean = sessionFactory.count<UnitNode>(
         listOf(
-            notEquals(UnitNode::id, id),
-            equals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
+            isNotEquals(UnitNode::id, id),
+            isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId),
             equalsUnaccentedLower(UnitNode::documentNumber, documentNumber),
         )
     ).isHigher(0)
@@ -144,7 +141,7 @@ class UnitNeo4JRepository(
     ): Set<UnitEntity> = sessionFactory.openSession()
         .loadAll(
             UnitNode::class.java,
-            inValues(UnitNode::id, ids).and(equals(OrganizationNode::id, UnitNode::unitOrganization, organizationId))
+            inValues(UnitNode::id, ids).and(isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId))
         ).map { it.toUnitEntity() }.toSet()
 
     private suspend fun save(

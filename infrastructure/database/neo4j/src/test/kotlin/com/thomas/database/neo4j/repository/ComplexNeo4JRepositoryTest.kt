@@ -1,7 +1,7 @@
 package com.thomas.database.neo4j.repository
 
 import com.thomas.core.extension.toUUIDOrNull
-import com.thomas.database.neo4j.filter.equals
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.inValues
 import com.thomas.database.neo4j.filter.isNotNull
 import com.thomas.database.neo4j.filter.isTrue
@@ -42,7 +42,7 @@ class ComplexNeo4JRepositoryTest : Neo4JRepositoryTest() {
             names.contains(it.propName) && it.propValue == 25 && it.propDatetime != null && it.propBoolean == true
         }
         val result = repository.complexFilterSearch(
-            listOf(inValues(ComplexPropsNode::propName, names), equals(ComplexPropsNode::propValue, 25), isNotNull(ComplexPropsNode::propDatetime), isTrue(ComplexPropsNode::propBoolean)),
+            listOf(inValues(ComplexPropsNode::propName, names), isEquals(ComplexPropsNode::propValue, 25), isNotNull(ComplexPropsNode::propDatetime), isTrue(ComplexPropsNode::propBoolean)),
         )
         assertEquals(nodes.count(), result.count())
         nodes.forEach {

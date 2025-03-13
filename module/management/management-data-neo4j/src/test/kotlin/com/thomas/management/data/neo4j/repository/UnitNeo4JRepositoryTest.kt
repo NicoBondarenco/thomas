@@ -5,17 +5,18 @@ import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
 import com.thomas.core.model.pagination.PageSortDirection.DESC
 import com.thomas.core.util.StringUtils.randomString
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.entity.unitEntity
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationEntity
 import com.thomas.management.data.neo4j.model.mapper.toUnitEntity
 import com.thomas.management.data.neo4j.model.mapper.toUnitNode
+import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
 import com.thomas.management.data.neo4j.model.node.UnitNode
-import com.thomas.management.data.neo4j.util.OrganizationSameData
-import com.thomas.management.data.neo4j.util.UnitFindOneData
-import com.thomas.management.data.neo4j.util.UnitSameData
+import com.thomas.management.data.neo4j.util.EntityFindOneData
+import com.thomas.management.data.neo4j.util.EntitySameData
 import com.thomas.management.data.neo4j.util.UnitSearchData
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -38,17 +39,17 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
         context(name = "One", script = "/scripts/unit/one.cypher") {
             val units = entities(UnitEntity::class)
             val data = units.shuffled().take(5).map { node ->
-                UnitFindOneData(node.id, node.unitOrganization.id, node)
+                EntityFindOneData<UnitEntity>(node.id, node.unitOrganization.id, node)
             } + (1..5).map {
-                UnitFindOneData(randomUUID(), randomUUID(), null)
+                EntityFindOneData<UnitEntity>(randomUUID(), randomUUID(), null)
             } + units.shuffled().take(5).map { node ->
-                UnitFindOneData(node.id, entities(OrganizationEntity::class).filter { o ->
+                EntityFindOneData<UnitEntity>(node.id, entities(OrganizationEntity::class).filter { o ->
                     o.id != node.unitOrganization.id
                 }.random().id, null)
             }
             withData(data) {
                 val result = repository.one(it.id, it.organizationId)
-                result shouldBe it.node
+                result shouldBe it.entity
             }
         }
 
@@ -91,10 +92,12 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
         }
 
         context(name = "Delete", script = "/scripts/unit/upsert.cypher") {
-            val unit = entities(UnitEntity::class).random()
-            repository.delete(unit.id)
-            val result = sessionFactory.openSession().load(UnitNode::class.java, unit.id)
+            val unitId: UUID = sessionFactory.openSession().loadAll(GroupUnitNode::class.java).random().unitId
+            repository.delete(unitId)
+            val result = sessionFactory.openSession().load(UnitNode::class.java, unitId)
             result shouldBe null
+            val relations = sessionFactory.openSession().loadAll(GroupUnitNode::class.java, isEquals(GroupUnitNode::unitId, unitId))
+            relations.isEmpty() shouldBe true
         }
 
         context(name = "All by ID", script = "/scripts/unit/page.cypher") {
@@ -110,14 +113,14 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
             val unit = entities(UnitEntity::class).random()
             val organization = unit.unitOrganization
             val data = mapOf(
-                "Unit same name same organization" to UnitSameData(true, action = { repository.hasAnotherWithName(randomUUID(), organization.id, unit.unitName) }),
-                "Unit same name new unit" to UnitSameData(false, action = { repository.hasAnotherWithName(randomUUID(), organization.id, randomString()) }),
-                "Unit same name another organization" to UnitSameData(false, action = { repository.hasAnotherWithName(randomUUID(), randomUUID(), unit.unitName) }),
-                "Unit same name same unit" to UnitSameData(false, action = { repository.hasAnotherWithName(unit.id, organization.id, unit.unitName) }),
-                "Unit same document same organization" to UnitSameData(true, action = { repository.hasAnotherWithDocument(randomUUID(), organization.id, unit.documentNumber) }),
-                "Unit same document new unit" to UnitSameData(false, action = { repository.hasAnotherWithDocument(randomUUID(), organization.id, randomString()) }),
-                "Unit same document another organization" to UnitSameData(false, action = { repository.hasAnotherWithDocument(randomUUID(), randomUUID(), unit.documentNumber) }),
-                "Unit same document same unit" to UnitSameData(false, action = { repository.hasAnotherWithDocument(unit.id, organization.id, unit.documentNumber) }),
+                "Unit same name same organization" to EntitySameData(true, action = { repository.hasAnotherWithName(randomUUID(), organization.id, unit.unitName) }),
+                "Unit same name new unit" to EntitySameData(false, action = { repository.hasAnotherWithName(randomUUID(), organization.id, randomString()) }),
+                "Unit same name another organization" to EntitySameData(false, action = { repository.hasAnotherWithName(randomUUID(), randomUUID(), unit.unitName) }),
+                "Unit same name same unit" to EntitySameData(false, action = { repository.hasAnotherWithName(unit.id, organization.id, unit.unitName) }),
+                "Unit same document same organization" to EntitySameData(true, action = { repository.hasAnotherWithDocument(randomUUID(), organization.id, unit.documentNumber) }),
+                "Unit same document new unit" to EntitySameData(false, action = { repository.hasAnotherWithDocument(randomUUID(), organization.id, randomString()) }),
+                "Unit same document another organization" to EntitySameData(false, action = { repository.hasAnotherWithDocument(randomUUID(), randomUUID(), unit.documentNumber) }),
+                "Unit same document same unit" to EntitySameData(false, action = { repository.hasAnotherWithDocument(unit.id, organization.id, unit.documentNumber) }),
             )
             withData(data) {
                 it.action() shouldBe it.result

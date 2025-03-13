@@ -21,4 +21,4 @@ data class GenericNestedPropsNode(
     @Relationship(type = "GENERIC_NESTED", direction = OUTGOING)
     val nestedNode: GenericPropsNode
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

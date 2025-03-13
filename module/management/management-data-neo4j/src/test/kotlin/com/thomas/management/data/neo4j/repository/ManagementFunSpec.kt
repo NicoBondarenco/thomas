@@ -1,7 +1,6 @@
 package com.thomas.management.data.neo4j.repository
 
 import com.thomas.core.model.entity.BaseEntity
-import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.repository.Neo4JFunSpec
 import com.thomas.database.neo4j.repository.Neo4JRepository
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
@@ -29,7 +28,7 @@ abstract class ManagementFunSpec<R : Neo4JRepository>(
 
     fun loadNodes() {
         nodesMap.forEach { (klass, mapper) ->
-            sessionFactory.openSession().loadAll(klass.java).takeIf {
+            sessionFactory.openSession().loadAll(klass.java, 5).takeIf {
                 it.isNotEmpty()
             }?.map(mapper)?.apply {
                 entitiesMap[this.first()::class] = this.toSet()

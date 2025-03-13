@@ -42,4 +42,4 @@ data class DatetimePropsNode(
     @Property(name = "local_time")
     var localTime: LocalTime
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

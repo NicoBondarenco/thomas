@@ -18,6 +18,7 @@ import com.thomas.database.neo4j.operator.StringOperator.STARTS_WITH
 import com.thomas.database.neo4j.operator.StringOperator.STARTS_WITH_UNACCENTED_LOWER
 import kotlin.reflect.KProperty
 import org.neo4j.ogm.cypher.Filter
+import java.io.Serializable
 
 fun <K : Any> equalsUnaccentedLower(
     property: KProperty<K?>,
@@ -89,85 +90,85 @@ fun <K : Any> notEndsWithUnaccentedLower(
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_ENDS_WITH_UNACCENTED_LOWER))
 
-fun <K : Any, T : Neo4JNode> equalsUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> equalsUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, EQUALS_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notEqualsUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notEqualsUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_EQUALS_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> like(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> like(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, LIKE)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notLike(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notLike(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_LIKE)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> likeUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> likeUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, LIKE_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notLikeUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notLikeUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_LIKE_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> startsWith(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> startsWith(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, STARTS_WITH)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notStartsWith(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notStartsWith(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_STARTS_WITH)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> startsWithUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> startsWithUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, STARTS_WITH_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notStartsWithUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notStartsWithUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_STARTS_WITH_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> endsWith(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> endsWith(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, ENDS_WITH)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notEndsWith(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notEndsWith(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, NOT_ENDS_WITH)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> endsWithUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> endsWithUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(value, ENDS_WITH_UNACCENTED_LOWER)).applyNested(nested)
 
-fun <K : Any, T : Neo4JNode> notEndsWithUnaccentedLower(
+fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notEndsWithUnaccentedLower(
     property: KProperty<K?>,
     nested: KProperty<T?>,
     value: String,

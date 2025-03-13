@@ -24,4 +24,4 @@ data class BooleanNestedPropsNode(
     @Relationship(type = "BOOLEAN_NESTED", direction = OUTGOING)
     val nestedNode: BooleanPropsNode
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

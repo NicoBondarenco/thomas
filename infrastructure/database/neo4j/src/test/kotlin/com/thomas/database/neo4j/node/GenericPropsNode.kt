@@ -22,4 +22,4 @@ data class GenericPropsNode(
     @Property(name = "prop_value")
     var propValue: Int?,
 
-    ) : Neo4JNode
+    ) : Neo4JNode<UUID>

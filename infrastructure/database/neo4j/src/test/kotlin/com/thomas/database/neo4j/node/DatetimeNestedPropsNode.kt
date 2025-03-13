@@ -24,4 +24,4 @@ data class DatetimeNestedPropsNode(
     @Relationship(type = "DATETIME_NESTED", direction = OUTGOING)
     val nestedNode: DatetimePropsNode
 
-) : Neo4JNode
+) : Neo4JNode<UUID>

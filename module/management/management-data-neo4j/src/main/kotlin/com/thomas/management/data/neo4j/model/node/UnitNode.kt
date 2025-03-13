@@ -72,4 +72,4 @@ data class UnitNode(
 
     @Property(name = "updated_at")
     var updatedAt: ZonedDateTime,
-) : Neo4JNode
+) : Neo4JNode<UUID>
