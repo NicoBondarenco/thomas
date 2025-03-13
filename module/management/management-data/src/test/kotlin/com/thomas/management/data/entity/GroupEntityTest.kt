@@ -21,7 +21,7 @@ class GroupEntityTest : EntityValidationTest() {
         private const val MAX_SIZE = "Invalid max size"
     }
 
-    private val invalidLegalExecutions = mutableListOf<InvalidDataInput<GroupEntity, GroupEntity>>().apply {
+    private val simpleInvalidLegalExecutions = mutableListOf<InvalidDataInput<GroupSimpleEntity, GroupSimpleEntity>>().apply {
         "!@#$%¨&*()_+={}[]ªº?/<>:;|\\\"§".map { it.toString() }.forEach {
             this.add(
                 InvalidDataInput(
@@ -32,7 +32,7 @@ class GroupEntityTest : EntityValidationTest() {
                             groupName = "${randomString(MAX_NAME_SIZE - 5)}$it",
                         )
                     },
-                    property = GroupEntity::groupName,
+                    property = GroupSimpleEntity::groupName,
                     message = managementGroupValidationGroupNameInvalidValue(),
                 )
             )
@@ -45,14 +45,14 @@ class GroupEntityTest : EntityValidationTest() {
                             groupDescription = "${randomString(MAX_DESCRIPTION_SIZE - 5)}$it",
                         )
                     },
-                    property = GroupEntity::groupDescription,
+                    property = GroupSimpleEntity::groupDescription,
                     message = managementGroupValidationGroupDescriptionInvalidValue(),
                 )
             )
         }
     }
 
-    private val minSizeExecutions = mutableListOf<InvalidDataInput<GroupEntity, GroupEntity>>().apply {
+    private val simpleMinSizeExecutions = mutableListOf<InvalidDataInput<GroupSimpleEntity, GroupSimpleEntity>>().apply {
         this.add(
             InvalidDataInput(
                 description = MIN_SIZE,
@@ -62,7 +62,7 @@ class GroupEntityTest : EntityValidationTest() {
                         groupName = randomString(MIN_NAME_SIZE - 1),
                     )
                 },
-                property = GroupEntity::groupName,
+                property = GroupSimpleEntity::groupName,
                 message = managementGroupValidationGroupNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
@@ -75,13 +75,13 @@ class GroupEntityTest : EntityValidationTest() {
                         groupDescription = randomString(MIN_DESCRIPTION_SIZE - 1),
                     )
                 },
-                property = GroupEntity::groupDescription,
+                property = GroupSimpleEntity::groupDescription,
                 message = managementGroupValidationGroupDescriptionInvalidLength(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE),
             )
         )
     }
 
-    private val maxSizeExecutions = mutableListOf<InvalidDataInput<GroupEntity, GroupEntity>>().apply {
+    private val simpleMaxSizeExecutions = mutableListOf<InvalidDataInput<GroupSimpleEntity, GroupSimpleEntity>>().apply {
         this.add(
             InvalidDataInput(
                 description = MAX_SIZE,
@@ -91,7 +91,7 @@ class GroupEntityTest : EntityValidationTest() {
                         groupName = randomString(MAX_NAME_SIZE + 1),
                     )
                 },
-                property = GroupEntity::groupName,
+                property = GroupSimpleEntity::groupName,
                 message = managementGroupValidationGroupNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
@@ -104,16 +104,108 @@ class GroupEntityTest : EntityValidationTest() {
                         groupDescription = randomString(MAX_DESCRIPTION_SIZE + 1),
                     )
                 },
-                property = GroupEntity::groupDescription,
+                property = GroupSimpleEntity::groupDescription,
+                message = managementGroupValidationGroupDescriptionInvalidLength(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE),
+            )
+        )
+    }
+
+    private val completeInvalidLegalExecutions = mutableListOf<InvalidDataInput<GroupCompleteEntity, GroupCompleteEntity>>().apply {
+        "!@#$%¨&*()_+={}[]ªº?/<>:;|\\\"§".map { it.toString() }.forEach {
+            this.add(
+                InvalidDataInput(
+                    description = INVALID_CHARACTER,
+                    value = it,
+                    execution = {
+                        groupCompleteEntity.copy(
+                            groupName = "${randomString(MAX_NAME_SIZE - 5)}$it",
+                        )
+                    },
+                    property = GroupCompleteEntity::groupName,
+                    message = managementGroupValidationGroupNameInvalidValue(),
+                )
+            )
+            this.add(
+                InvalidDataInput(
+                    description = INVALID_CHARACTER,
+                    value = it,
+                    execution = {
+                        groupCompleteEntity.copy(
+                            groupDescription = "${randomString(MAX_DESCRIPTION_SIZE - 5)}$it",
+                        )
+                    },
+                    property = GroupCompleteEntity::groupDescription,
+                    message = managementGroupValidationGroupDescriptionInvalidValue(),
+                )
+            )
+        }
+    }
+
+    private val completeMinSizeExecutions = mutableListOf<InvalidDataInput<GroupCompleteEntity, GroupCompleteEntity>>().apply {
+        this.add(
+            InvalidDataInput(
+                description = MIN_SIZE,
+                value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
+                execution = {
+                    groupCompleteEntity.copy(
+                        groupName = randomString(MIN_NAME_SIZE - 1),
+                    )
+                },
+                property = GroupCompleteEntity::groupName,
+                message = managementGroupValidationGroupNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+        this.add(
+            InvalidDataInput(
+                description = MIN_SIZE,
+                value = "MIN_NAME_SIZE ($MIN_DESCRIPTION_SIZE)",
+                execution = {
+                    groupCompleteEntity.copy(
+                        groupDescription = randomString(MIN_DESCRIPTION_SIZE - 1),
+                    )
+                },
+                property = GroupCompleteEntity::groupDescription,
+                message = managementGroupValidationGroupDescriptionInvalidLength(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE),
+            )
+        )
+    }
+
+    private val completeMaxSizeExecutions = mutableListOf<InvalidDataInput<GroupCompleteEntity, GroupCompleteEntity>>().apply {
+        this.add(
+            InvalidDataInput(
+                description = MAX_SIZE,
+                value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
+                execution = {
+                    groupCompleteEntity.copy(
+                        groupName = randomString(MAX_NAME_SIZE + 1),
+                    )
+                },
+                property = GroupCompleteEntity::groupName,
+                message = managementGroupValidationGroupNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+        this.add(
+            InvalidDataInput(
+                description = MAX_SIZE,
+                value = "MAX_NAME_SIZE ($MAX_DESCRIPTION_SIZE)",
+                execution = {
+                    groupCompleteEntity.copy(
+                        groupDescription = randomString(MAX_DESCRIPTION_SIZE + 1),
+                    )
+                },
+                property = GroupCompleteEntity::groupDescription,
                 message = managementGroupValidationGroupDescriptionInvalidLength(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE),
             )
         )
     }
 
     override fun executions(): List<InvalidDataInput<*, *>> =
-        invalidLegalExecutions +
-                minSizeExecutions +
-                maxSizeExecutions
+        simpleInvalidLegalExecutions +
+                simpleMinSizeExecutions +
+                simpleMaxSizeExecutions +
+                completeInvalidLegalExecutions +
+                completeMinSizeExecutions +
+                completeMaxSizeExecutions
 
     @Test
     fun `Valid Group Entity`() {

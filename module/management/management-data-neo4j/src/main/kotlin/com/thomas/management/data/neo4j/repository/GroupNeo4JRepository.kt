@@ -17,7 +17,7 @@ import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.or
 import com.thomas.database.neo4j.filter.page
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.GroupSimpleEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupCompleteEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupNode
@@ -38,7 +38,7 @@ class GroupNeo4JRepository(
         isActive: Boolean?,
         organizationId: UUID,
         pageable: PageRequestPeriod
-    ): PageResponse<GroupEntity> = sessionFactory.page<GroupNode>(
+    ): PageResponse<GroupSimpleEntity> = sessionFactory.page<GroupNode>(
         listOfNotNull(
             isEquals(GroupOrganizationNode::organizationId, GroupNode::groupOrganization, organizationId),
             keywordText?.let {
@@ -106,7 +106,7 @@ class GroupNeo4JRepository(
     override suspend fun allByIds(
         ids: Set<UUID>,
         organizationId: UUID
-    ): Set<GroupEntity> = sessionFactory.openSession().loadAll(
+    ): Set<GroupSimpleEntity> = sessionFactory.openSession().loadAll(
         GroupNode::class.java,
         inValues(GroupNode::id, ids).and(isEquals(GroupOrganizationNode::organizationId, GroupNode::groupOrganization, organizationId)),
         DEFAULT_DEPTH

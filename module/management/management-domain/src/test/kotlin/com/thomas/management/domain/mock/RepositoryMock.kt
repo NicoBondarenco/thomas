@@ -7,7 +7,7 @@ import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.entity.UserCompleteEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.data.entity.groupCompleteEntity
 import com.thomas.management.data.entity.groupEntity
 import com.thomas.management.data.entity.organizationEntity
@@ -158,7 +158,7 @@ internal val userRepositoryMock: UserRepository
             firstArg<UserCompleteEntity>().copy()
         }
         coEvery { updateSimple(any()) } answers {
-            firstArg<UserEntity>().copy()
+            firstArg<UserSimpleEntity>().copy()
         }
         coEvery { simpleByEmail(any()) } answers {
             userEntity.copy(mainEmail = firstArg()).takeIf { !userEmails.contains(firstArg()) }

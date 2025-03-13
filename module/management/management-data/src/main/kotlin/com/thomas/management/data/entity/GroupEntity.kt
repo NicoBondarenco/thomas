@@ -12,32 +12,19 @@ import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroup
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationGroupNameInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementGroupValidationInvalidEntityErrorMessage
-import java.time.OffsetDateTime
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID
-import java.util.UUID.randomUUID
 
-data class GroupEntity(
-    override val id: UUID = randomUUID(),
-    val groupName: String,
-    val groupDescription: String?,
-    val groupOrganization: OrganizationEntity,
-    val organizationRoles: Set<SecurityOrganizationRole>,
-    override val isActive: Boolean = true,
-    override val createdAt: OffsetDateTime = now(UTC),
-    override val updatedAt: OffsetDateTime = now(UTC),
-) : BaseEntity<GroupEntity>(), BasicInfo {
+abstract class GroupEntity : BaseEntity<GroupEntity>(), BasicInfo {
+
+    abstract val groupName: String
+    abstract val groupDescription: String?
+    abstract val groupOrganization: OrganizationEntity
+    abstract val organizationRoles: Set<SecurityOrganizationRole>
 
     companion object {
         private const val MIN_NAME_SIZE = 5
         private const val MAX_NAME_SIZE = 250
         private const val MIN_DESCRIPTION_SIZE = 5
         private const val MAX_DESCRIPTION_SIZE = 1000
-    }
-
-    init {
-        validate()
     }
 
     override fun errorMessage(): String = managementGroupValidationInvalidEntityErrorMessage()
@@ -56,12 +43,12 @@ data class GroupEntity(
         EntityValidation(
             GroupEntity::groupDescription.name.toSnakeCase(),
             { managementGroupValidationGroupDescriptionInvalidLength(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE) },
-            { it.groupDescription == null || it.groupDescription.length.isBetween(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE) }
+            { it.groupDescription == null || it.groupDescription!!.length.isBetween(MIN_DESCRIPTION_SIZE, MAX_DESCRIPTION_SIZE) }
         ),
         EntityValidation(
             GroupEntity::groupDescription.name.toSnakeCase(),
             { managementGroupValidationGroupDescriptionInvalidValue() },
-            { it.groupDescription == null || LEGAL_NAME_REGEX.matches(it.groupDescription) }
+            { it.groupDescription == null || LEGAL_NAME_REGEX.matches(it.groupDescription!!) }
         ),
     )
 

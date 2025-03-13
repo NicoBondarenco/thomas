@@ -7,7 +7,7 @@ import java.time.ZoneOffset.UTC
 import java.util.UUID
 import java.util.UUID.randomUUID
 
-data class GroupCompleteEntity(
+data class GroupSimpleEntity(
     override val id: UUID = randomUUID(),
     override val groupName: String,
     override val groupDescription: String?,
@@ -16,7 +16,6 @@ data class GroupCompleteEntity(
     override val isActive: Boolean = true,
     override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
-    val groupUnits: Set<GroupUnitEntity> = emptySet()
 ) : GroupEntity() {
 
     init {

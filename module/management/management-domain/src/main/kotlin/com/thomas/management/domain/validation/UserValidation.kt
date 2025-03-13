@@ -4,7 +4,7 @@ import com.thomas.core.model.entity.DeferredEntityValidation
 import com.thomas.core.model.entity.DeferredEntityValidationContext.Companion.VT
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.UserCompleteEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationGroupDataNotFound
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationOrganizationDataMaxUser
@@ -26,29 +26,29 @@ private fun String.isValidPassword(): Boolean = length >= PASSWORD_LENGTH &&
         PASSWORD_NUMBERS.matches(this) &&
         this.toList().intersect(PASSWORD_SYMBOLS).isNotEmpty()
 
-fun UserRepository.sameEmailSignup() = DeferredEntityValidation<UserEntity>(
-    field = UserEntity::mainEmail,
+fun UserRepository.sameEmailSignup() = DeferredEntityValidation<UserSimpleEntity>(
+    field = UserSimpleEntity::mainEmail,
     message = { managementUserValidationUserDataDuplicatedEmail() },
     validate = { !this.hasAnotherWithEmail(it.id, it.mainEmail) },
     context = VT,
 )
 
 fun UserRepository.sameEmail() = DeferredEntityValidation<UserCompleteEntity>(
-    field = UserEntity::mainEmail,
+    field = UserSimpleEntity::mainEmail,
     message = { managementUserValidationUserDataDuplicatedEmail() },
     validate = { !this.hasAnotherWithEmail(it.id, it.userData.mainEmail) },
     context = VT,
 )
 
 fun UserRepository.sameDocument() = DeferredEntityValidation<UserCompleteEntity>(
-    field = UserEntity::documentNumber,
+    field = UserSimpleEntity::documentNumber,
     message = { managementUserValidationUserDataDuplicatedDocument() },
     validate = { !this.hasAnotherWithDocument(it.id, it.userData.userOrganization.id, it.userData.documentNumber) },
     context = VT,
 )
 
 fun UserRepository.maxUsers() = DeferredEntityValidation<UserCompleteEntity>(
-    field = UserEntity::userOrganization,
+    field = UserSimpleEntity::userOrganization,
     message = { managementUserValidationOrganizationDataMaxUser() },
     validate = { !this.limitReached(it.id, it.userData.userOrganization.id) },
     context = VT,
@@ -78,8 +78,8 @@ fun userUnitsFound(
     validate = { it.userUnits.size == userUnits.size },
 )
 
-fun validPassword(password: String) = DeferredEntityValidation<UserEntity>(
-    field = UserEntity::passwordHash,
+fun validPassword(password: String) = DeferredEntityValidation<UserSimpleEntity>(
+    field = UserSimpleEntity::passwordHash,
     message = { managementUserValidationUserDataInvalidPassword() },
     validate = { password.isValidPassword() },
 )

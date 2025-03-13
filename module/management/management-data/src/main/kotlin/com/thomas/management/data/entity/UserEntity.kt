@@ -1,6 +1,5 @@
 package com.thomas.management.data.entity
 
-import com.thomas.core.aspect.MaskField
 import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
@@ -18,38 +17,23 @@ import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserV
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidValue
 import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID
-import java.util.UUID.randomUUID
 
-data class UserEntity(
-    override val id: UUID = randomUUID(),
-    val firstName: String,
-    val lastName: String,
-    @MaskField val documentNumber: String,
-    val profilePhoto: String? = null,
-    val userGender: Gender? = null,
-    val birthDate: LocalDate? = null,
-    @MaskField val passwordSalt: String,
-    @MaskField val passwordHash: String,
-    val userOrganization: OrganizationEntity,
-    val organizationRoles: Set<SecurityOrganizationRole>,
-    override val mainEmail: String,
-    override val mainPhone: String,
-    override val isActive: Boolean = true,
-    override val createdAt: OffsetDateTime = now(UTC),
-    override val updatedAt: OffsetDateTime = now(UTC),
-) : BaseEntity<UserEntity>(), ContactInfo, BasicInfo {
+abstract class UserEntity : BaseEntity<UserEntity>(), ContactInfo, BasicInfo {
+
+    abstract val firstName: String
+    abstract val lastName: String
+    abstract val documentNumber: String
+    abstract val profilePhoto: String?
+    abstract val userGender: Gender?
+    abstract val birthDate: LocalDate?
+    abstract val passwordSalt: String
+    abstract val passwordHash: String
+    abstract val userOrganization: OrganizationEntity
+    abstract val organizationRoles: Set<SecurityOrganizationRole>
 
     companion object {
         internal const val MIN_NAME_SIZE = 2
         internal const val MAX_NAME_SIZE = 250
-    }
-
-    init {
-        validate()
     }
 
     override fun errorMessage(): String = managementUserValidationInvalidEntityErrorMessage()

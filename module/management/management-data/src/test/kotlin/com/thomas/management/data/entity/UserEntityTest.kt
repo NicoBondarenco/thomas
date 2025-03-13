@@ -21,7 +21,7 @@ class UserEntityTest : EntityValidationTest() {
         private const val INVALID_DOCUMENT = "Invalid document"
     }
 
-    private val invalidNameExecutions = mutableListOf<InvalidDataInput<UserEntity, UserEntity>>().apply {
+    private val simpleInvalidNameExecutions = mutableListOf<InvalidDataInput<UserSimpleEntity, UserSimpleEntity>>().apply {
         "9876543210!@#$%¨&*()_+='\"\\|<>,.:?;/^~`´{}[]§¬¢£³²¹".map {
             it.toString()
         }.forEach {
@@ -34,7 +34,7 @@ class UserEntityTest : EntityValidationTest() {
                             firstName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
                         )
                     },
-                    property = UserEntity::firstName,
+                    property = UserSimpleEntity::firstName,
                     message = managementUserValidationFirstNameInvalidValue(),
                 )
             )
@@ -47,14 +47,14 @@ class UserEntityTest : EntityValidationTest() {
                             lastName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
                         )
                     },
-                    property = UserEntity::lastName,
+                    property = UserSimpleEntity::lastName,
                     message = managementUserValidationLastNameInvalidValue(),
                 )
             )
         }
     }
 
-    private val minSizeExecutions = mutableListOf<InvalidDataInput<UserEntity, UserEntity>>().apply {
+    private val simpleMinSizeExecutions = mutableListOf<InvalidDataInput<UserSimpleEntity, UserSimpleEntity>>().apply {
         this.add(
             InvalidDataInput(
                 description = MIN_SIZE,
@@ -64,7 +64,7 @@ class UserEntityTest : EntityValidationTest() {
                         firstName = randomString(MIN_NAME_SIZE - 1, false),
                     )
                 },
-                property = UserEntity::firstName,
+                property = UserSimpleEntity::firstName,
                 message = managementUserValidationFirstNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
@@ -77,13 +77,13 @@ class UserEntityTest : EntityValidationTest() {
                         lastName = randomString(MIN_NAME_SIZE - 1, false),
                     )
                 },
-                property = UserEntity::lastName,
+                property = UserSimpleEntity::lastName,
                 message = managementUserValidationLastNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
     }
 
-    private val maxSizeExecutions = mutableListOf<InvalidDataInput<UserEntity, UserEntity>>().apply {
+    private val simpleMaxSizeExecutions = mutableListOf<InvalidDataInput<UserSimpleEntity, UserSimpleEntity>>().apply {
         this.add(
             InvalidDataInput(
                 description = MAX_SIZE,
@@ -93,7 +93,7 @@ class UserEntityTest : EntityValidationTest() {
                         firstName = randomString(MAX_NAME_SIZE + 1, false),
                     )
                 },
-                property = UserEntity::firstName,
+                property = UserSimpleEntity::firstName,
                 message = managementUserValidationFirstNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
@@ -106,7 +106,98 @@ class UserEntityTest : EntityValidationTest() {
                         lastName = randomString(MAX_NAME_SIZE + 1, false),
                     )
                 },
-                property = UserEntity::lastName,
+                property = UserSimpleEntity::lastName,
+                message = managementUserValidationLastNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+    }
+
+    private val completeInvalidNameExecutions = mutableListOf<InvalidDataInput<UserCompleteEntity, UserCompleteEntity>>().apply {
+        "9876543210!@#$%¨&*()_+='\"\\|<>,.:?;/^~`´{}[]§¬¢£³²¹".map {
+            it.toString()
+        }.forEach {
+            this.add(
+                InvalidDataInput(
+                    description = INVALID_CHARACTER,
+                    value = it,
+                    execution = {
+                        userCompleteEntity.copy(
+                            firstName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
+                        )
+                    },
+                    property = UserCompleteEntity::firstName,
+                    message = managementUserValidationFirstNameInvalidValue(),
+                )
+            )
+            this.add(
+                InvalidDataInput(
+                    description = INVALID_CHARACTER,
+                    value = it,
+                    execution = {
+                        userCompleteEntity.copy(
+                            lastName = "${randomString(MAX_NAME_SIZE - 5, false)}$it",
+                        )
+                    },
+                    property = UserCompleteEntity::lastName,
+                    message = managementUserValidationLastNameInvalidValue(),
+                )
+            )
+        }
+    }
+
+    private val completeMinSizeExecutions = mutableListOf<InvalidDataInput<UserCompleteEntity, UserCompleteEntity>>().apply {
+        this.add(
+            InvalidDataInput(
+                description = MIN_SIZE,
+                value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
+                execution = {
+                    userCompleteEntity.copy(
+                        firstName = randomString(MIN_NAME_SIZE - 1, false),
+                    )
+                },
+                property = UserCompleteEntity::firstName,
+                message = managementUserValidationFirstNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+        this.add(
+            InvalidDataInput(
+                description = MIN_SIZE,
+                value = "MIN_NAME_SIZE ($MIN_NAME_SIZE)",
+                execution = {
+                    userCompleteEntity.copy(
+                        lastName = randomString(MIN_NAME_SIZE - 1, false),
+                    )
+                },
+                property = UserCompleteEntity::lastName,
+                message = managementUserValidationLastNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+    }
+
+    private val completeMaxSizeExecutions = mutableListOf<InvalidDataInput<UserCompleteEntity, UserCompleteEntity>>().apply {
+        this.add(
+            InvalidDataInput(
+                description = MAX_SIZE,
+                value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
+                execution = {
+                    userCompleteEntity.copy(
+                        firstName = randomString(MAX_NAME_SIZE + 1, false),
+                    )
+                },
+                property = UserCompleteEntity::firstName,
+                message = managementUserValidationFirstNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
+            )
+        )
+        this.add(
+            InvalidDataInput(
+                description = MAX_SIZE,
+                value = "MAX_NAME_SIZE ($MAX_NAME_SIZE)",
+                execution = {
+                    userCompleteEntity.copy(
+                        lastName = randomString(MAX_NAME_SIZE + 1, false),
+                    )
+                },
+                property = UserCompleteEntity::lastName,
                 message = managementUserValidationLastNameInvalidLength(MIN_NAME_SIZE, MAX_NAME_SIZE),
             )
         )
@@ -134,16 +225,30 @@ class UserEntityTest : EntityValidationTest() {
                     documentNumber = it,
                 )
             },
-            property = UserEntity::documentNumber,
+            property = UserSimpleEntity::documentNumber,
+            message = managementUserValidationDocumentNumberInvalidValue(),
+        )
+        InvalidDataInput(
+            description = INVALID_DOCUMENT,
+            value = it,
+            execution = {
+                userCompleteEntity.copy(
+                    documentNumber = it,
+                )
+            },
+            property = UserCompleteEntity::documentNumber,
             message = managementUserValidationDocumentNumberInvalidValue(),
         )
     }
 
     override fun executions(): List<InvalidDataInput<*, *>> =
-        invalidNameExecutions +
-                minSizeExecutions +
-                maxSizeExecutions +
-                invalidDocumentExecutions
+        simpleInvalidNameExecutions +
+                simpleMinSizeExecutions +
+                simpleMaxSizeExecutions +
+                invalidDocumentExecutions +
+                completeInvalidNameExecutions +
+                completeMinSizeExecutions +
+                completeMaxSizeExecutions
 
     @Test
     fun `Valid User Entity`() {

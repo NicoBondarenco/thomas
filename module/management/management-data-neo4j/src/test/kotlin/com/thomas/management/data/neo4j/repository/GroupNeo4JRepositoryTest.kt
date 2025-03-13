@@ -10,9 +10,10 @@ import com.thomas.core.util.NumberUtils.randomInteger
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.management.data.entity.GroupCompleteEntity
+import com.thomas.management.data.entity.GroupUnitEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
-import com.thomas.management.data.entity.groupEntity
+import com.thomas.management.data.entity.groupCompleteEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupCompleteEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupNode
 import com.thomas.management.data.neo4j.model.mapper.toOrganizationEntity
@@ -25,6 +26,7 @@ import com.thomas.management.data.neo4j.model.node.UnitNode
 import com.thomas.management.data.neo4j.util.EntityFindOneData
 import com.thomas.management.data.neo4j.util.EntitySameData
 import com.thomas.management.data.neo4j.util.GroupSearchData
+import com.thomas.management.data.neo4j.util.toGroupSimpleEntity
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import java.time.OffsetDateTime
@@ -52,12 +54,12 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
 
             organizations.forEach { organization ->
                 groups.filter {
-                    it.groupData.groupOrganization.id == organization.id
+                    it.groupOrganization.id == organization.id
                 }.take(5).forEach { group ->
                     data += EntityFindOneData(group.id, organization.id, group)
                 }
                 groups.filter {
-                    it.groupData.groupOrganization.id != organization.id
+                    it.groupOrganization.id != organization.id
                 }.take(5).forEach { group ->
                     data += EntityFindOneData(group.id, organization.id, null)
                 }
@@ -77,16 +79,16 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
             val organizations = entities(OrganizationEntity::class)
 
             val data = listOf(
-                GroupSearchData("gest", null, organizations.random().id, PageRequestPeriod(pageNumber = 3, pageSize = 4, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.groupData.updatedAt }),
-                GroupSearchData(null, true, organizations.random().id, PageRequestPeriod(pageNumber = 5, pageSize = 5, pageSort = listOf(PageSort("created_at", DESC), PageSort("group_name", ASC))), compareByDescending<GroupCompleteEntity> { it.groupData.createdAt }.thenBy { it.groupData.groupName }),
-                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(pageNumber = 5, pageSize = 5, pageSort = listOf(PageSort("group_description", ASC))), compareBy { it.groupData.groupDescription }),
-                GroupSearchData("ÇÃO", true, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 3, pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.groupData.updatedAt }),
-                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-01-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), createdEnd = OffsetDateTime.parse("2025-06-30T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.groupData.updatedAt }),
-                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("group_name", DESC))), compareByDescending { it.groupData.groupName }),
+                GroupSearchData("gest", null, organizations.random().id, PageRequestPeriod(pageNumber = 3, pageSize = 4, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.updatedAt }),
+                GroupSearchData(null, true, organizations.random().id, PageRequestPeriod(pageNumber = 5, pageSize = 5, pageSort = listOf(PageSort("created_at", DESC), PageSort("group_name", ASC))), compareByDescending<GroupCompleteEntity> { it.createdAt }.thenBy { it.groupName }),
+                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(pageNumber = 5, pageSize = 5, pageSort = listOf(PageSort("group_description", ASC))), compareBy { it.groupDescription }),
+                GroupSearchData("ÇÃO", true, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 3, pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.updatedAt }),
+                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-01-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), createdEnd = OffsetDateTime.parse("2025-06-30T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.updatedAt }),
+                GroupSearchData(null, null, organizations.random().id, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("group_name", DESC))), compareByDescending { it.groupName }),
             )
 
             withData(data) {
-                val page = it.page(groups.toList()).map { g -> g.groupData }
+                val page = it.page(groups.toList()).map { g -> g.toGroupSimpleEntity() }
                 val result = repository.page(it.keyword, it.isActive, it.organizationId, it.pageable)
                 result.contentList.size shouldBe page.contentList.size
                 result.totalItems shouldBe page.totalItems
@@ -104,16 +106,15 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
                 val units = entities(UnitEntity::class).filter {
                     it.unitOrganization.id == organization.id
                 }
-                GroupCompleteEntity(
-                    groupEntity.copy(
-                        groupOrganization = organization,
-                        organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet()
-                    ),
-                    groupUnits = mapOf(
-                        *units.take(randomInteger(0, units.size)).map {
-                            it to SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
-                        }.toTypedArray()
-                    )
+                groupCompleteEntity.copy(
+                    groupOrganization = organization,
+                    organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet(),
+                    groupUnits = units.take(randomInteger(0, units.size)).map {
+                        GroupUnitEntity(
+                            groupUnit = it,
+                            groupRoles = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
+                        )
+                    }.toSet()
                 )
             }.associateBy { it.id.toString() }
 
@@ -144,21 +145,20 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
         context(name = "Update", script = "/scripts/group/page.cypher") {
 
             val data: Map<String, GroupCompleteEntity> = entities(GroupCompleteEntity::class).shuffled().take(10).map { existent ->
-                val organization = existent.groupData.groupOrganization
+                val organization = existent.groupOrganization
                 val units = entities(UnitEntity::class).filter {
                     it.unitOrganization.id == organization.id
                 }
-                GroupCompleteEntity(
-                    groupEntity.copy(
-                        id = existent.id,
-                        groupOrganization = organization,
-                        organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet()
-                    ),
-                    groupUnits = mapOf(
-                        *units.take(randomInteger(0, units.size)).map {
-                            it to SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
-                        }.toTypedArray()
-                    )
+                groupCompleteEntity.copy(
+                    id = existent.id,
+                    groupOrganization = organization,
+                    organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet(),
+                    groupUnits = units.take(randomInteger(0, units.size)).map {
+                        GroupUnitEntity(
+                            groupUnit = it,
+                            groupRoles = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
+                        )
+                    }.toSet()
                 )
             }.associateBy { it.id.toString() }
 
@@ -211,7 +211,7 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
         context(name = "All by ID", script = "/scripts/group/page.cypher") {
             val organization = entities(OrganizationEntity::class).random()
             val groups = entities(GroupCompleteEntity::class).map {
-                it.groupData
+                it.toGroupSimpleEntity()
             }.filter {
                 it.groupOrganization.id == organization.id
             }.shuffled().take(10)
@@ -224,7 +224,7 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
         context(name = "All by ID Full", script = "/scripts/group/page.cypher") {
             val organization = entities(OrganizationEntity::class).random()
             val groups = entities(GroupCompleteEntity::class).filter {
-                it.groupData.groupOrganization.id == organization.id
+                it.groupOrganization.id == organization.id
             }.shuffled().take(10)
             val result = repository.allFullByIds(groups.map { it.id }.toSet(), organization.id)
             groups.forEach { group ->
@@ -233,7 +233,7 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
         }
 
         context(name = "Exists same", script = "/scripts/group/page.cypher") {
-            val group = entities(GroupCompleteEntity::class).random().groupData
+            val group = entities(GroupCompleteEntity::class).random()
             val organization = group.groupOrganization
             val data = mapOf(
                 "Group same name same organization" to EntitySameData(true, action = { repository.hasAnotherWithName(randomUUID(), organization.id, group.groupName) }),

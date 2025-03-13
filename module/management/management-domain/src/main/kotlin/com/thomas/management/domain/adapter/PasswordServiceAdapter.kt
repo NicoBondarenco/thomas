@@ -5,7 +5,7 @@ import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.validate
 import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.PasswordResetEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.data.repository.PasswordResetRepository
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.PasswordService
@@ -71,7 +71,7 @@ class PasswordServiceAdapter(
 
     private suspend fun findSimpleByIdOrThrows(
         id: UUID,
-    ): UserEntity = userRepository.byId(id) ?: throw UserNotFoundException(id)
+    ): UserSimpleEntity = userRepository.byId(id) ?: throw UserNotFoundException(id)
 
     private suspend fun generateResetToken(): String = coroutineScope {
         (1..RESET_TOKEN_LENGTH).map { RESET_TOKEN_CHARS.random() }.joinToString(separator = "")
@@ -80,7 +80,7 @@ class PasswordServiceAdapter(
     private suspend fun updatePassword(
         userId: UUID,
         newPassword: String,
-    ): UserEntity = findSimpleByIdOrThrows(userId).let { entity ->
+    ): UserSimpleEntity = findSimpleByIdOrThrows(userId).let { entity ->
         listOf(
             validPassword(newPassword)
         ).validate(entity, managementUserValidationUserDataInvalidData())

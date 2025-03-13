@@ -3,12 +3,12 @@ package com.thomas.management.data.repository
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.GroupSimpleEntity
 import java.util.UUID
 
 interface GroupRepository {
 
-    suspend fun page(keywordText: String?, isActive: Boolean?, organizationId: UUID, pageable: PageRequestPeriod): PageResponse<GroupEntity>
+    suspend fun page(keywordText: String?, isActive: Boolean?, organizationId: UUID, pageable: PageRequestPeriod): PageResponse<GroupSimpleEntity>
 
     suspend fun one(id: UUID, organizationId: UUID): GroupCompleteEntity?
 
@@ -18,7 +18,7 @@ interface GroupRepository {
 
     suspend fun delete(id: UUID)
 
-    suspend fun allByIds(ids: Set<UUID>, organizationId: UUID): Set<GroupEntity>
+    suspend fun allByIds(ids: Set<UUID>, organizationId: UUID): Set<GroupSimpleEntity>
 
     suspend fun allFullByIds(ids: Set<UUID>, organizationId: UUID): Set<GroupCompleteEntity>
 

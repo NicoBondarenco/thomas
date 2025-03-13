@@ -6,7 +6,7 @@ import com.thomas.core.util.StringUtils.randomEmail
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.management.data.entity.OrganizationEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.domain.SignupService
 import com.thomas.management.domain.exception.SignupDisabledException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataDuplicatedName
@@ -127,7 +127,7 @@ class SignupServiceAdapterTest : DomainValidationTest() {
                         }
                     )
                 },
-                property = UserEntity::mainEmail,
+                property = UserSimpleEntity::mainEmail,
                 message = managementUserValidationUserDataDuplicatedEmail(),
                 extraValidations = extraValidations,
             )
@@ -187,7 +187,7 @@ class SignupServiceAdapterTest : DomainValidationTest() {
         mapOf(
             OrganizationEntity::organizationName to managementOrganizationValidationOrganizationDataDuplicatedName(),
             OrganizationEntity::registrationNumber to managementOrganizationValidationOrganizationDataDuplicatedRegistration(),
-            UserEntity::mainEmail to managementUserValidationUserDataDuplicatedEmail(),
+            UserSimpleEntity::mainEmail to managementUserValidationUserDataDuplicatedEmail(),
         ).forEach {
             val field = it.key.name.toSnakeCase()
             assertTrue(details.containsKey(field))

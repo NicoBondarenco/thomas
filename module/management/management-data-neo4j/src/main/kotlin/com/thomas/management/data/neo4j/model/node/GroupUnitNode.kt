@@ -18,7 +18,8 @@ import org.neo4j.ogm.annotation.typeconversion.Convert
 data class GroupUnitNode(
     @Id
     @Property(name = "id")
-    override var id: String,
+    @Convert(UUIDConverter::class)
+    override var id: UUID,
 
     @Property(name = "group_id")
     @Convert(UUIDConverter::class)
@@ -38,8 +39,7 @@ data class GroupUnitNode(
     @EndNode
     var unitNode: UnitNode
 
-) : Neo4JNode<String> {
-
+) : Neo4JNode<UUID> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

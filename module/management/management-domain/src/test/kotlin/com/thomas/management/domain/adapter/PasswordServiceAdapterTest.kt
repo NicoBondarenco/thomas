@@ -5,7 +5,7 @@ import com.thomas.core.context.UnauthenticatedUserException
 import com.thomas.core.data.securityUser
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.domain.PasswordService
 import com.thomas.management.domain.exception.ResetPasswordException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementResetPasswordResetTokenExpiredToken
@@ -144,7 +144,7 @@ class PasswordServiceAdapterTest : DomainValidationTest() {
         val details = (exception.detail as? Map<String, List<String>>)!!
         assertEquals(1, details.size)
 
-        val field = UserEntity::passwordHash.name.toSnakeCase()
+        val field = UserSimpleEntity::passwordHash.name.toSnakeCase()
         assertTrue(details.containsKey(field))
         assertEquals(1, details[field]!!.size)
         assertEquals(managementUserValidationUserDataInvalidPassword(), details[field]!!.first())

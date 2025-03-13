@@ -13,7 +13,7 @@ import com.thomas.core.util.StringUtils.randomDocumentNumber
 import com.thomas.core.util.StringUtils.randomEmail
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.management.data.entity.UserCompleteEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.data.entity.pageRequestPeriod
 import com.thomas.management.domain.UserService
 import com.thomas.management.domain.exception.UserNotFoundException
@@ -116,7 +116,7 @@ class UserServiceAdapterTest : DomainValidationTest() {
                                 )
                             )
                         },
-                        property = UserEntity::mainEmail,
+                        property = UserSimpleEntity::mainEmail,
                         message = managementUserValidationUserDataDuplicatedEmail(),
                         extraValidations = extraValidationsCreate,
                     )
@@ -137,7 +137,7 @@ class UserServiceAdapterTest : DomainValidationTest() {
                                 )
                             )
                         },
-                        property = UserEntity::documentNumber,
+                        property = UserSimpleEntity::documentNumber,
                         message = managementUserValidationUserDataDuplicatedDocument(),
                         extraValidations = extraValidationsCreate,
                     )
@@ -154,7 +154,7 @@ class UserServiceAdapterTest : DomainValidationTest() {
                             userWithOrganizationRole(role as SecurityOrganizationRole, it)
                             userService.create(userCreateRequest)
                         },
-                        property = UserEntity::userOrganization,
+                        property = UserSimpleEntity::userOrganization,
                         message = managementUserValidationOrganizationDataMaxUser(),
                         extraValidations = extraValidationsCreate,
                     )
@@ -222,7 +222,7 @@ class UserServiceAdapterTest : DomainValidationTest() {
                                 )
                             )
                         },
-                        property = UserEntity::documentNumber,
+                        property = UserSimpleEntity::documentNumber,
                         message = managementUserValidationUserDataDuplicatedDocument(),
                         extraValidations = extraValidationsUpdate,
                     )
@@ -399,9 +399,9 @@ class UserServiceAdapterTest : DomainValidationTest() {
 
         assertEquals(5, details.size, details.errorListMessage())
         mapOf(
-            UserEntity::mainEmail to managementUserValidationUserDataDuplicatedEmail(),
-            UserEntity::documentNumber to managementUserValidationUserDataDuplicatedDocument(),
-            UserEntity::userOrganization to managementUserValidationOrganizationDataMaxUser(),
+            UserSimpleEntity::mainEmail to managementUserValidationUserDataDuplicatedEmail(),
+            UserSimpleEntity::documentNumber to managementUserValidationUserDataDuplicatedDocument(),
+            UserSimpleEntity::userOrganization to managementUserValidationOrganizationDataMaxUser(),
             UserCompleteEntity::userGroups to managementUserValidationGroupDataNotFound(setOf(userGroup)),
             UserCompleteEntity::userUnits to managementUserValidationUnitDataNotFound(setOf(userUnit)),
         ).forEach { entry ->
@@ -438,7 +438,7 @@ class UserServiceAdapterTest : DomainValidationTest() {
 
         assertEquals(3, details.size, details.errorListMessage())
         mapOf(
-            UserEntity::documentNumber to managementUserValidationUserDataDuplicatedDocument(),
+            UserSimpleEntity::documentNumber to managementUserValidationUserDataDuplicatedDocument(),
             UserCompleteEntity::userGroups to managementUserValidationGroupDataNotFound(setOf(userGroup)),
             UserCompleteEntity::userUnits to managementUserValidationUnitDataNotFound(setOf(userUnit)),
         ).forEach { entry ->

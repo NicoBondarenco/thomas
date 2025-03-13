@@ -11,7 +11,7 @@ import com.thomas.core.model.security.SecurityRole
 import com.thomas.core.util.BooleanUtils.randomBoolean
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.GroupSimpleEntity
 import com.thomas.management.data.entity.pageRequestPeriod
 import com.thomas.management.domain.GroupService
 import com.thomas.management.domain.exception.GroupNotFoundException
@@ -109,7 +109,7 @@ class GroupServiceAdapterTest : DomainValidationTest() {
                                 )
                             )
                         },
-                        property = GroupEntity::groupName,
+                        property = GroupSimpleEntity::groupName,
                         message = managementGroupValidationGroupDataDuplicatedName(),
                         extraValidations = extraValidationsCreate,
                     )
@@ -156,7 +156,7 @@ class GroupServiceAdapterTest : DomainValidationTest() {
                                 )
                             )
                         },
-                        property = GroupEntity::groupName,
+                        property = GroupSimpleEntity::groupName,
                         message = managementGroupValidationGroupDataDuplicatedName(),
                         extraValidations = extraValidationsUpdate,
                     )
@@ -324,7 +324,7 @@ class GroupServiceAdapterTest : DomainValidationTest() {
 
         assertEquals(2, details.size, details.errorListMessage())
         mapOf(
-            GroupEntity::groupName to managementGroupValidationGroupDataDuplicatedName(),
+            GroupSimpleEntity::groupName to managementGroupValidationGroupDataDuplicatedName(),
             GroupCompleteEntity::groupUnits to managementGroupValidationUnitDataNotFound(setOf(groupUnit)),
         ).forEach { entry ->
             val field = entry.key.name.toSnakeCase()
@@ -358,7 +358,7 @@ class GroupServiceAdapterTest : DomainValidationTest() {
 
         assertEquals(2, details.size, details.errorListMessage())
         mapOf(
-            GroupEntity::groupName to managementGroupValidationGroupDataDuplicatedName(),
+            GroupSimpleEntity::groupName to managementGroupValidationGroupDataDuplicatedName(),
             GroupCompleteEntity::groupUnits to managementGroupValidationUnitDataNotFound(setOf(groupUnit)),
         ).forEach { entry ->
             val field = entry.key.name.toSnakeCase()

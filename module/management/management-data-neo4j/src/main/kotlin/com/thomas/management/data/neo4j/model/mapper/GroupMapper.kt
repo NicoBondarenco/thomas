@@ -1,14 +1,13 @@
 package com.thomas.management.data.neo4j.model.mapper
 
-import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
-import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.GroupSimpleEntity
+import com.thomas.management.data.entity.GroupUnitEntity
 import com.thomas.management.data.neo4j.model.node.GroupNode
 import com.thomas.management.data.neo4j.model.node.GroupOrganizationNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 
-fun GroupNode.toGroupEntity(): GroupEntity = GroupEntity(
+fun GroupNode.toGroupEntity(): GroupSimpleEntity = GroupSimpleEntity(
     id = this.id,
     groupName = this.groupName,
     groupDescription = this.groupDescription,
@@ -19,40 +18,48 @@ fun GroupNode.toGroupEntity(): GroupEntity = GroupEntity(
     updatedAt = this.updatedAt.toOffsetDateTime(),
 )
 
+fun GroupNode.toGroupCompleteEntity(): GroupCompleteEntity = GroupCompleteEntity(
+    id = this.id,
+    groupName = this.groupName,
+    groupDescription = this.groupDescription,
+    groupOrganization = this.groupOrganization.organizationNode.toOrganizationEntity(),
+    organizationRoles = this.groupOrganization.groupRoles,
+    isActive = this.isActive,
+    createdAt = this.createdAt.toOffsetDateTime(),
+    updatedAt = this.updatedAt.toOffsetDateTime(),
+    groupUnits = this.groupUnits?.map { it.toGroupUnitEntity() }?.toSet() ?: setOf()
+)
+
+fun GroupUnitNode.toGroupUnitEntity(): GroupUnitEntity = GroupUnitEntity(
+    id = this.id,
+    groupUnit = this.unitNode.toUnitEntity(),
+    groupRoles = this.groupRoles,
+)
+
 fun GroupCompleteEntity.toGroupNode(): GroupNode = GroupNode(
     id = this.id,
-    groupName = this.groupData.groupName,
-    groupDescription = this.groupData.groupDescription,
+    groupName = this.groupName,
+    groupDescription = this.groupDescription,
     groupOrganization = GroupOrganizationNode(
-        id = "${this.id}-${this.groupData.groupOrganization.id}",
+        id = "${this.id}-${this.groupOrganization.id}",
         groupId = this.id,
-        organizationId = this.groupData.groupOrganization.id,
-        groupRoles = this.groupData.organizationRoles,
-        organizationNode = this.groupData.groupOrganization.toOrganizationNode(),
+        organizationId = this.groupOrganization.id,
+        groupRoles = this.organizationRoles,
+        organizationNode = this.groupOrganization.toOrganizationNode(),
     ),
-    isActive = this.groupData.isActive,
-    createdAt = this.groupData.createdAt.toZonedDateTime(),
-    updatedAt = this.groupData.updatedAt.toZonedDateTime(),
-    groupUnits = this.groupUnits.map { (unit, roles) ->
+    isActive = this.isActive,
+    createdAt = this.createdAt.toZonedDateTime(),
+    updatedAt = this.updatedAt.toZonedDateTime(),
+    groupUnits = this.groupUnits.map {
         GroupUnitNode(
-            id = "${this.id}-${unit.id}",
+            id = it.id,
             groupId = this.id,
-            unitId = unit.id,
-            groupRoles = roles,
-            unitNode = unit.toUnitNode()
+            unitId = it.groupUnit.id,
+            groupRoles = it.groupRoles,
+            unitNode = it.groupUnit.toUnitNode()
         )
     }
 ).apply {
     this.groupOrganization.groupNode = this
     this.groupUnits?.forEach { it.groupNode = this }
 }
-
-fun GroupNode.toGroupCompleteEntity(): GroupCompleteEntity = GroupCompleteEntity(
-    groupData = this.toGroupEntity(),
-    groupUnits = this.groupUnits?.let { gu -> mapOf(*gu.map { it.toGroupUnitEntity() }.toTypedArray()) } ?: mapOf(),
-)
-
-fun GroupUnitNode.toGroupUnitEntity(): Pair<UnitEntity, Set<SecurityUnitRole>> = Pair(
-    first = this.unitNode.toUnitEntity(),
-    second = this.groupRoles,
-)

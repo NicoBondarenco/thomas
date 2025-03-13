@@ -1,6 +1,5 @@
 package com.thomas.management.data.neo4j.repository
 
-import com.thomas.core.model.entity.BaseEntity
 import com.thomas.database.neo4j.repository.Neo4JFunSpec
 import com.thomas.database.neo4j.repository.Neo4JRepository
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
@@ -40,7 +39,7 @@ abstract class ManagementFunSpec<R : Neo4JRepository>(
         entitiesMap.clear()
     }
 
-    fun <E : BaseEntity<E>> entities(
+    fun <E : Any> entities(
         type: KClass<E>
     ): Set<E> = entitiesMap[type] as? Set<E> ?: emptySet()
 

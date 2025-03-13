@@ -7,8 +7,8 @@ import com.thomas.core.util.StringUtils.randomEmail
 import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomString
 
-val userEntity: UserEntity
-    get() = UserEntity(
+val userEntity: UserSimpleEntity
+    get() = UserSimpleEntity(
         firstName = randomString(numbers = false),
         lastName = randomString(numbers = false),
         documentNumber = randomDocumentNumber(),
@@ -20,23 +20,42 @@ val userEntity: UserEntity
         mainPhone = randomPhone(),
     )
 
-val userRolesEntity: UserEntity
+val userRolesEntity: UserSimpleEntity
     get() = userEntity.copy(
         organizationRoles = SecurityOrganizationRole.entries.shuffled().subList(0, 3).toSet(),
     )
 
 val userCompleteEntity: UserCompleteEntity
     get() = UserCompleteEntity(
-        userData = userEntity,
+        firstName = randomString(numbers = false),
+        lastName = randomString(numbers = false),
+        documentNumber = randomDocumentNumber(),
+        passwordSalt = randomString(),
+        passwordHash = randomString(),
+        userOrganization = organizationEntity,
+        organizationRoles = setOf(),
+        mainEmail = randomEmail(),
+        mainPhone = randomPhone(),
         userGroups = setOf(),
-        userUnits = mapOf(),
+        userUnits = setOf(),
     )
 
 val userFullEntity: UserCompleteEntity
     get() = UserCompleteEntity(
-        userData = userRolesEntity,
+        firstName = randomString(numbers = false),
+        lastName = randomString(numbers = false),
+        documentNumber = randomDocumentNumber(),
+        passwordSalt = randomString(),
+        passwordHash = randomString(),
+        userOrganization = organizationEntity,
+        organizationRoles = setOf(),
+        mainEmail = randomEmail(),
+        mainPhone = randomPhone(),
         userGroups = (1..3).map { groupFullEntity }.toSet(),
-        userUnits = (1..3).associate {
-            unitEntity to SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
-        },
+        userUnits = (1..3).map {
+            UserUnitEntity(
+                groupUnit = unitEntity,
+                groupRoles = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
+            )
+        }.toSet(),
     )

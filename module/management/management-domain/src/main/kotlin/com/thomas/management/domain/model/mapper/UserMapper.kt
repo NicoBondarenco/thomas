@@ -6,11 +6,10 @@ import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.entity.UserCompleteEntity
-import com.thomas.management.data.entity.UserEntity
+import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.domain.model.request.SignupUserRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
@@ -22,11 +21,11 @@ import kotlinx.coroutines.coroutineScope
 suspend fun SignupUserRequest.toUserEntity(
     userOrganization: OrganizationEntity,
     hasher: Hasher,
-): UserEntity = coroutineScope {
+): UserSimpleEntity = coroutineScope {
     hasher.let {
         val salt = it.generateSalt()
         val password = it.hash(this@toUserEntity.userPassword, salt)
-        UserEntity(
+        UserSimpleEntity(
             firstName = this@toUserEntity.firstName,
             lastName = this@toUserEntity.lastName,
             documentNumber = this@toUserEntity.documentNumber,
@@ -42,7 +41,7 @@ suspend fun SignupUserRequest.toUserEntity(
     }
 }
 
-suspend fun UserEntity.toSignupUserResponse() = coroutineScope {
+suspend fun UserSimpleEntity.toSignupUserResponse() = coroutineScope {
     SignupUserResponse(
         id = this@toSignupUserResponse.id,
         firstName = this@toSignupUserResponse.firstName,
@@ -67,7 +66,7 @@ suspend fun UserCreateRequest.toUserEntity(
     passwordSalt: String,
     passwordHash: String,
 ) = coroutineScope {
-    UserEntity(
+    UserSimpleEntity(
         firstName = this@toUserEntity.firstName,
         lastName = this@toUserEntity.lastName,
         documentNumber = this@toUserEntity.documentNumber,
@@ -83,7 +82,7 @@ suspend fun UserCreateRequest.toUserEntity(
     )
 }
 
-suspend fun UserEntity.updateFromRequest(
+suspend fun UserSimpleEntity.updateFromRequest(
     request: UserUpdateRequest,
 ) = coroutineScope {
     this@updateFromRequest.copy(
@@ -98,7 +97,7 @@ suspend fun UserEntity.updateFromRequest(
     )
 }
 
-suspend fun UserEntity.toUserSimpleResponse() = coroutineScope {
+suspend fun UserSimpleEntity.toUserSimpleResponse() = coroutineScope {
     UserSimpleResponse(
         id = this@toUserSimpleResponse.id,
         firstName = this@toUserSimpleResponse.firstName,
@@ -141,7 +140,7 @@ suspend fun UserCompleteEntity.toUserDetailResponse() = coroutineScope {
     )
 }
 
-suspend fun UserEntity.toUserCreatedEvent() = coroutineScope {
+suspend fun UserSimpleEntity.toUserCreatedEvent() = coroutineScope {
     UserCreatedEvent(
         id = this@toUserCreatedEvent.id,
         firstName = this@toUserCreatedEvent.firstName,

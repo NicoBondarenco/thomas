@@ -5,7 +5,7 @@ import com.thomas.contract.messaging.management.group.GroupDeletedEvent
 import com.thomas.contract.messaging.management.group.GroupUpdatedEvent
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupEntity
+import com.thomas.management.data.entity.GroupSimpleEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.domain.model.request.GroupUpsertRequest
@@ -16,7 +16,7 @@ import java.time.ZoneOffset.UTC
 import java.util.UUID
 import kotlinx.coroutines.coroutineScope
 
-suspend fun GroupEntity.toGroupSimpleResponse() = coroutineScope {
+suspend fun GroupSimpleEntity.toGroupSimpleResponse() = coroutineScope {
     GroupSimpleResponse(
         id = this@toGroupSimpleResponse.id,
         groupName = this@toGroupSimpleResponse.groupName,
@@ -45,7 +45,7 @@ suspend fun GroupCompleteEntity.toGroupDetailResponse() = coroutineScope {
 suspend fun GroupUpsertRequest.toGroupEntity(
     organization: OrganizationEntity
 ) = coroutineScope {
-    GroupEntity(
+    GroupSimpleEntity(
         groupName = this@toGroupEntity.groupName,
         groupDescription = this@toGroupEntity.groupDescription,
         groupOrganization = organization,
@@ -54,7 +54,7 @@ suspend fun GroupUpsertRequest.toGroupEntity(
     )
 }
 
-suspend fun GroupEntity.updateFromRequest(
+suspend fun GroupSimpleEntity.updateFromRequest(
     request: GroupUpsertRequest
 ) = coroutineScope {
     this@updateFromRequest.copy(
