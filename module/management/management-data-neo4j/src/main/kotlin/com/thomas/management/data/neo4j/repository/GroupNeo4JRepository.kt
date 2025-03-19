@@ -19,7 +19,7 @@ import com.thomas.database.neo4j.filter.page
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupSimpleEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupCompleteEntity
-import com.thomas.management.data.neo4j.model.mapper.toGroupEntity
+import com.thomas.management.data.neo4j.model.mapper.toGroupSimpleEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupNode
 import com.thomas.management.data.neo4j.model.node.GroupNode
 import com.thomas.management.data.neo4j.model.node.GroupOrganizationNode
@@ -64,9 +64,9 @@ class GroupNeo4JRepository(
             },
         ),
         pageable,
-        DEFAULT_DEPTH
+        defaultDepth
     ).map {
-        it.toGroupEntity()
+        it.toGroupSimpleEntity()
     }
 
     override suspend fun one(
@@ -75,7 +75,7 @@ class GroupNeo4JRepository(
     ): GroupCompleteEntity? = sessionFactory.openSession().loadAll(
         GroupNode::class.java,
         isEquals(GroupNode::id, id).and(isEquals(GroupOrganizationNode::organizationId, GroupNode::groupOrganization, organizationId)),
-        DEFAULT_DEPTH
+        defaultDepth
     ).firstOrNull()?.toGroupCompleteEntity()
 
     override suspend fun create(
@@ -109,8 +109,8 @@ class GroupNeo4JRepository(
     ): Set<GroupSimpleEntity> = sessionFactory.openSession().loadAll(
         GroupNode::class.java,
         inValues(GroupNode::id, ids).and(isEquals(GroupOrganizationNode::organizationId, GroupNode::groupOrganization, organizationId)),
-        DEFAULT_DEPTH
-    ).map { it.toGroupEntity() }.toSet()
+        defaultDepth
+    ).map { it.toGroupSimpleEntity() }.toSet()
 
     override suspend fun allFullByIds(
         ids: Set<UUID>,
@@ -118,7 +118,7 @@ class GroupNeo4JRepository(
     ): Set<GroupCompleteEntity> = sessionFactory.openSession().loadAll(
         GroupNode::class.java,
         inValues(GroupNode::id, ids).and(isEquals(GroupOrganizationNode::organizationId, GroupNode::groupOrganization, organizationId)),
-        DEFAULT_DEPTH
+        defaultDepth
     ).map { it.toGroupCompleteEntity() }.toSet()
 
     override suspend fun hasAnotherWithName(

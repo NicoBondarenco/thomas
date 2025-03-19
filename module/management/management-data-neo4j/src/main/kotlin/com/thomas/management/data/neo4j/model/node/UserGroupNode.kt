@@ -1,7 +1,6 @@
 package com.thomas.management.data.neo4j.model.node
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.database.neo4j.converter.UUIDConverter
 import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.node.NoArgsConstructor
@@ -14,30 +13,28 @@ import org.neo4j.ogm.annotation.StartNode
 import org.neo4j.ogm.annotation.typeconversion.Convert
 
 @NoArgsConstructor
-@RelationshipEntity(type = "GROUP_ALLOWED_IN_UNIT")
-data class GroupUnitNode(
+@RelationshipEntity(type = "USER_IN_GROUP")
+data class UserGroupNode(
+
     @Id
     @Property(name = "id")
     @Convert(UUIDConverter::class)
     override var id: UUID,
 
+    @Property(name = "user_id")
+    @Convert(UUIDConverter::class)
+    var userId: UUID,
+
     @Property(name = "group_id")
     @Convert(UUIDConverter::class)
     var groupId: UUID,
 
-    @Property(name = "unit_id")
-    @Convert(UUIDConverter::class)
-    var unitId: UUID,
-
-    @Property(name = "group_roles")
-    var groupRoles: Set<SecurityUnitRole>,
-
     @StartNode
     @JsonIgnore
-    var groupNode: GroupNode? = null,
+    var userNode: UserNode? = null,
 
     @EndNode
-    var unitNode: UnitNode
+    var groupNode: GroupNode
 
 ) : Neo4JNode<UUID> {
 
@@ -45,26 +42,24 @@ data class GroupUnitNode(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as GroupUnitNode
+        other as UserGroupNode
 
         if (id != other.id) return false
+        if (userId != other.userId) return false
         if (groupId != other.groupId) return false
-        if (unitId != other.unitId) return false
-        if (groupRoles != other.groupRoles) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = id.hashCode()
+        result = 31 * result + userId.hashCode()
         result = 31 * result + groupId.hashCode()
-        result = 31 * result + unitId.hashCode()
-        result = 31 * result + groupRoles.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "GroupUnitNode(id=$id, groupId=$groupId, unitId=$unitId, groupRoles=$groupRoles, unitNode=$unitNode)"
+        return "UserUnitNode(id='$id', userId=$userId, groupId=$groupId)"
     }
 
 }

@@ -17,6 +17,7 @@ import org.neo4j.ogm.annotation.typeconversion.Convert
 @NoArgsConstructor
 @NodeEntity(value = "Unit")
 data class UnitNode(
+
     @Id
     @Property(name = "id")
     @Convert(UUIDConverter::class)
@@ -71,5 +72,58 @@ data class UnitNode(
     var createdAt: ZonedDateTime,
 
     @Property(name = "updated_at")
-    var updatedAt: ZonedDateTime,
-) : Neo4JNode<UUID>
+    var updatedAt: ZonedDateTime
+
+) : Neo4JNode<UUID> {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UnitNode
+
+        if (id != other.id) return false
+        if (unitName != other.unitName) return false
+        if (fantasyName != other.fantasyName) return false
+        if (documentNumber != other.documentNumber) return false
+        if (unitType != other.unitType) return false
+        if (unitOrganization != other.unitOrganization) return false
+        if (mainEmail != other.mainEmail) return false
+        if (mainPhone != other.mainPhone) return false
+        if (addressZipcode != other.addressZipcode) return false
+        if (addressStreet != other.addressStreet) return false
+        if (addressNumber != other.addressNumber) return false
+        if (addressComplement != other.addressComplement) return false
+        if (addressNeighborhood != other.addressNeighborhood) return false
+        if (addressCity != other.addressCity) return false
+        if (addressState != other.addressState) return false
+        if (isActive != other.isActive) return false
+        if (createdAt != other.createdAt) return false
+        if (updatedAt != other.updatedAt) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = isActive.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + unitName.hashCode()
+        result = 31 * result + (fantasyName?.hashCode() ?: 0)
+        result = 31 * result + documentNumber.hashCode()
+        result = 31 * result + unitType.hashCode()
+        result = 31 * result + unitOrganization.hashCode()
+        result = 31 * result + mainEmail.hashCode()
+        result = 31 * result + mainPhone.hashCode()
+        result = 31 * result + addressZipcode.hashCode()
+        result = 31 * result + addressStreet.hashCode()
+        result = 31 * result + addressNumber.hashCode()
+        result = 31 * result + (addressComplement?.hashCode() ?: 0)
+        result = 31 * result + addressNeighborhood.hashCode()
+        result = 31 * result + addressCity.hashCode()
+        result = 31 * result + addressState.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        result = 31 * result + updatedAt.hashCode()
+        return result
+    }
+
+}

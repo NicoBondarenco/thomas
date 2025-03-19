@@ -14,6 +14,7 @@ import org.neo4j.ogm.annotation.typeconversion.Convert
 @NoArgsConstructor
 @NodeEntity(value = "Organization")
 data class OrganizationNode(
+
     @Id
     @Property(name = "id")
     @Convert(UUIDConverter::class)
@@ -68,5 +69,6 @@ data class OrganizationNode(
     var createdAt: ZonedDateTime,
 
     @Property(name = "updated_at")
-    var updatedAt: ZonedDateTime,
+    var updatedAt: ZonedDateTime
+
 ) : Neo4JNode<UUID>

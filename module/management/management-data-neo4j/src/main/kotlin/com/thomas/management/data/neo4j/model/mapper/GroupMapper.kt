@@ -6,8 +6,9 @@ import com.thomas.management.data.entity.GroupUnitEntity
 import com.thomas.management.data.neo4j.model.node.GroupNode
 import com.thomas.management.data.neo4j.model.node.GroupOrganizationNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
+import java.util.UUID.randomUUID
 
-fun GroupNode.toGroupEntity(): GroupSimpleEntity = GroupSimpleEntity(
+fun GroupNode.toGroupSimpleEntity(): GroupSimpleEntity = GroupSimpleEntity(
     id = this.id,
     groupName = this.groupName,
     groupDescription = this.groupDescription,
@@ -41,7 +42,7 @@ fun GroupCompleteEntity.toGroupNode(): GroupNode = GroupNode(
     groupName = this.groupName,
     groupDescription = this.groupDescription,
     groupOrganization = GroupOrganizationNode(
-        id = "${this.id}-${this.groupOrganization.id}",
+        id = this.id,
         groupId = this.id,
         organizationId = this.groupOrganization.id,
         groupRoles = this.organizationRoles,

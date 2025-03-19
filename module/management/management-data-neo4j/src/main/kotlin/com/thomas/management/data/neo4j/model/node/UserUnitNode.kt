@@ -14,27 +14,28 @@ import org.neo4j.ogm.annotation.StartNode
 import org.neo4j.ogm.annotation.typeconversion.Convert
 
 @NoArgsConstructor
-@RelationshipEntity(type = "GROUP_ALLOWED_IN_UNIT")
-data class GroupUnitNode(
+@RelationshipEntity(type = "USER_ALLOWED_IN_UNIT")
+data class UserUnitNode(
+
     @Id
     @Property(name = "id")
     @Convert(UUIDConverter::class)
     override var id: UUID,
 
-    @Property(name = "group_id")
+    @Property(name = "user_id")
     @Convert(UUIDConverter::class)
-    var groupId: UUID,
+    var userId: UUID,
 
     @Property(name = "unit_id")
     @Convert(UUIDConverter::class)
     var unitId: UUID,
 
-    @Property(name = "group_roles")
-    var groupRoles: Set<SecurityUnitRole>,
+    @Property(name = "user_roles")
+    var userRoles: Set<SecurityUnitRole>,
 
     @StartNode
     @JsonIgnore
-    var groupNode: GroupNode? = null,
+    var userNode: UserNode? = null,
 
     @EndNode
     var unitNode: UnitNode
@@ -45,26 +46,26 @@ data class GroupUnitNode(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as GroupUnitNode
+        other as UserUnitNode
 
         if (id != other.id) return false
-        if (groupId != other.groupId) return false
+        if (userId != other.userId) return false
         if (unitId != other.unitId) return false
-        if (groupRoles != other.groupRoles) return false
+        if (userRoles != other.userRoles) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + groupId.hashCode()
+        result = 31 * result + userId.hashCode()
         result = 31 * result + unitId.hashCode()
-        result = 31 * result + groupRoles.hashCode()
+        result = 31 * result + userRoles.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "GroupUnitNode(id=$id, groupId=$groupId, unitId=$unitId, groupRoles=$groupRoles, unitNode=$unitNode)"
+        return "UserUnitNode(id='$id', userId=$userId, unitId=$unitId, userRoles=$userRoles, unitNode=$unitNode)"
     }
 
 }

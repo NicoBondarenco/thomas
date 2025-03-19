@@ -43,5 +43,36 @@ data class GroupNode(
 
     @JsonIgnoreProperties("groupNode")
     @Relationship(type = "GROUP_ALLOWED_IN_UNIT", direction = OUTGOING)
-    var groupUnits: List<GroupUnitNode>?,
-) : Neo4JNode<UUID>
+    var groupUnits: List<GroupUnitNode>?
+
+) : Neo4JNode<UUID> {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as GroupNode
+
+        if (id != other.id) return false
+        if (groupName != other.groupName) return false
+        if (groupDescription != other.groupDescription) return false
+        if (groupOrganization != other.groupOrganization) return false
+        if (isActive != other.isActive) return false
+        if (createdAt != other.createdAt) return false
+        if (updatedAt != other.updatedAt) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = isActive.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + groupName.hashCode()
+        result = 31 * result + (groupDescription?.hashCode() ?: 0)
+        result = 31 * result + groupOrganization.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        result = 31 * result + updatedAt.hashCode()
+        return result
+    }
+
+}

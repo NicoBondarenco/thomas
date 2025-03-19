@@ -61,11 +61,11 @@ class OrganizationNeo4JRepositoryTest : ManagementFunSpec<OrganizationNeo4JRepos
         context(name = "Page", script = "/scripts/organization/page.cypher") {
             val organizations = entities(OrganizationEntity::class)
             val data = listOf(
-                OrganizationSearchData("tóri", null, PageRequestPeriod(pageNumber = 1, pageSize = 15, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.updatedAt }),
-                OrganizationSearchData(null, true, PageRequestPeriod(pageNumber = 2, pageSize = 5, pageSort = listOf(PageSort("created_at", ASC))), compareBy { it.createdAt }),
-                OrganizationSearchData(null, null, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-04-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), pageNumber = 3, pageSize = 7, pageSort = listOf(PageSort("organization_name", ASC))), compareBy { it.organizationName }),
-                OrganizationSearchData(null, null, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-04-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-10-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageNumber = 2, pageSize = 4, pageSort = listOf(PageSort("fantasy_name", DESC))), compareByDescending { it.fantasyName }),
-                OrganizationSearchData(null, true, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-03-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-07-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageNumber = 1, pageSize = 3, pageSort = listOf(PageSort("created_at", DESC), PageSort("registration_number", ASC))), compareByDescending<OrganizationEntity> { it.createdAt }.thenBy { it.registrationNumber }),
+                OrganizationSearchData("tóri", null, null, PageRequestPeriod(pageNumber = 1, pageSize = 15, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.updatedAt }),
+                OrganizationSearchData(null, true, null, PageRequestPeriod(pageNumber = 2, pageSize = 5, pageSort = listOf(PageSort("created_at", ASC))), compareBy { it.createdAt }),
+                OrganizationSearchData(null, null, null, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-04-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), pageNumber = 3, pageSize = 7, pageSort = listOf(PageSort("organization_name", ASC))), compareBy { it.organizationName }),
+                OrganizationSearchData(null, null, null, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-04-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-10-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageNumber = 2, pageSize = 4, pageSort = listOf(PageSort("fantasy_name", DESC))), compareByDescending { it.fantasyName }),
+                OrganizationSearchData(null, true, null, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-03-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-07-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageNumber = 1, pageSize = 3, pageSort = listOf(PageSort("created_at", DESC), PageSort("registration_number", ASC))), compareByDescending<OrganizationEntity> { it.createdAt }.thenBy { it.registrationNumber }),
             )
             withData(data) {
                 val page = it.page(organizations.toList())

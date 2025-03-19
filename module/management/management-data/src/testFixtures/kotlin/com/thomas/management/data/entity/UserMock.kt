@@ -54,8 +54,8 @@ val userFullEntity: UserCompleteEntity
         userGroups = (1..3).map { groupFullEntity }.toSet(),
         userUnits = (1..3).map {
             UserUnitEntity(
-                groupUnit = unitEntity,
-                groupRoles = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
+                userUnit = unitEntity,
+                userRoles = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
             )
         }.toSet(),
     )

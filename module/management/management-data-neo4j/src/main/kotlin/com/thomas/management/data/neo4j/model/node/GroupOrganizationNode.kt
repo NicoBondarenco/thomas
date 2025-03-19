@@ -16,9 +16,11 @@ import org.neo4j.ogm.annotation.typeconversion.Convert
 @NoArgsConstructor
 @RelationshipEntity(type = "GROUP_BELONGS_TO_ORGANIZATION")
 data class GroupOrganizationNode(
+
     @Id
     @Property(name = "id")
-    override var id: String,
+    @Convert(UUIDConverter::class)
+    override var id: UUID,
 
     @Property(name = "group_id")
     @Convert(UUIDConverter::class)
@@ -38,7 +40,7 @@ data class GroupOrganizationNode(
     @EndNode
     var organizationNode: OrganizationNode
 
-) : Neo4JNode<String> {
+) : Neo4JNode<UUID> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -50,7 +52,6 @@ data class GroupOrganizationNode(
         if (groupId != other.groupId) return false
         if (organizationId != other.organizationId) return false
         if (groupRoles != other.groupRoles) return false
-        if (organizationNode != other.organizationNode) return false
 
         return true
     }
@@ -60,12 +61,11 @@ data class GroupOrganizationNode(
         result = 31 * result + groupId.hashCode()
         result = 31 * result + organizationId.hashCode()
         result = 31 * result + groupRoles.hashCode()
-        result = 31 * result + organizationNode.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "GroupOrganizationNode(id='$id', groupId=$groupId, organizationId=$organizationId, groupRoles=$groupRoles, organizationNode=$organizationNode)"
+        return "GroupOrganizationNode(id=$id, groupId=$groupId, organizationId=$organizationId, groupRoles=$groupRoles, organizationNode=$organizationNode)"
     }
 
 }

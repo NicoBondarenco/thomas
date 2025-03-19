@@ -2,7 +2,6 @@ package com.thomas.management.data.neo4j.model.mapper
 
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.neo4j.model.node.UnitNode
-import java.util.UUID
 
 fun UnitEntity.toUnitNode() = UnitNode(
     id = this.id,

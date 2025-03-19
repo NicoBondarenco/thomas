@@ -65,7 +65,7 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
             )
             withData(data) {
                 val page = it.page(units.toList())
-                val result = repository.page(it.organizationId, it.keyword, it.isActive, it.pageable)
+                val result = repository.page(it.organizationId!!, it.keyword, it.isActive, it.pageable)
                 result.contentList.size shouldBe page.contentList.size
                 result.totalItems shouldBe page.totalItems
                 result.totalPages shouldBe page.totalPages
