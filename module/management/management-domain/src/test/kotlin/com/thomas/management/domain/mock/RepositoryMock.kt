@@ -136,12 +136,9 @@ internal val userRepositoryMock: UserRepository
         coEvery { one(any(), any()) } answers {
             userCompleteEntity.let {
                 it.copy(
-                    userData = it.userData.copy(
-                        id = firstArg(),
-                        userOrganization = it.userData.userOrganization.copy(id = secondArg()),
-                    ),
-
-                    ).takeIf { !userNotFound.contains(firstArg()) }
+                    id = firstArg(),
+                    userOrganization = it.userOrganization.copy(id = secondArg()),
+                ).takeIf { !userNotFound.contains(firstArg()) }
             }
         }
         coEvery { byId(any()) } answers {
@@ -174,18 +171,16 @@ internal val userRepositoryMock: UserRepository
         }
         coEvery { findByUsername(any()) } answers {
             val username = firstArg() as String
-            (userLogin.firstOrNull { it.userData.mainEmail == username } ?: userCompleteEntity).let {
+            (userLogin.firstOrNull { it.mainEmail == username } ?: userCompleteEntity).let {
                 it.copy(
-                    userData = it.userData.copy(
-                        mainEmail = username,
-                        isActive = !userInactiveStatus.contains(username),
-                        userOrganization = organizationEntity.copy(
-                            isActive = !userInactiveOrganization.contains(username),
-                        ),
-                        passwordHash = "${it.userData.passwordHash}${it.userData.passwordSalt}".takeIf {
-                            !userInvalidCredential.contains(username)
-                        } ?: randomPassword(),
+                    mainEmail = username,
+                    isActive = !userInactiveStatus.contains(username),
+                    userOrganization = organizationEntity.copy(
+                        isActive = !userInactiveOrganization.contains(username),
                     ),
+                    passwordHash = "${it.passwordHash}${it.passwordSalt}".takeIf {
+                        !userInvalidCredential.contains(username)
+                    } ?: randomPassword(),
                 )
             }.takeIf {
                 !userNotFound.contains(it.id)
@@ -202,12 +197,9 @@ internal val groupRepositoryMock: GroupRepository
         coEvery { one(any(), any()) } answers {
             groupCompleteEntity.let {
                 it.copy(
-                    groupData = it.groupData.copy(
-                        id = firstArg(),
-                        groupOrganization = it.groupData.groupOrganization.copy(id = secondArg()),
-                    ),
-
-                    ).takeIf { !groupNotFound.contains(firstArg()) }
+                    id = firstArg(),
+                    groupOrganization = it.groupOrganization.copy(id = secondArg()),
+                ).takeIf { !groupNotFound.contains(firstArg()) }
             }
         }
         coEvery { create(any()) } answers {
@@ -232,14 +224,10 @@ internal val groupRepositoryMock: GroupRepository
         }
         coEvery { allFullByIds(any(), any()) } answers {
             firstArg<Set<UUID>>().filter { !userGroups.contains(it) }.map { id ->
-                groupCompleteEntity.let { complete ->
-                    complete.copy(
-                        groupData = groupEntity.let {
-                            it.copy(
-                                id = id,
-                                groupOrganization = it.groupOrganization.copy(id = secondArg()),
-                            )
-                        },
+                groupCompleteEntity.let {
+                    it.copy(
+                        id = id,
+                        groupOrganization = it.groupOrganization.copy(id = secondArg()),
                     )
                 }
             }.toSet()

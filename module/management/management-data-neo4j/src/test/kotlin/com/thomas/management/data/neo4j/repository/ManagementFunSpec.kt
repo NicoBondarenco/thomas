@@ -5,6 +5,7 @@ import com.thomas.database.neo4j.repository.Neo4JRepository
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
 import kotlin.reflect.KClass
 import org.neo4j.ogm.config.Configuration
+import org.neo4j.ogm.session.SessionFactory
 
 abstract class ManagementFunSpec<R : Neo4JRepository>(
     body: ManagementFunSpec<R>.() -> Unit = {}
@@ -16,20 +17,29 @@ abstract class ManagementFunSpec<R : Neo4JRepository>(
 ) {
 
     private lateinit var nodesMap: MutableMap<KClass<*>, (Any) -> Any>
+    private lateinit var nodesSearch: MutableMap<KClass<*>, (SessionFactory) -> Collection<Any>?>
     private val entitiesMap: MutableMap<KClass<*>, Set<Any>> = mutableMapOf()
 
     fun initNodes(classes: Map<KClass<*>, (Any) -> Any>) {
         nodesMap = mutableMapOf()
+        nodesSearch = mutableMapOf()
         classes.forEach { (klass, mapper) ->
             nodesMap[klass] = mapper
+            nodesSearch[klass] = { sessionFactory ->
+                sessionFactory.openSession().loadAll(klass.java, 5).takeIf {
+                    it.isNotEmpty()
+                }
+            }
         }
+    }
+
+    fun setNodeSearch(klass: KClass<*>, search: (SessionFactory) -> Collection<Any>?) {
+        nodesSearch[klass] = search
     }
 
     fun loadNodes() {
         nodesMap.forEach { (klass, mapper) ->
-            sessionFactory.openSession().loadAll(klass.java, 5).takeIf {
-                it.isNotEmpty()
-            }?.map(mapper)?.apply {
+            nodesSearch[klass]?.invoke(sessionFactory)?.map(mapper)?.apply {
                 entitiesMap[this.first()::class] = this.toSet()
             }
         }

@@ -16,7 +16,7 @@ data class GroupCompleteEntity(
     override val isActive: Boolean = true,
     override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
-    val groupUnits: Set<GroupUnitEntity> = emptySet()
+    val groupUnits: Set<UnitRoleEntity> = emptySet()
 ) : GroupEntity() {
 
     init {

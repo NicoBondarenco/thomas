@@ -26,9 +26,9 @@ val groupFullEntity: GroupCompleteEntity
         groupOrganization = organizationEntity,
         organizationRoles = setOf(),
         groupUnits = (1..3).map {
-            GroupUnitEntity(
-                groupUnit = unitEntity,
-                groupRoles = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
+            UnitRoleEntity(
+                roleUnit = unitEntity,
+                roleList = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
             )
         }.toSet(),
     )

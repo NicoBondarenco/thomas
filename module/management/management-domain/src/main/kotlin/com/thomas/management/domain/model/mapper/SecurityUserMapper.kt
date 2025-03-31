@@ -4,17 +4,16 @@ import com.thomas.core.model.security.SecurityGroup
 import com.thomas.core.model.security.SecurityOrganization
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.core.model.security.SecurityUnit
-import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityUser
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
-import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.UserCompleteEntity
 import kotlinx.coroutines.coroutineScope
 
 suspend fun UserCompleteEntity.toSecurityUser() = coroutineScope {
 
-    this@toSecurityUser.userData.let { user ->
+    this@toSecurityUser.let { user ->
         SecurityUser(
             userId = user.id,
             firstName = user.firstName,
@@ -43,22 +42,20 @@ private suspend fun OrganizationEntity.toSecurityOrganization(
 }
 
 private suspend fun GroupCompleteEntity.toSecurityGroup() = coroutineScope {
-    this@toSecurityGroup.groupData.let { group ->
-        SecurityGroup(
-            groupId = group.id,
-            groupName = group.groupName,
-            groupOrganization = group.groupOrganization.toSecurityOrganization(group.organizationRoles),
-            groupUnits = this@toSecurityGroup.groupUnits.toSecurityUnit(),
-        )
-    }
+    SecurityGroup(
+        groupId = this@toSecurityGroup.id,
+        groupName = this@toSecurityGroup.groupName,
+        groupOrganization = this@toSecurityGroup.groupOrganization.toSecurityOrganization(this@toSecurityGroup.organizationRoles),
+        groupUnits = this@toSecurityGroup.groupUnits.toSecurityUnit(),
+    )
 }
 
-private suspend fun Map<UnitEntity, Set<SecurityUnitRole>>.toSecurityUnit() = coroutineScope {
-    this@toSecurityUnit.map { (unit, roles) ->
+private suspend fun Set<UnitRoleEntity>.toSecurityUnit() = coroutineScope {
+    this@toSecurityUnit.map {
         SecurityUnit(
-            unitId = unit.id,
-            unitName = unit.unitName,
-            unitRoles = roles,
+            unitId = it.roleUnit.id,
+            unitName = it.roleUnit.unitName,
+            unitRoles = it.roleList,
         )
     }.toSet()
 }

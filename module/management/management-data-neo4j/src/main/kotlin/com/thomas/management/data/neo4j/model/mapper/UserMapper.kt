@@ -1,8 +1,8 @@
 package com.thomas.management.data.neo4j.model.mapper
 
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserSimpleEntity
-import com.thomas.management.data.entity.UserUnitEntity
 import com.thomas.management.data.neo4j.model.node.UserGroupNode
 import com.thomas.management.data.neo4j.model.node.UserNode
 import com.thomas.management.data.neo4j.model.node.UserOrganizationNode
@@ -46,13 +46,13 @@ fun UserNode.toUserCompleteEntity(): UserCompleteEntity = UserCompleteEntity(
     createdAt = this.createdAt.toOffsetDateTime(),
     updatedAt = this.updatedAt.toOffsetDateTime(),
     userGroups = this.userGroups?.map { it.groupNode.toGroupCompleteEntity() }?.toSet() ?: emptySet(),
-    userUnits = this.userUnits?.map { it.toUserUnitEntity() }?.toSet() ?: emptySet(),
+    userUnits = this.userUnits?.map { it.toUnitRoleEntity() }?.toSet() ?: emptySet(),
 )
 
-fun UserUnitNode.toUserUnitEntity(): UserUnitEntity = UserUnitEntity(
+fun UserUnitNode.toUnitRoleEntity(): UnitRoleEntity = UnitRoleEntity(
     id = this.id,
-    userUnit = this.unitNode.toUnitEntity(),
-    userRoles = this.userRoles,
+    roleUnit = this.unitNode.toUnitEntity(),
+    roleList = this.userRoles,
 )
 
 fun UserCompleteEntity.toUserNode(): UserNode = UserNode(
@@ -81,11 +81,11 @@ fun UserCompleteEntity.toUserNode(): UserNode = UserNode(
         UserUnitNode(
             id = it.id,
             userId = this.id,
-            unitId = it.userUnit.id,
-            userRoles = it.userRoles,
-            unitNode = it.userUnit.toUnitNode()
+            unitId = it.roleUnit.id,
+            userRoles = it.roleList,
+            unitNode = it.roleUnit.toUnitNode()
         )
-    },
+    }.toSet(),
     userGroups = this.userGroups.map {
         UserGroupNode(
             id = randomUUID(),

@@ -36,21 +36,21 @@ fun UserRepository.sameEmailSignup() = DeferredEntityValidation<UserSimpleEntity
 fun UserRepository.sameEmail() = DeferredEntityValidation<UserCompleteEntity>(
     field = UserSimpleEntity::mainEmail,
     message = { managementUserValidationUserDataDuplicatedEmail() },
-    validate = { !this.hasAnotherWithEmail(it.id, it.userData.mainEmail) },
+    validate = { !this.hasAnotherWithEmail(it.id, it.mainEmail) },
     context = VT,
 )
 
 fun UserRepository.sameDocument() = DeferredEntityValidation<UserCompleteEntity>(
     field = UserSimpleEntity::documentNumber,
     message = { managementUserValidationUserDataDuplicatedDocument() },
-    validate = { !this.hasAnotherWithDocument(it.id, it.userData.userOrganization.id, it.userData.documentNumber) },
+    validate = { !this.hasAnotherWithDocument(it.id, it.userOrganization.id, it.documentNumber) },
     context = VT,
 )
 
 fun UserRepository.maxUsers() = DeferredEntityValidation<UserCompleteEntity>(
     field = UserSimpleEntity::userOrganization,
     message = { managementUserValidationOrganizationDataMaxUser() },
-    validate = { !this.limitReached(it.id, it.userData.userOrganization.id) },
+    validate = { !this.limitReached(it.id, it.userOrganization.id) },
     context = VT,
 )
 
@@ -72,7 +72,7 @@ fun userUnitsFound(
     field = UserCompleteEntity::userUnits,
     message = { entity ->
         managementUserValidationUnitDataNotFound(
-            userUnits.keys.subtract(entity.userUnits.keys.map { it.id }.toSet())
+            userUnits.keys.subtract(entity.userUnits.map { it.roleUnit.id }.toSet())
         )
     },
     validate = { it.userUnits.size == userUnits.size },

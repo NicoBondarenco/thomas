@@ -69,7 +69,7 @@ data class UserNode(
 
     @JsonIgnoreProperties("userNode")
     @Relationship(type = "USER_ALLOWED_IN_UNIT", direction = OUTGOING)
-    var userUnits: List<UserUnitNode>?,
+    var userUnits: Set<UserUnitNode>?,
 
     @Relationship(type = "USER_IN_GROUP", direction = OUTGOING)
     var userGroups: Set<UserGroupNode>?
@@ -96,7 +96,7 @@ data class UserNode(
         if (isActive != other.isActive) return false
         if (createdAt != other.createdAt) return false
         if (updatedAt != other.updatedAt) return false
-        if (userOrganization != other.userOrganization) return false
+        if (userOrganization.organizationId != other.userOrganization.organizationId) return false
 
         return true
     }
@@ -116,7 +116,31 @@ data class UserNode(
         result = 31 * result + mainPhone.hashCode()
         result = 31 * result + createdAt.hashCode()
         result = 31 * result + updatedAt.hashCode()
-        result = 31 * result + userOrganization.hashCode()
+        result = 31 * result + userOrganization.organizationId.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "UserNode(" +
+                "id=$id, " +
+                "firstName='$firstName', " +
+                "lastName='$lastName', " +
+                "documentNumber='$documentNumber', " +
+                "profilePhoto=$profilePhoto, " +
+                "userGender=$userGender, " +
+                "birthDate=$birthDate, " +
+                "passwordSalt='$passwordSalt', " +
+                "passwordHash='$passwordHash', " +
+                "mainEmail='$mainEmail', " +
+                "mainPhone='$mainPhone', " +
+                "isActive=$isActive, " +
+                "createdAt=$createdAt, " +
+                "updatedAt=$updatedAt, " +
+                "userOrganization=${userOrganization.organizationId}, " +
+                "userUnits=$userUnits, " +
+                "userGroups=$userGroups" +
+                ")"
+    }
+
+
 }

@@ -19,12 +19,13 @@ import com.thomas.management.domain.groupReadRoles
 import com.thomas.management.domain.groupUpdateRoles
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementGroupValidationGroupDataInvalidData
 import com.thomas.management.domain.messaging.event.GroupEventProducer
+import com.thomas.management.domain.model.mapper.toGroupCompleteEntity
 import com.thomas.management.domain.model.mapper.toGroupCreatedEvent
 import com.thomas.management.domain.model.mapper.toGroupDeletedEvent
 import com.thomas.management.domain.model.mapper.toGroupDetailResponse
-import com.thomas.management.domain.model.mapper.toGroupEntity
 import com.thomas.management.domain.model.mapper.toGroupSimpleResponse
 import com.thomas.management.domain.model.mapper.toGroupUpdatedEvent
+import com.thomas.management.domain.model.mapper.toUnitRoleEntity
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.GroupUpsertRequest
 import com.thomas.management.domain.model.response.GroupDetailResponse
@@ -58,7 +59,7 @@ class GroupServiceAdapter(
 
     private fun CoroutineScope.unitsDeferred(request: GroupUpsertRequest) = async {
         val found = unitRepository.allByIds(request.groupUnits.keys, currentOrganization)
-        found.associateWith { request.groupUnits[it.id]!!.toSet() }
+        found.associateWith { request.groupUnits[it.id]!!.toSet() }.toUnitRoleEntity()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -71,22 +72,16 @@ class GroupServiceAdapter(
             groupUnits,
         ).awaitAll()
 
-        GroupCompleteEntity(
-            groupData = this@toCompleteEntity.toGroupEntity(
-                groupOrganization.getCompleted()
-            ),
-            groupUnits = groupUnits.getCompleted(),
+        this@toCompleteEntity.toGroupCompleteEntity(
+            groupOrganization.getCompleted(),
+            groupUnits.getCompleted()
         )
     }
 
     private suspend fun GroupUpsertRequest.updateEntity(id: UUID): GroupCompleteEntity = coroutineScope {
         findByIdOrThrows(id).let { groupEntity ->
             val groupUnits = unitsDeferred(this@updateEntity).await()
-
-            GroupCompleteEntity(
-                groupData = groupEntity.groupData.updateFromRequest(this@updateEntity),
-                groupUnits = groupUnits,
-            )
+            groupEntity.updateFromRequest(this@updateEntity, groupUnits)
         }
     }
 

@@ -21,6 +21,7 @@ import com.thomas.management.data.neo4j.model.mapper.toUnitNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
 import com.thomas.management.data.neo4j.model.node.UnitNode
+import com.thomas.management.data.neo4j.model.node.UserUnitNode
 import com.thomas.management.data.repository.UnitRepository
 import java.util.UUID
 import org.neo4j.ogm.cypher.Filters
@@ -87,6 +88,7 @@ class UnitNeo4JRepository(
         id: UUID
     ): Unit = transaction { session ->
         session.delete(GroupUnitNode::class.java, Filters(isEquals(GroupUnitNode::unitId, id)), false)
+        session.delete(UserUnitNode::class.java, Filters(isEquals(UserUnitNode::unitId, id)), false)
         session.delete(UnitNode::class.java,Filters(isEquals(UnitNode::id, id)),false)
     }
 

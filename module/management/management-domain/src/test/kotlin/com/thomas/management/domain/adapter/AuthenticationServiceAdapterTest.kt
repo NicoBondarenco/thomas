@@ -56,8 +56,8 @@ class AuthenticationServiceAdapterTest {
         assertDoesNotThrow {
             service.login(
                 LoginRequest(
-                    username = user.userData.mainEmail,
-                    password = user.userData.passwordHash,
+                    username = user.mainEmail,
+                    password = user.passwordHash,
                 )
             )
         }
@@ -72,8 +72,8 @@ class AuthenticationServiceAdapterTest {
         assertThrows<InvalidCredentialException> {
             service.login(
                 LoginRequest(
-                    username = user.userData.mainEmail,
-                    password = user.userData.passwordHash,
+                    username = user.mainEmail,
+                    password = user.passwordHash,
                 )
             )
         }
@@ -83,13 +83,13 @@ class AuthenticationServiceAdapterTest {
     fun `Login invalid credentials`() = runTest(StandardTestDispatcher()) {
         val user = userCompleteEntity
         userLogin.add(user)
-        userInvalidCredential.add(user.userData.mainEmail)
+        userInvalidCredential.add(user.mainEmail)
 
         assertThrows<InvalidCredentialException> {
             service.login(
                 LoginRequest(
-                    username = user.userData.mainEmail,
-                    password = user.userData.passwordHash,
+                    username = user.mainEmail,
+                    password = user.passwordHash,
                 )
             )
         }
@@ -99,13 +99,13 @@ class AuthenticationServiceAdapterTest {
     fun `Login inactive user`() = runTest(StandardTestDispatcher()) {
         val user = userCompleteEntity
         userLogin.add(user)
-        userInactiveStatus.add(user.userData.mainEmail)
+        userInactiveStatus.add(user.mainEmail)
 
         assertThrows<InactiveUserException> {
             service.login(
                 LoginRequest(
-                    username = user.userData.mainEmail,
-                    password = user.userData.passwordHash,
+                    username = user.mainEmail,
+                    password = user.passwordHash,
                 )
             )
         }
@@ -115,13 +115,13 @@ class AuthenticationServiceAdapterTest {
     fun `Login inactive organization`() = runTest(StandardTestDispatcher()) {
         val user = userCompleteEntity
         userLogin.add(user)
-        userInactiveOrganization.add(user.userData.mainEmail)
+        userInactiveOrganization.add(user.mainEmail)
 
         assertThrows<InactiveOrganizationException> {
             service.login(
                 LoginRequest(
-                    username = user.userData.mainEmail,
-                    password = user.userData.passwordHash,
+                    username = user.mainEmail,
+                    password = user.passwordHash,
                 )
             )
         }
@@ -135,7 +135,7 @@ class AuthenticationServiceAdapterTest {
         assertDoesNotThrow {
             service.refresh(
                 RefreshTokenRequest(
-                    refreshToken = "${user.userData.mainEmail}_${user.userData.userOrganization.id}",
+                    refreshToken = "${user.mainEmail}_${user.userOrganization.id}",
                 )
             )
         }
@@ -150,7 +150,7 @@ class AuthenticationServiceAdapterTest {
         assertThrows<InvalidRefreshTokenException> {
             service.refresh(
                 RefreshTokenRequest(
-                    refreshToken = "${user.userData.mainEmail}_${user.userData.userOrganization.id}",
+                    refreshToken = "${user.mainEmail}_${user.userOrganization.id}",
                 )
             )
         }
@@ -160,12 +160,12 @@ class AuthenticationServiceAdapterTest {
     fun `Refresh inactive user`() = runTest(StandardTestDispatcher()) {
         val user = userCompleteEntity
         userLogin.add(user)
-        userInactiveStatus.add(user.userData.mainEmail)
+        userInactiveStatus.add(user.mainEmail)
 
         assertThrows<InactiveUserException> {
             service.refresh(
                 RefreshTokenRequest(
-                    refreshToken = "${user.userData.mainEmail}_${user.userData.userOrganization.id}",
+                    refreshToken = "${user.mainEmail}_${user.userOrganization.id}",
                 )
             )
         }
@@ -175,12 +175,12 @@ class AuthenticationServiceAdapterTest {
     fun `Refresh inactive organization`() = runTest(StandardTestDispatcher()) {
         val user = userCompleteEntity
         userLogin.add(user)
-        userInactiveOrganization.add(user.userData.mainEmail)
+        userInactiveOrganization.add(user.mainEmail)
 
         assertThrows<InactiveOrganizationException> {
             service.refresh(
                 RefreshTokenRequest(
-                    refreshToken = "${user.userData.mainEmail}_${user.userData.userOrganization.id}",
+                    refreshToken = "${user.mainEmail}_${user.userOrganization.id}",
                 )
             )
         }

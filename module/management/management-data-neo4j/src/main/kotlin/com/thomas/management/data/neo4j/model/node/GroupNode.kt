@@ -56,7 +56,7 @@ data class GroupNode(
         if (id != other.id) return false
         if (groupName != other.groupName) return false
         if (groupDescription != other.groupDescription) return false
-        if (groupOrganization != other.groupOrganization) return false
+        if (groupOrganization.organizationId != other.groupOrganization.organizationId) return false
         if (isActive != other.isActive) return false
         if (createdAt != other.createdAt) return false
         if (updatedAt != other.updatedAt) return false
@@ -69,10 +69,22 @@ data class GroupNode(
         result = 31 * result + id.hashCode()
         result = 31 * result + groupName.hashCode()
         result = 31 * result + (groupDescription?.hashCode() ?: 0)
-        result = 31 * result + groupOrganization.hashCode()
+        result = 31 * result + groupOrganization.id.hashCode()
         result = 31 * result + createdAt.hashCode()
         result = 31 * result + updatedAt.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "GroupNode(id=$id, " +
+                "groupName='$groupName', " +
+                "groupDescription=$groupDescription, " +
+                "groupOrganization=${groupOrganization.organizationId}, " +
+                "isActive=$isActive, " +
+                "createdAt=$createdAt, " +
+                "updatedAt=$updatedAt, " +
+                "groupUnits=$groupUnits)"
+    }
+
 
 }

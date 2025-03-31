@@ -33,14 +33,14 @@ data class UserUnitNode(
     @Property(name = "user_roles")
     var userRoles: Set<SecurityUnitRole>,
 
-    @StartNode
-    @JsonIgnore
-    var userNode: UserNode? = null,
-
     @EndNode
     var unitNode: UnitNode
 
 ) : Neo4JNode<UUID> {
+
+    @StartNode
+    @JsonIgnore
+    lateinit var userNode: UserNode
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -65,7 +65,7 @@ data class UserUnitNode(
     }
 
     override fun toString(): String {
-        return "UserUnitNode(id='$id', userId=$userId, unitId=$unitId, userRoles=$userRoles, unitNode=$unitNode)"
+        return "UserUnitNode(id='$id', userId=$userId, unitId=$unitId, userRoles=$userRoles)"
     }
 
 }

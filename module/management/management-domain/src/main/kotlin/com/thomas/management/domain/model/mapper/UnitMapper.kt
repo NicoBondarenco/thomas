@@ -3,8 +3,10 @@ package com.thomas.management.domain.model.mapper
 import com.thomas.contract.messaging.management.unit.UnitCreatedEvent
 import com.thomas.contract.messaging.management.unit.UnitDeletedEvent
 import com.thomas.contract.messaging.management.unit.UnitUpdatedEvent
+import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.domain.model.request.UnitUpsertRequest
 import com.thomas.management.domain.model.response.UnitResponse
 import java.time.OffsetDateTime.now
@@ -129,3 +131,13 @@ suspend fun UUID.toUnitDeletedEvent() = coroutineScope {
         deletedAt = now(UTC),
     )
 }
+
+suspend fun Map<UnitEntity, Set<SecurityUnitRole>>.toUnitRoleEntity(): Set<UnitRoleEntity> = coroutineScope {
+    this@toUnitRoleEntity.map {
+        UnitRoleEntity(
+            roleUnit = it.key,
+            roleList = it.value,
+        )
+    }.toSet()
+}
+

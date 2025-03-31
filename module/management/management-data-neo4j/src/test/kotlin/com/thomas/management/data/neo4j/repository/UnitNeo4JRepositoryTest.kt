@@ -1,5 +1,6 @@
 package com.thomas.management.data.neo4j.repository
 
+import com.thomas.core.extension.toUUIDOrNull
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
@@ -15,6 +16,7 @@ import com.thomas.management.data.neo4j.model.mapper.toUnitNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
 import com.thomas.management.data.neo4j.model.node.UnitNode
+import com.thomas.management.data.neo4j.model.node.UserUnitNode
 import com.thomas.management.data.neo4j.util.EntityFindOneData
 import com.thomas.management.data.neo4j.util.EntitySameData
 import com.thomas.management.data.neo4j.util.UnitSearchData
@@ -24,7 +26,9 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 import java.util.UUID
 import java.util.UUID.randomUUID
+import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.session.SessionFactory
+import org.neo4j.ogm.session.count
 
 class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
     body = {
@@ -92,12 +96,33 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
         }
 
         context(name = "Delete", script = "/scripts/unit/upsert.cypher") {
-            val unitId: UUID = sessionFactory.openSession().loadAll(GroupUnitNode::class.java).random().unitId
-            repository.delete(unitId)
-            val result = sessionFactory.openSession().load(UnitNode::class.java, unitId)
-            result shouldBe null
-            val relations = sessionFactory.openSession().loadAll(GroupUnitNode::class.java, isEquals(GroupUnitNode::unitId, unitId))
-            relations.isEmpty() shouldBe true
+            listOf(
+                "03b1d027-5f37-41be-acd5-c61bda329e18",
+                "1bd85051-af88-420b-a298-0ca077b8d9fa",
+                "333d3fdc-9c52-427e-a850-8eb3edd717c6",
+                "3b48b23d-d49e-4e0c-9e76-dade4fd4a109",
+                "421b9c06-f807-42f5-8f9e-d9844466bfd2",
+                "6d8f5eab-c63e-47fa-a2f6-3b881edf4dae",
+                "b09c725d-a274-4ff3-aeb7-5cffc8d16a80",
+                "b78fb3fb-ad8e-4836-9828-85046c8004e9",
+                "ecc6d15c-e4b2-4d25-87d1-8fa8ccd79d2e",
+            ).map { it.toUUIDOrNull()!! }.forEach { unitId ->
+                var totalGroupUnit = sessionFactory.openSession().count<GroupUnitNode>(Filters(isEquals(GroupUnitNode::unitId, unitId)))
+                var totalUserUnit = sessionFactory.openSession().count<UserUnitNode>(Filters(isEquals(UserUnitNode::unitId, unitId)))
+
+                (totalGroupUnit > 0) shouldBe true
+                (totalUserUnit > 0) shouldBe true
+
+                repository.delete(unitId)
+                val result = sessionFactory.openSession().load(UnitNode::class.java, unitId)
+                result shouldBe null
+
+                totalGroupUnit = sessionFactory.openSession().count<GroupUnitNode>(Filters(isEquals(GroupUnitNode::unitId, unitId)))
+                totalUserUnit = sessionFactory.openSession().count<UserUnitNode>(Filters(isEquals(UserUnitNode::unitId, unitId)))
+
+                (totalGroupUnit == 0L) shouldBe true
+                (totalUserUnit == 0L) shouldBe true
+            }
         }
 
         context(name = "All by ID", script = "/scripts/unit/page.cypher") {

@@ -17,9 +17,10 @@ import com.thomas.management.domain.UserService
 import com.thomas.management.domain.exception.UserNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidData
 import com.thomas.management.domain.messaging.event.UserEventProducer
+import com.thomas.management.domain.model.mapper.toUnitRoleEntity
+import com.thomas.management.domain.model.mapper.toUserCompleteEntity
 import com.thomas.management.domain.model.mapper.toUserCreatedEvent
 import com.thomas.management.domain.model.mapper.toUserDetailResponse
-import com.thomas.management.domain.model.mapper.toUserEntity
 import com.thomas.management.domain.model.mapper.toUserSimpleResponse
 import com.thomas.management.domain.model.mapper.toUserUpdatedEvent
 import com.thomas.management.domain.model.mapper.updateFromRequest
@@ -86,7 +87,7 @@ class UserServiceAdapter(
 
     private fun CoroutineScope.unitsDeferred(request: UserRequest) = async {
         val found = unitRepository.allByIds(request.userUnits.keys, currentOrganization)
-        found.associateWith { request.userUnits[it.id]!!.toSet() }
+        found.associateWith { request.userUnits[it.id]!!.toSet() }.toUnitRoleEntity()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -103,17 +104,15 @@ class UserServiceAdapter(
             userPassword,
         ).awaitAll()
 
-        UserCompleteEntity(
-            userPassword.getCompleted().let {
-                this@toCompleteEntity.toUserEntity(
-                    userOrganization = userOrganization.getCompleted(),
-                    it.first,
-                    it.second,
-                )
-            },
-            userGroups.getCompleted(),
-            userUnits.getCompleted(),
-        )
+        userPassword.getCompleted().let {
+            this@toCompleteEntity.toUserCompleteEntity(
+                userOrganization = userOrganization.getCompleted(),
+                it.first,
+                it.second,
+                userGroups.getCompleted(),
+                userUnits.getCompleted(),
+            )
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -128,10 +127,10 @@ class UserServiceAdapter(
                 userUnits,
             ).awaitAll()
 
-            userEntity.copy(
-                userData = userEntity.userData.updateFromRequest(this@toCompleteEntity),
-                userGroups = userGroups.getCompleted(),
-                userUnits = userUnits.getCompleted(),
+            userEntity.updateFromRequest(
+                this@toCompleteEntity,
+                userGroups.getCompleted(),
+                userUnits.getCompleted(),
             )
         }
     }

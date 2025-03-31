@@ -87,7 +87,7 @@ data class UnitNode(
         if (fantasyName != other.fantasyName) return false
         if (documentNumber != other.documentNumber) return false
         if (unitType != other.unitType) return false
-        if (unitOrganization != other.unitOrganization) return false
+        if (unitOrganization.id != other.unitOrganization.id) return false
         if (mainEmail != other.mainEmail) return false
         if (mainPhone != other.mainPhone) return false
         if (addressZipcode != other.addressZipcode) return false
@@ -111,7 +111,7 @@ data class UnitNode(
         result = 31 * result + (fantasyName?.hashCode() ?: 0)
         result = 31 * result + documentNumber.hashCode()
         result = 31 * result + unitType.hashCode()
-        result = 31 * result + unitOrganization.hashCode()
+        result = 31 * result + unitOrganization.id.hashCode()
         result = 31 * result + mainEmail.hashCode()
         result = 31 * result + mainPhone.hashCode()
         result = 31 * result + addressZipcode.hashCode()

@@ -85,7 +85,7 @@ class SignupServiceAdapter(
         }
     }
 
-    private fun <T : BaseEntity<T>> CoroutineScope.asyncValidation(
+    private fun <T : BaseEntity<*>> CoroutineScope.asyncValidation(
         entity: T,
         message: String,
         validations: List<DeferredEntityValidation<T>>,

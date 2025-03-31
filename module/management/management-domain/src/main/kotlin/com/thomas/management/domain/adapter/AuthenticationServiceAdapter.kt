@@ -43,13 +43,12 @@ class AuthenticationServiceAdapter(
     private suspend fun RefreshTokenData.toUserCompleteEntity() = userRepository.findByUsername(this.username)
 
     private suspend fun UserCompleteEntity.toAccessTokenResponse() = coroutineScope {
-        this@toAccessTokenResponse.toSecurityUser().let { user ->
-            AccessTokenResponse(
-                idToken = tokenizer.generateAccessToken(user, authenticationProperties.accessDurationSeconds),
-                refreshToken = tokenizer.generateRefreshToken(user, authenticationProperties.refreshDurationSeconds),
-                durationSeconds = authenticationProperties.refreshDurationSeconds,
-            )
-        }
+        val user = this@toAccessTokenResponse.toSecurityUser()
+        AccessTokenResponse(
+            idToken = tokenizer.generateAccessToken(user, authenticationProperties.accessDurationSeconds),
+            refreshToken = tokenizer.generateRefreshToken(user, authenticationProperties.refreshDurationSeconds),
+            durationSeconds = authenticationProperties.refreshDurationSeconds,
+        )
     }
 
     private suspend fun UserCompleteEntity.isValidUser(
@@ -62,19 +61,19 @@ class AuthenticationServiceAdapter(
     private suspend fun UserCompleteEntity.isValidPassword(
         password: String
     ): UserCompleteEntity = this.apply {
-        (this.userData.passwordHash == hasher.hash(password, this.userData.passwordSalt)).takeIf { !it }?.let {
+        (this.passwordHash == hasher.hash(password, this.passwordSalt)).takeIf { !it }?.let {
             throw InvalidCredentialException()
         }
     }
 
     private fun UserCompleteEntity.isUserActive(): UserCompleteEntity = this.apply {
-        this.userData.isActive.takeIf { !it }?.let {
+        this.isActive.takeIf { !it }?.let {
             throw InactiveUserException()
         }
     }
 
     private fun UserCompleteEntity.isOrganizationActive(): UserCompleteEntity = this.apply {
-        this.userData.userOrganization.isActive.takeIf { !it }?.let {
+        this.userOrganization.isActive.takeIf { !it }?.let {
             throw InactiveOrganizationException()
         }
     }

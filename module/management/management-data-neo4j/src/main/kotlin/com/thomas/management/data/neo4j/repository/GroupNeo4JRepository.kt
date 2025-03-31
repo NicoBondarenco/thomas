@@ -24,6 +24,7 @@ import com.thomas.management.data.neo4j.model.mapper.toGroupNode
 import com.thomas.management.data.neo4j.model.node.GroupNode
 import com.thomas.management.data.neo4j.model.node.GroupOrganizationNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
+import com.thomas.management.data.neo4j.model.node.UserGroupNode
 import com.thomas.management.data.repository.GroupRepository
 import java.util.UUID
 import org.neo4j.ogm.cypher.Filters
@@ -91,6 +92,7 @@ class GroupNeo4JRepository(
     ): GroupCompleteEntity = transaction { session ->
         entity.apply {
             session.delete(GroupUnitNode::class.java, Filters(isEquals(GroupUnitNode::groupId, entity.id)), false)
+            session.delete(UserGroupNode::class.java, Filters(isEquals(UserGroupNode::groupId, entity.id)), false)
             session.save(this.toGroupNode())
         }
     }
@@ -100,6 +102,7 @@ class GroupNeo4JRepository(
     ): Unit = transaction { session ->
         session.delete(GroupOrganizationNode::class.java, Filters(isEquals(GroupOrganizationNode::groupId, id)), false)
         session.delete(GroupUnitNode::class.java, Filters(isEquals(GroupUnitNode::groupId, id)), false)
+        session.delete(UserGroupNode::class.java, Filters(isEquals(UserGroupNode::groupId, id)), false)
         session.delete(GroupNode::class.java, Filters(isEquals(GroupNode::id, id)), false)
     }
 

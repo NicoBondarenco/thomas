@@ -10,9 +10,9 @@ import com.thomas.core.util.NumberUtils.randomInteger
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.management.data.entity.GroupCompleteEntity
-import com.thomas.management.data.entity.GroupUnitEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.groupCompleteEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupCompleteEntity
 import com.thomas.management.data.neo4j.model.mapper.toGroupNode
@@ -45,6 +45,19 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
                 OrganizationNode::class to { (it as OrganizationNode).toOrganizationEntity() },
             )
         )
+
+//        setNodeSearch(GroupNode::class) { sessionFactory ->
+//            val result = sessionFactory.openSession().query(
+//                GroupNode::class.java,
+//                """
+//                    MATCH (g:`Group`)-[gbto:`GROUP_BELONGS_TO_ORGANIZATION`]->(go:`Organization`)
+//                    WITH g, gbto, go
+//                    RETURN g, gbto, go, [ (g)-[gaiu:`GROUP_ALLOWED_IN_UNIT`]->(u:`Unit`) | [ gaiu, u, [ [ (u)-[ubto:`UNIT_BELONGS_TO_ORGANIZATION`]->(uo:`Organization`) | [ ubto, uo ] ] ] ] ];
+//                """.trimIndent(),
+//                mapOf<String, Any>()
+//            ).toList()
+//            result
+//        }
 
         context(name = "One", script = "/scripts/group/page.cypher") {
             val groups = entities(GroupCompleteEntity::class)
@@ -110,9 +123,9 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
                     groupOrganization = organization,
                     organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet(),
                     groupUnits = units.take(randomInteger(0, units.size)).map {
-                        GroupUnitEntity(
-                            groupUnit = it,
-                            groupRoles = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
+                        UnitRoleEntity(
+                            roleUnit = it,
+                            roleList = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
                         )
                     }.toSet()
                 )
@@ -154,9 +167,9 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
                     groupOrganization = organization,
                     organizationRoles = SecurityOrganizationRole.entries.shuffled().take(randomInteger(0, SecurityOrganizationRole.entries.size)).toSet(),
                     groupUnits = units.take(randomInteger(0, units.size)).map {
-                        GroupUnitEntity(
-                            groupUnit = it,
-                            groupRoles = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
+                        UnitRoleEntity(
+                            roleUnit = it,
+                            roleList = SecurityUnitRole.entries.shuffled().take(randomInteger(0, SecurityUnitRole.entries.size)).toSet()
                         )
                     }.toSet()
                 )
@@ -165,22 +178,21 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
             withData(data) { group ->
                 repository.update(group)
 
-                val node = group.toGroupNode()
-                val result = sessionFactory.openSession().load(GroupNode::class.java, group.id, 5)
+                val result = sessionFactory.openSession().load(GroupNode::class.java, group.id, 5).toGroupCompleteEntity()
 
-                result.id shouldBe node.id
-                result.groupName shouldBe node.groupName
-                result.groupDescription shouldBe node.groupDescription
-                result.isActive shouldBe node.isActive
-                result.createdAt shouldBe node.createdAt
-                result.updatedAt shouldBe node.updatedAt
+                result.id shouldBe group.id
+                result.groupName shouldBe group.groupName
+                result.groupDescription shouldBe group.groupDescription
+                result.isActive shouldBe group.isActive
+                result.createdAt shouldBe group.createdAt
+                result.updatedAt shouldBe group.updatedAt
 
-                result.groupOrganization shouldBe node.groupOrganization
+                result.groupOrganization shouldBe group.groupOrganization
 
-                (result.groupUnits?.size ?: 0) shouldBe (node.groupUnits?.size ?: 0)
+                result.groupUnits.size shouldBe (group.groupUnits.size)
 
-                node.groupUnits?.forEach { groupUnit ->
-                    result.groupUnits!!.contains(groupUnit) shouldBe true
+                group.groupUnits.forEach { groupUnit ->
+                    result.groupUnits.contains(groupUnit) shouldBe true
                 }
             }
 

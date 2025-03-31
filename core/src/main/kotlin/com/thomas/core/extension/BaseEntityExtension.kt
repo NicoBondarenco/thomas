@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-suspend fun <T : BaseEntity<T>> List<DeferredEntityValidation<T>>.validate(
+suspend fun <T : BaseEntity<*>> List<DeferredEntityValidation<T>>.validate(
     entity: T,
     errorMessage: String,
 ) = coroutineScope {
@@ -26,7 +26,7 @@ suspend fun <T : BaseEntity<T>> List<DeferredEntityValidation<T>>.validate(
     }
 }
 
-private suspend fun <T : BaseEntity<T>> ConcurrentHashMap<String, MutableList<String>>.validate(
+private suspend fun <T : BaseEntity<*>> ConcurrentHashMap<String, MutableList<String>>.validate(
     entity: T,
     validation: DeferredEntityValidation<T>,
 ) = coroutineScope {

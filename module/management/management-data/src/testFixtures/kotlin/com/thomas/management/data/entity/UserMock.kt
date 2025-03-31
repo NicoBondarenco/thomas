@@ -53,9 +53,9 @@ val userFullEntity: UserCompleteEntity
         mainPhone = randomPhone(),
         userGroups = (1..3).map { groupFullEntity }.toSet(),
         userUnits = (1..3).map {
-            UserUnitEntity(
-                userUnit = unitEntity,
-                userRoles = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
+            UnitRoleEntity(
+                roleUnit = unitEntity,
+                roleList = SecurityUnitRole.entries.shuffled().subList(0, 3).toSet()
             )
         }.toSet(),
     )

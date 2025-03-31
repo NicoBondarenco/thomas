@@ -2,11 +2,10 @@ package com.thomas.management.data.neo4j.model.mapper
 
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupSimpleEntity
-import com.thomas.management.data.entity.GroupUnitEntity
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.neo4j.model.node.GroupNode
 import com.thomas.management.data.neo4j.model.node.GroupOrganizationNode
 import com.thomas.management.data.neo4j.model.node.GroupUnitNode
-import java.util.UUID.randomUUID
 
 fun GroupNode.toGroupSimpleEntity(): GroupSimpleEntity = GroupSimpleEntity(
     id = this.id,
@@ -28,13 +27,13 @@ fun GroupNode.toGroupCompleteEntity(): GroupCompleteEntity = GroupCompleteEntity
     isActive = this.isActive,
     createdAt = this.createdAt.toOffsetDateTime(),
     updatedAt = this.updatedAt.toOffsetDateTime(),
-    groupUnits = this.groupUnits?.map { it.toGroupUnitEntity() }?.toSet() ?: setOf()
+    groupUnits = this.groupUnits?.map { it.toUnitRoleEntity() }?.toSet() ?: setOf()
 )
 
-fun GroupUnitNode.toGroupUnitEntity(): GroupUnitEntity = GroupUnitEntity(
+fun GroupUnitNode.toUnitRoleEntity(): UnitRoleEntity = UnitRoleEntity(
     id = this.id,
-    groupUnit = this.unitNode.toUnitEntity(),
-    groupRoles = this.groupRoles,
+    roleUnit = this.unitNode.toUnitEntity(),
+    roleList = this.groupRoles,
 )
 
 fun GroupCompleteEntity.toGroupNode(): GroupNode = GroupNode(
@@ -55,9 +54,9 @@ fun GroupCompleteEntity.toGroupNode(): GroupNode = GroupNode(
         GroupUnitNode(
             id = it.id,
             groupId = this.id,
-            unitId = it.groupUnit.id,
-            groupRoles = it.groupRoles,
-            unitNode = it.groupUnit.toUnitNode()
+            unitId = it.roleUnit.id,
+            groupRoles = it.roleList,
+            unitNode = it.roleUnit.toUnitNode()
         )
     }
 ).apply {

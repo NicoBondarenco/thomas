@@ -28,7 +28,7 @@ data class UserCompleteEntity(
     override val createdAt: OffsetDateTime = now(UTC),
     override val updatedAt: OffsetDateTime = now(UTC),
     val userGroups: Set<GroupCompleteEntity> = emptySet(),
-    val userUnits: Set<UserUnitEntity> = emptySet()
+    val userUnits: Set<UnitRoleEntity> = emptySet()
 ) : UserEntity() {
 
     init {

@@ -13,7 +13,7 @@ import java.util.UUID
 fun GroupRepository.sameName() = DeferredEntityValidation<GroupCompleteEntity>(
     field = GroupSimpleEntity::groupName,
     message = { managementGroupValidationGroupDataDuplicatedName() },
-    validate = { !this.hasAnotherWithName(it.id, it.groupData.groupOrganization.id, it.groupData.groupName) },
+    validate = { !this.hasAnotherWithName(it.id, it.groupOrganization.id, it.groupName) },
     context = VT,
 )
 
@@ -23,7 +23,7 @@ fun groupUnitsFound(
     field = GroupCompleteEntity::groupUnits,
     message = { entity ->
         managementUserValidationUnitDataNotFound(
-            groupUnits.keys.subtract(entity.groupUnits.keys.map { it.id }.toSet())
+            groupUnits.keys.subtract(entity.groupUnits.map { it.roleUnit.id }.toSet())
         )
     },
     validate = { it.groupUnits.size == groupUnits.size },
