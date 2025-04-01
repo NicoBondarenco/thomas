@@ -110,13 +110,7 @@ fun UserNode.updateFrom(entity: UserSimpleEntity) {
     this.birthDate = entity.birthDate
     this.passwordSalt = entity.passwordSalt
     this.passwordHash = entity.passwordHash
-    this.userOrganization = UserOrganizationNode(
-        id = entity.id,
-        userId = this.id,
-        organizationId = entity.userOrganization.id,
-        userRoles = entity.organizationRoles,
-        organizationNode = entity.userOrganization.toOrganizationNode(),
-    )
+    this.userOrganization.userNode = this
     this.mainEmail = entity.mainEmail
     this.mainPhone = entity.mainPhone
     this.isActive = entity.isActive

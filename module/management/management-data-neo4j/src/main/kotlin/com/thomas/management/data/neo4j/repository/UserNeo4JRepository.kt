@@ -147,8 +147,8 @@ class UserNeo4JRepository(
                 MATCH(u: User) WHERE NOT(u.id = ${"$"}`user_id`)
                 MATCH(o: Organization) WHERE o.id = ${"$"}`organization_id`
                 MATCH(u)-[:`USER_BELONGS_TO_ORGANIZATION`]->(o)
-                WITH o.maximum_units as max_units, COUNT(u) as total_units
-                RETURN (max_units - total_units) as available
+                WITH o.maximum_users as max_users, COUNT(u) as total_users
+                RETURN (max_users - total_users) as available
             """.trimIndent(),
             mapOf(
                 "user_id" to id.toString(),

@@ -43,16 +43,16 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
         context(name = "One", script = "/scripts/unit/one.cypher") {
             val units = entities(UnitEntity::class)
             val data = units.shuffled().take(5).map { node ->
-                EntityFindOneData<UnitEntity>(node.id, node.unitOrganization.id, node)
+                EntityFindOneData<UUID, UnitEntity>(node.id, node.unitOrganization.id, node)
             } + (1..5).map {
-                EntityFindOneData<UnitEntity>(randomUUID(), randomUUID(), null)
+                EntityFindOneData<UUID, UnitEntity>(randomUUID(), randomUUID(), null)
             } + units.shuffled().take(5).map { node ->
-                EntityFindOneData<UnitEntity>(node.id, entities(OrganizationEntity::class).filter { o ->
+                EntityFindOneData<UUID, UnitEntity>(node.id, entities(OrganizationEntity::class).filter { o ->
                     o.id != node.unitOrganization.id
                 }.random().id, null)
             }
             withData(data) {
-                val result = repository.one(it.id, it.organizationId)
+                val result = repository.one(it.field, it.organizationId)
                 result shouldBe it.entity
             }
         }

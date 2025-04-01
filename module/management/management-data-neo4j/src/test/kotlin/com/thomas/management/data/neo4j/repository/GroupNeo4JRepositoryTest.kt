@@ -31,6 +31,7 @@ import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
+import java.util.UUID
 import java.util.UUID.randomUUID
 import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.session.SessionFactory
@@ -63,7 +64,7 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
             val groups = entities(GroupCompleteEntity::class)
             val organizations = entities(OrganizationEntity::class)
 
-            val data = mutableListOf<EntityFindOneData<GroupCompleteEntity>>()
+            val data = mutableListOf<EntityFindOneData<UUID, GroupCompleteEntity>>()
 
             organizations.forEach { organization ->
                 groups.filter {
@@ -82,7 +83,7 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
             }
 
             withData(data) {
-                val result = repository.one(it.id, it.organizationId)
+                val result = repository.one(it.field, it.organizationId)
                 result shouldBe it.entity
             }
         }
