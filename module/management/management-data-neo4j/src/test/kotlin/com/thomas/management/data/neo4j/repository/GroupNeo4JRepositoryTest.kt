@@ -47,19 +47,6 @@ class GroupNeo4JRepositoryTest : ManagementFunSpec<GroupNeo4JRepository>(
             )
         )
 
-//        setNodeSearch(GroupNode::class) { sessionFactory ->
-//            val result = sessionFactory.openSession().query(
-//                GroupNode::class.java,
-//                """
-//                    MATCH (g:`Group`)-[gbto:`GROUP_BELONGS_TO_ORGANIZATION`]->(go:`Organization`)
-//                    WITH g, gbto, go
-//                    RETURN g, gbto, go, [ (g)-[gaiu:`GROUP_ALLOWED_IN_UNIT`]->(u:`Unit`) | [ gaiu, u, [ [ (u)-[ubto:`UNIT_BELONGS_TO_ORGANIZATION`]->(uo:`Organization`) | [ ubto, uo ] ] ] ] ];
-//                """.trimIndent(),
-//                mapOf<String, Any>()
-//            ).toList()
-//            result
-//        }
-
         context(name = "One", script = "/scripts/group/page.cypher") {
             val groups = entities(GroupCompleteEntity::class)
             val organizations = entities(OrganizationEntity::class)

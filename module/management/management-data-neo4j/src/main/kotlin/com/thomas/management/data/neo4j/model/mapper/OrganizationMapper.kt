@@ -2,7 +2,6 @@ package com.thomas.management.data.neo4j.model.mapper
 
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.neo4j.model.node.OrganizationNode
-import java.util.UUID
 
 fun OrganizationEntity.toOrganizationNode() = OrganizationNode(
     id = this.id,
