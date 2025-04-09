@@ -23,7 +23,7 @@ internal class NumberExtensionTest {
     }
 
     @Test
-    fun `Long is higher`(){
+    fun `Long is higher`() {
         assertTrue(10L.isHigher(-1L))
         assertTrue(10L.isHigher(0L))
         assertTrue(10L.isHigher(1L))
@@ -32,7 +32,7 @@ internal class NumberExtensionTest {
     }
 
     @Test
-    fun `Long is lower`(){
+    fun `Long is lower`() {
         assertFalse(10L.isLower(-1L))
         assertFalse(10L.isLower(0L))
         assertFalse(10L.isLower(1L))

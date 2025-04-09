@@ -51,29 +51,29 @@ fun <T : Any> notInValues(
     Filter(property.nodePropertyName(), GenericFilterFunction(values, it))
 }
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Any,
 ): Filter = Filter(property.nodePropertyName(), EQUALS, value).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNotEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isNotEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Any,
 ): Filter = isEquals(property, value).apply { isNegated = true }.applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNull(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isNull(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
 ): Filter = Filter(property.nodePropertyName(), IS_NULL).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isNotNull(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isNotNull(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
 ): Filter = isNull(property).apply { isNegated = true }.applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> inValues(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> inValues(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     values: Collection<Any?>,
@@ -81,7 +81,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> inValues(
     Filter(property.nodePropertyName(), GenericFilterFunction(values, it)).applyNested(nestedProperty)
 }
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notInValues(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> notInValues(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     values: Collection<Any?>,

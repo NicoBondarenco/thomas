@@ -102,7 +102,7 @@ class BooleanNeo4JRepositoryTest : Neo4JRepositoryTest() {
         val result = repository.booleanNestedIs(
             BooleanNestedPropsNode::propBoolean,
             propBoolean,
-            "prop_boolean",
+            BooleanPropsNode::propBoolean,
             BooleanNestedPropsNode::nestedNode,
             nestedBoolean
         )

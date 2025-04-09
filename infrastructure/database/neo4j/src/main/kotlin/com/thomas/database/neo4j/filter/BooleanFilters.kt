@@ -14,12 +14,12 @@ fun <T : Any> isFalse(
     property: KProperty<T?>
 ): Filter = isTrue(property).apply { isNegated = true }
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isTrue(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isTrue(
     propertyName: KProperty<K?>,
     nestedProperty: KProperty<T?>
 ): Filter = Filter(propertyName.nodePropertyName(), IS_TRUE).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> isFalse(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> isFalse(
     propertyName: KProperty<K?>,
     nestedProperty: KProperty<T?>
 ): Filter = isTrue(propertyName, nestedProperty).apply { isNegated = true }

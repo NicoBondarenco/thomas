@@ -66,7 +66,7 @@ class PasswordServiceAdapter(
             now(UTC).isBefore(it.expiresOn)
         }?.run {
             updatePassword(this.userId, request.newPassword)
-        }?: throw expiredToken()
+        } ?: throw expiredToken()
     }
 
     private suspend fun findSimpleByIdOrThrows(

@@ -10,12 +10,13 @@ import com.thomas.database.neo4j.filter.betweenEquals
 import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.endsWith
 import com.thomas.database.neo4j.filter.endsWithUnaccentedLower
-import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThan
 import com.thomas.database.neo4j.filter.greaterThanEquals
 import com.thomas.database.neo4j.filter.inValues
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.isFalse
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.isNotNull
 import com.thomas.database.neo4j.filter.isNull
 import com.thomas.database.neo4j.filter.isTrue
@@ -28,7 +29,6 @@ import com.thomas.database.neo4j.filter.notBetween
 import com.thomas.database.neo4j.filter.notBetweenEquals
 import com.thomas.database.neo4j.filter.notEndsWith
 import com.thomas.database.neo4j.filter.notEndsWithUnaccentedLower
-import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.notEqualsUnaccentedLower
 import com.thomas.database.neo4j.filter.notInValues
 import com.thomas.database.neo4j.filter.notLike
@@ -54,6 +54,7 @@ import com.thomas.database.neo4j.node.PagePropsNode
 import com.thomas.database.neo4j.node.SavePropsNode
 import com.thomas.database.neo4j.node.StringNestedPropsNode
 import com.thomas.database.neo4j.node.StringPropsNode
+import java.io.Serializable
 import java.time.temporal.Temporal
 import java.util.UUID
 import kotlin.reflect.KProperty
@@ -80,10 +81,10 @@ class TestNeo4JRepository(
 
     //region BOOLEAN NESTED PROPS
 
-    suspend fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> booleanNestedIs(
+    suspend fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> booleanNestedIs(
         propName: KProperty<K>,
         propValue: Boolean,
-        nestedName: String,
+        nestedName: KProperty<K>,
         nestedProp: KProperty<T>,
         nestedValue: Boolean
     ): List<BooleanNestedPropsNode> = booleanNestedSearch(
@@ -505,7 +506,7 @@ class TestNeo4JRepository(
 
     suspend fun sortPageSearch(sorts: List<PageSort>): List<PagePropsNode> = pageSearch(sorts.toSortOrder()).toList()
 
-    suspend fun findById(id: UUID): PagePropsNode? = sessionFactory.one(id)
+    suspend fun findById(id: UUID): PagePropsNode? = sessionFactory.one<UUID, PagePropsNode>(id)
 
     suspend fun findList(filters: List<Filter>, sorts: List<PageSort>): List<PagePropsNode> = sessionFactory.list(filters, sorts)
 

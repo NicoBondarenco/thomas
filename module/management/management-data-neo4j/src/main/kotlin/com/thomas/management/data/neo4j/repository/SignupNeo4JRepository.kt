@@ -7,7 +7,7 @@ import org.neo4j.ogm.session.SessionFactory
 
 class SignupNeo4JRepository(
     sessionFactory: SessionFactory
-): ManagementNeo4JRepository(sessionFactory), SignupRepository {
+) : ManagementNeo4JRepository(sessionFactory), SignupRepository {
 
     override suspend fun signup(
         entity: SignupEntity

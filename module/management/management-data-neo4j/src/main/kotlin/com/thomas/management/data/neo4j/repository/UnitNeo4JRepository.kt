@@ -5,14 +5,14 @@ import com.thomas.core.extension.unaccentedLower
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.database.neo4j.filter.count
-import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThanEquals
 import com.thomas.database.neo4j.filter.inValues
+import com.thomas.database.neo4j.filter.isEquals
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
 import com.thomas.database.neo4j.filter.likeUnaccentedLower
-import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.or
 import com.thomas.database.neo4j.filter.page
 import com.thomas.management.data.entity.UnitEntity
@@ -89,7 +89,7 @@ class UnitNeo4JRepository(
     ): Unit = transaction { session ->
         session.delete(GroupUnitNode::class.java, Filters(isEquals(GroupUnitNode::unitId, id)), false)
         session.delete(UserUnitNode::class.java, Filters(isEquals(UserUnitNode::unitId, id)), false)
-        session.delete(UnitNode::class.java,Filters(isEquals(UnitNode::id, id)),false)
+        session.delete(UnitNode::class.java, Filters(isEquals(UnitNode::id, id)), false)
     }
 
     override suspend fun limitReached(

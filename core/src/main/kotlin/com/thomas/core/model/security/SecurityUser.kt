@@ -41,6 +41,11 @@ data class SecurityUser(
             (userUnits.unitRoles(it) + userGroups.unitRoles(it)).distinct().toSet()
         } ?: emptySet()
 
+    val unitsRoles: Map<UUID, Set<SecurityUnitRole>>
+        get() = (userUnits.map { it.unitId } + userGroups.unitIds()).distinct().associateWith {
+            (userUnits.unitRoles(it) + userGroups.unitRoles(it)).distinct().toSet()
+        }
+
     val currentRoles: Set<SecurityRole<*, *, *>>
         get() = (organizationRoles + unitRoles).distinct().toSet()
 
@@ -55,5 +60,7 @@ data class SecurityUser(
     private fun Set<SecurityGroup>.unitRoles(
         unitId: UUID
     ) = this.map { it.groupUnits.unitRoles(unitId) }.flatten()
+
+    private fun Set<SecurityGroup>.unitIds(): List<UUID> = this.map { group -> group.groupUnits.map { it.unitId } }.flatten()
 
 }

@@ -1,13 +1,8 @@
 package com.thomas.management.data.entity
 
 import com.thomas.core.util.StringUtils.randomDocumentNumber
-import com.thomas.core.util.StringUtils.randomEmail
-import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
-import com.thomas.core.util.StringUtils.randomZipcode
-import com.thomas.management.data.entity.value.AddressState
-import com.thomas.management.data.entity.value.UnitType
 import com.thomas.management.data.entity.value.UnitType.LEGAL
 import com.thomas.management.data.entity.value.UnitType.NATURAL
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitValidationDocumentNumberInvalidValue
@@ -15,9 +10,6 @@ import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitV
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitValidationFantasyNameInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitValidationUnitNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitValidationUnitNameInvalidValue
-import java.time.OffsetDateTime.now
-import java.time.ZoneOffset.UTC
-import java.util.UUID.randomUUID
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 

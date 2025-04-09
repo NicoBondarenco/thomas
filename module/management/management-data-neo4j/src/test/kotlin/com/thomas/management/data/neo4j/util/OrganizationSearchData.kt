@@ -11,7 +11,7 @@ data class OrganizationSearchData(
     override val organizationId: UUID? = null,
     override val pageable: PageRequestPeriod,
     override val comparator: Comparator<OrganizationEntity>
-): EntitySearchData<OrganizationEntity>() {
+) : EntitySearchData<OrganizationEntity>() {
 
     override fun filterKeyWord(entity: OrganizationEntity): Boolean = this.keyword?.let {
         entity.organizationName.unaccentedLower().contains(it.unaccentedLower()) ||

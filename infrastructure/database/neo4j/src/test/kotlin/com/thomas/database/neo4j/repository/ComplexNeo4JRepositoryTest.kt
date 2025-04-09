@@ -1,8 +1,8 @@
 package com.thomas.database.neo4j.repository
 
 import com.thomas.core.extension.toUUIDOrNull
-import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.inValues
+import com.thomas.database.neo4j.filter.isEquals
 import com.thomas.database.neo4j.filter.isNotNull
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.node.ComplexPropsNode

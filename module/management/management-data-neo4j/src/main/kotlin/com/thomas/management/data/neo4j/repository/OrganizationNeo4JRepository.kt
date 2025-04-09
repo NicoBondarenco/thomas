@@ -7,10 +7,10 @@ import com.thomas.core.model.pagination.PageResponse
 import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThanEquals
+import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
 import com.thomas.database.neo4j.filter.likeUnaccentedLower
-import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.or
 import com.thomas.database.neo4j.filter.page
 import com.thomas.management.data.entity.OrganizationEntity

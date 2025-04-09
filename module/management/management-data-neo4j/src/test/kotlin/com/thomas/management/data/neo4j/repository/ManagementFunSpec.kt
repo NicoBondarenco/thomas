@@ -4,7 +4,6 @@ import com.thomas.database.neo4j.repository.Neo4JFunSpec
 import com.thomas.database.neo4j.repository.Neo4JRepository
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
 import kotlin.reflect.KClass
-import org.neo4j.ogm.config.Configuration
 import org.neo4j.ogm.session.SessionFactory
 
 abstract class ManagementFunSpec<R : Neo4JRepository>(
@@ -64,15 +63,5 @@ abstract class ManagementFunSpec<R : Neo4JRepository>(
         after = this::clearNodes,
         test = test,
     )
-
-    override fun createConfiguration(): Configuration = Configuration.Builder()
-        .uri("bolt://localhost:7687")
-        .credentials("neo4j", "Meruss@453822")
-        .database("neo4j")
-        .connectionLivenessCheckTimeout(10000)
-        .verifyConnection(true)
-        .connectionPoolSize(20)
-        .useNativeTypes()
-        .build()
 
 }

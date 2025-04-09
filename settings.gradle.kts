@@ -33,8 +33,8 @@ dependencyResolutionManagement {
 
             version("flywayPlugin", "10.11.0")
 
-            version("springFrameworkBoot", "3.2.5")
-            version("springDependencyManagement", "1.1.4")
+            version("springFrameworkBoot", "3.4.4")
+            version("springDependencyManagement", "1.1.7")
 
             version("detekt", "1.23.3")
 
@@ -49,8 +49,8 @@ dependencyResolutionManagement {
             version("log4j", "2.23.1")
             version("log4jKotlin", "1.4.0")
 
-            version("junit", "5.10.2")
-            version("junitPioneer", "2.2.0")
+            version("junit", "5.12.1")
+            version("junitPioneer", "2.3.0")
 
             version("mockito", "5.11.0")
             version("mockito-inline", "5.2.0")
@@ -83,13 +83,13 @@ dependencyResolutionManagement {
 
             version("typedb", "2.28.0")
 
-            version("auth0", "4.4.0")
+            version("auth0", "4.5.0")
 
             version("jackson", "2.17.0")
 
             version("springCloud", "2023.0.1")
 
-            version("springdocOpenapi", "2.6.0")
+            version("springdocOpenapi", "2.8.6")
 
             version("detektFormat", "1.23.3")
 
@@ -311,7 +311,29 @@ dependencyResolutionManagement {
 
             //region SPRING
 
+            library("spring-boot-starter-versioned-web", "org.springframework.boot", "spring-boot-starter-web").versionRef("springFrameworkBoot")
+            library("spring-boot-starter-versioned-webflux", "org.springframework.boot", "spring-boot-starter-webflux").versionRef("springFrameworkBoot")
+            library("spring-boot-starter-versioned-security", "org.springframework.boot", "spring-boot-starter-security").versionRef("springFrameworkBoot")
+            library("spring-boot-starter-versioned-validation", "org.springframework.boot", "spring-boot-starter-validation").versionRef("springFrameworkBoot")
+            library("spring-boot-starter-versioned-aop", "org.springframework.boot", "spring-boot-starter-aop").versionRef("springFrameworkBoot")
+            library("spring-boot-starter-versioned-actuator", "org.springframework.boot", "spring-boot-starter-actuator").versionRef("springFrameworkBoot")
+
+            library("spring-boot-test-starter-versioned-core", "org.springframework.boot", "spring-boot-starter-test").versionRef("springFrameworkBoot")
+
+            bundle(
+                "spring-boot-starter-versioned-bundle",
+                listOf(
+                    "spring-boot-starter-versioned-web",
+                    "spring-boot-starter-versioned-webflux",
+                    "spring-boot-starter-versioned-security",
+                    "spring-boot-starter-versioned-validation",
+                    "spring-boot-starter-versioned-aop",
+                    "spring-boot-starter-versioned-actuator",
+                ),
+            )
+
             library("spring-boot-starter-web", "org.springframework.boot", "spring-boot-starter-web").withoutVersion()
+            library("spring-boot-starter-webflux", "org.springframework.boot", "spring-boot-starter-webflux").withoutVersion()
             library("spring-boot-starter-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
             library("spring-boot-starter-validation", "org.springframework.boot", "spring-boot-starter-validation").withoutVersion()
             library("spring-boot-starter-aop", "org.springframework.boot", "spring-boot-starter-aop").withoutVersion()
@@ -373,6 +395,9 @@ findProject(":infrastructure:database:neo4j")?.name = "neo4j"
 include("infrastructure:hasher:hasher")
 findProject(":infrastructure:hasher:hasher")?.name = "hasher"
 
+include("infrastructure:spring:spring-base")
+findProject(":infrastructure:spring:spring-base")?.name = "spring-base"
+
 include("module:management:management-data")
 findProject(":module:management:management-data")?.name = "management-data"
 
@@ -381,3 +406,6 @@ findProject(":module:management:management-data-neo4j")?.name = "management-data
 
 include("module:management:management-domain")
 findProject(":module:management:management-domain")?.name = "management-domain"
+
+include("module:management:management-springboot")
+findProject(":module:management:management-springboot")?.name = "management-springboot"

@@ -110,7 +110,7 @@ class SecurityOrganizationRoleTest {
     }
 
     @Test
-    fun `Security Role displayable`(){
+    fun `Security Role displayable`() {
         assertFalse(MASTER_ROLE.roleDisplayable)
         assertTrue(ORGANIZATION_ALL.roleDisplayable)
     }

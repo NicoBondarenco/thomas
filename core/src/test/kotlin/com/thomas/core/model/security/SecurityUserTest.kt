@@ -172,6 +172,60 @@ class SecurityUserTest {
     }
 
     @Test
+    fun `Security User Unit roles map`() {
+        val unitId = UUID.randomUUID()
+        currentUnit = unitId
+        val user = generateSecurityUser().copy(
+            userUnits = setOf(
+                generateSecurityUnit().copy(
+                    unitRoles = setOf()
+                ),
+                generateSecurityUnit().copy(
+                    unitId = unitId,
+                    unitRoles = setOf(COA_READ)
+                ),
+            ),
+            userGroups = setOf(
+                generateSecurityGroup().copy(
+                    groupUnits = setOf()
+                ),
+                generateSecurityGroup().copy(
+                    groupUnits = setOf(
+                        generateSecurityUnit().copy(
+                            unitId = unitId,
+                            unitRoles = setOf(COA_READ)
+                        ),
+                    )
+                ),
+                generateSecurityGroup().copy(
+                    groupUnits = setOf(
+                        generateSecurityUnit().copy(
+                            unitRoles = setOf(COA_READ)
+                        ),
+                        generateSecurityUnit().copy(
+                            unitId = unitId,
+                            unitRoles = setOf(COA_CREATE)
+                        ),
+                    )
+                ),
+                generateSecurityGroup().copy(
+                    groupUnits = setOf(
+                        generateSecurityUnit().copy(
+                            unitRoles = setOf(COA_UPDATE)
+                        ),
+                        generateSecurityUnit().copy(
+                            unitId = unitId,
+                            unitRoles = setOf(COA_CREATE)
+                        ),
+                    )
+                ),
+            )
+        )
+
+        assertEquals(4, user.unitsRoles.size)
+    }
+
+    @Test
     fun `Security User current roles`() {
         val unitId = UUID.randomUUID()
         currentUnit = unitId

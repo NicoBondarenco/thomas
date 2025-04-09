@@ -10,10 +10,10 @@ import com.thomas.database.neo4j.operator.SingleOperator.GREATER_THAN
 import com.thomas.database.neo4j.operator.SingleOperator.GREATER_THAN_EQUALS
 import com.thomas.database.neo4j.operator.SingleOperator.LESS_THAN
 import com.thomas.database.neo4j.operator.SingleOperator.LESS_THAN_EQUALS
+import java.io.Serializable
 import java.time.temporal.Temporal
 import kotlin.reflect.KProperty
 import org.neo4j.ogm.cypher.Filter
-import java.io.Serializable
 
 fun <T : Any> greaterThan(
     property: KProperty<T?>,
@@ -59,7 +59,7 @@ fun <T : Any> notBetweenEquals(
     max: Temporal,
 ): Filter = Filter(property.nodePropertyName(), GenericFilterFunction(Pair(min, max), NOT_BETWEEN_EQUALS))
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> greaterThan(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> greaterThan(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Temporal,
@@ -68,7 +68,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> greaterThan(
     GenericFilterFunction(value, GREATER_THAN)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> greaterThanEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> greaterThanEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Temporal,
@@ -77,7 +77,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> greaterThanEquals(
     GenericFilterFunction(value, GREATER_THAN_EQUALS)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> lessThan(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> lessThan(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Temporal,
@@ -86,7 +86,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> lessThan(
     GenericFilterFunction(value, LESS_THAN)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> lessThanEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> lessThanEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     value: Temporal,
@@ -95,7 +95,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> lessThanEquals(
     GenericFilterFunction(value, LESS_THAN_EQUALS)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> between(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> between(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     min: Temporal,
@@ -105,7 +105,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> between(
     GenericFilterFunction(Pair(min, max), BETWEEN)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> betweenEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> betweenEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     min: Temporal,
@@ -115,7 +115,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> betweenEquals(
     GenericFilterFunction(Pair(min, max), BETWEEN_EQUALS)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notBetween(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> notBetween(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     min: Temporal,
@@ -125,7 +125,7 @@ fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notBetween(
     GenericFilterFunction(Pair(min, max), NOT_BETWEEN)
 ).applyNested(nestedProperty)
 
-fun <ID: Serializable, K : Any, T : Neo4JNode<ID>> notBetweenEquals(
+fun <ID : Serializable, K : Any, T : Neo4JNode<ID>> notBetweenEquals(
     property: KProperty<K?>,
     nestedProperty: KProperty<T?>,
     min: Temporal,

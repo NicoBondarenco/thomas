@@ -1,0 +1,6 @@
+Armazenamento
+- S3
+- Garage (Pode conectar como se fosse no S3) - https://garagehq.deuxfleurs.fr/
+
+Monitoramento
+- SigNoz (Alternativa self hosted datadog) - https://signoz.io/docs/install/docker/

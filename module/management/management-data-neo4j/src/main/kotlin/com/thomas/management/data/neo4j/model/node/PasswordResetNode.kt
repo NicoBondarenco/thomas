@@ -3,7 +3,6 @@ package com.thomas.management.data.neo4j.model.node
 import com.thomas.database.neo4j.converter.UUIDConverter
 import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.node.NoArgsConstructor
-import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.UUID
 import org.neo4j.ogm.annotation.Id
