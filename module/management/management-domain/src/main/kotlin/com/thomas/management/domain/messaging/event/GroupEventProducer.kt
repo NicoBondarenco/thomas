@@ -1,15 +1,13 @@
 package com.thomas.management.domain.messaging.event
 
-import com.thomas.contract.messaging.management.group.GroupCreatedEvent
-import com.thomas.contract.messaging.management.group.GroupDeletedEvent
-import com.thomas.contract.messaging.management.group.GroupUpdatedEvent
+import com.thomas.contract.messaging.management.group.GroupManagementEvent
 
 interface GroupEventProducer {
 
-    suspend fun groupCreated(event: GroupCreatedEvent)
+    suspend fun groupCreated(event: GroupManagementEvent)
 
-    suspend fun groupUpdated(event: GroupUpdatedEvent)
+    suspend fun groupUpdated(event: GroupManagementEvent)
 
-    suspend fun groupDeleted(event: GroupDeletedEvent)
+    suspend fun groupDeleted(event: GroupManagementEvent)
 
 }

@@ -1,5 +1,7 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.contract.messaging.management.ManagementEventType.CREATE
+import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentOrganization
@@ -13,11 +15,10 @@ import com.thomas.management.domain.UnitService
 import com.thomas.management.domain.exception.UnitNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUnitValidationUnitDataInvalidData
 import com.thomas.management.domain.messaging.event.UnitEventProducer
-import com.thomas.management.domain.model.mapper.toUnitCreatedEvent
-import com.thomas.management.domain.model.mapper.toUnitDeletedEvent
+import com.thomas.management.domain.model.mapper.toUnitDataEvent
 import com.thomas.management.domain.model.mapper.toUnitEntity
+import com.thomas.management.domain.model.mapper.toUnitManagementEvent
 import com.thomas.management.domain.model.mapper.toUnitResponse
-import com.thomas.management.domain.model.mapper.toUnitUpdatedEvent
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.UnitUpsertRequest
 import com.thomas.management.domain.model.response.UnitResponse
@@ -68,7 +69,7 @@ class UnitServiceAdapter(
         val organizationEntity = organizationRepository.one(currentOrganization)!!
         request.toUnitEntity(organizationEntity).upsert(
             { unitRepository.create(it) },
-            { unitEventProducer.unitCreated(it.toUnitCreatedEvent()) }
+            { unitEventProducer.unitCreated(it.toUnitManagementEvent(CREATE)) }
         )
     }
 
@@ -79,7 +80,7 @@ class UnitServiceAdapter(
     ): UnitResponse = authorized(unitUpdateRoles) {
         findUnitByIdOrThrows(id).updateFromRequest(request).upsert(
             { unitRepository.update(it) },
-            { unitEventProducer.unitUpdated(it.toUnitUpdatedEvent()) }
+            { unitEventProducer.unitUpdated(it.toUnitManagementEvent(UPDATE)) }
         )
     }
 
@@ -88,7 +89,7 @@ class UnitServiceAdapter(
         id: UUID,
     ) = authorized(unitDeleteRoles) {
         unitRepository.delete(id)
-        unitEventProducer.unitDeleted(id.toUnitDeletedEvent())
+        unitEventProducer.unitDeleted(id.toUnitManagementEvent())
     }
 
     private suspend fun UnitEntity.upsert(

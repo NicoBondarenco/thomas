@@ -1,5 +1,7 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.contract.messaging.management.ManagementEventType.CREATE
+import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.extension.validate
@@ -11,10 +13,9 @@ import com.thomas.management.domain.OrganizationService
 import com.thomas.management.domain.exception.OrganizationNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementOrganizationValidationOrganizationDataInvalidData
 import com.thomas.management.domain.messaging.event.OrganizationEventProducer
-import com.thomas.management.domain.model.mapper.toOrganizationCreatedEvent
 import com.thomas.management.domain.model.mapper.toOrganizationEntity
+import com.thomas.management.domain.model.mapper.toOrganizationManagementEvent
 import com.thomas.management.domain.model.mapper.toOrganizationResponse
-import com.thomas.management.domain.model.mapper.toOrganizationUpdatedEvent
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.OrganizationUpsertRequest
 import com.thomas.management.domain.model.response.OrganizationResponse
@@ -57,7 +58,7 @@ class OrganizationServiceAdapter(
     ): OrganizationResponse = authorized(organizationUpsertRoles) {
         request.toOrganizationEntity().upsert(
             { organizationRepository.create(it) },
-            { organizationEventProducer.organizationCreated(it.toOrganizationCreatedEvent()) }
+            { organizationEventProducer.organizationCreated(it.toOrganizationManagementEvent(CREATE)) }
         )
     }
 
@@ -68,7 +69,7 @@ class OrganizationServiceAdapter(
     ): OrganizationResponse = authorized(organizationUpsertRoles) {
         findOrganizationByIdOrThrows(id).updateFromRequest(request).upsert(
             { organizationRepository.update(it) },
-            { organizationEventProducer.organizationUpdated(it.toOrganizationUpdatedEvent()) }
+            { organizationEventProducer.organizationUpdated(it.toOrganizationManagementEvent(UPDATE)) }
         )
     }
 

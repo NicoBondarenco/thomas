@@ -1,5 +1,8 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.contract.messaging.management.ManagementEventType.CREATE
+import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
+import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentOrganization
 import com.thomas.core.extension.validate
@@ -7,22 +10,21 @@ import com.thomas.core.model.entity.DeferredEntityValidation
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.security.SecurityUnitRole
-import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.repository.GroupRepository
 import com.thomas.management.data.repository.OrganizationRepository
 import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.UserService
+import com.thomas.management.domain.crypt.Hasher
 import com.thomas.management.domain.exception.UserNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUserValidationUserDataInvalidData
 import com.thomas.management.domain.messaging.event.UserEventProducer
 import com.thomas.management.domain.model.mapper.toUnitRoleEntity
 import com.thomas.management.domain.model.mapper.toUserCompleteEntity
-import com.thomas.management.domain.model.mapper.toUserCreatedEvent
 import com.thomas.management.domain.model.mapper.toUserDetailResponse
+import com.thomas.management.domain.model.mapper.toUserManagementEvent
 import com.thomas.management.domain.model.mapper.toUserSimpleResponse
-import com.thomas.management.domain.model.mapper.toUserUpdatedEvent
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserRequest
@@ -165,6 +167,7 @@ class UserServiceAdapter(
         findCompleteByIdOrThrows(id).toUserDetailResponse()
     }
 
+    @MethodLog
     override suspend fun create(
         request: UserCreateRequest,
     ): UserDetailResponse = authorized(userCreateRoles) {
@@ -174,10 +177,11 @@ class UserServiceAdapter(
                 userUnits = request.userUnits,
             ),
             { userRepository.create(it) },
-            { userProducer.userCreated(it.toUserCreatedEvent()) }
+            { userProducer.userCreated(it.toUserManagementEvent(CREATE)) }
         )
     }
 
+    @MethodLog
     override suspend fun update(
         id: UUID,
         request: UserUpdateRequest,
@@ -188,7 +192,7 @@ class UserServiceAdapter(
                 userUnits = request.userUnits,
             ),
             { userRepository.update(it) },
-            { userProducer.userUpdated(it.toUserUpdatedEvent()) },
+            { userProducer.userUpdated(it.toUserManagementEvent(UPDATE)) },
         )
     }
 

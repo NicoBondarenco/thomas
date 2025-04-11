@@ -1,15 +1,13 @@
 package com.thomas.management.domain.messaging.event
 
-import com.thomas.contract.messaging.management.unit.UnitCreatedEvent
-import com.thomas.contract.messaging.management.unit.UnitDeletedEvent
-import com.thomas.contract.messaging.management.unit.UnitUpdatedEvent
+import com.thomas.contract.messaging.management.unit.UnitManagementEvent
 
 interface UnitEventProducer {
 
-    suspend fun unitCreated(event: UnitCreatedEvent)
+    suspend fun unitCreated(event: UnitManagementEvent)
 
-    suspend fun unitUpdated(event: UnitUpdatedEvent)
+    suspend fun unitUpdated(event: UnitManagementEvent)
 
-    suspend fun unitDeleted(event: UnitDeletedEvent)
+    suspend fun unitDeleted(event: UnitManagementEvent)
 
 }

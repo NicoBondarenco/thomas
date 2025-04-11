@@ -8,7 +8,6 @@ val jwtConfiguration = JWTProperties(
     jwtAudience = "test-audience",
     jwtRealm = "test-realm",
     jwtAlgorithm = "RSA",
-    validityMinutes = 5L,
     privateKey = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJMiW6O3XOwALyk+" +
             "DsYRop+zp0HeNgbMpfKuJx4A5Hqcqdz0pmIAEyZMZCnwmG2GDE5D3oVQoST52V9BtENZxX+" +
             "yGnzd+FsKWND8/azDOPGtCC25GXHeppy1Swpd5Vsbe5w4itEsKABJY068zZmLtaGZA0jsSW" +

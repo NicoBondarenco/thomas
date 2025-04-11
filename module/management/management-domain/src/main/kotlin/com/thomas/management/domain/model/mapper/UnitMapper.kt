@@ -1,8 +1,9 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.unit.UnitCreatedEvent
-import com.thomas.contract.messaging.management.unit.UnitDeletedEvent
-import com.thomas.contract.messaging.management.unit.UnitUpdatedEvent
+import com.thomas.contract.messaging.management.ManagementEventType
+import com.thomas.contract.messaging.management.ManagementEventType.DELETE
+import com.thomas.contract.messaging.management.unit.UnitDataEvent
+import com.thomas.contract.messaging.management.unit.UnitManagementEvent
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
@@ -79,56 +80,44 @@ suspend fun UnitEntity.updateFromRequest(request: UnitUpsertRequest) = coroutine
     )
 }
 
-suspend fun UnitEntity.toUnitCreatedEvent() = coroutineScope {
-    UnitCreatedEvent(
-        id = this@toUnitCreatedEvent.id,
-        unitName = this@toUnitCreatedEvent.unitName,
-        fantasyName = this@toUnitCreatedEvent.fantasyName,
-        documentNumber = this@toUnitCreatedEvent.documentNumber,
-        unitType = this@toUnitCreatedEvent.unitType.toUnitTypeEvent(),
-        unitOrganization = this@toUnitCreatedEvent.unitOrganization.id,
-        mainEmail = this@toUnitCreatedEvent.mainEmail,
-        mainPhone = this@toUnitCreatedEvent.mainPhone,
-        addressZipcode = this@toUnitCreatedEvent.addressZipcode,
-        addressStreet = this@toUnitCreatedEvent.addressStreet,
-        addressNumber = this@toUnitCreatedEvent.addressNumber,
-        addressComplement = this@toUnitCreatedEvent.addressComplement,
-        addressNeighborhood = this@toUnitCreatedEvent.addressNeighborhood,
-        addressCity = this@toUnitCreatedEvent.addressCity,
-        addressState = this@toUnitCreatedEvent.addressState.toAddressStateEvent(),
-        isActive = this@toUnitCreatedEvent.isActive,
-        createdAt = this@toUnitCreatedEvent.createdAt,
-        updatedAt = this@toUnitCreatedEvent.updatedAt,
+suspend fun UnitEntity.toUnitManagementEvent(type: ManagementEventType) = coroutineScope {
+    UnitManagementEvent(
+        eventType = type,
+        eventTimestamp = now(UTC),
+        eventKey = this@toUnitManagementEvent.id,
+        eventData = this@toUnitManagementEvent.toUnitDataEvent(),
     )
 }
 
-suspend fun UnitEntity.toUnitUpdatedEvent() = coroutineScope {
-    UnitUpdatedEvent(
-        id = this@toUnitUpdatedEvent.id,
-        unitName = this@toUnitUpdatedEvent.unitName,
-        fantasyName = this@toUnitUpdatedEvent.fantasyName,
-        documentNumber = this@toUnitUpdatedEvent.documentNumber,
-        unitType = this@toUnitUpdatedEvent.unitType.toUnitTypeEvent(),
-        unitOrganization = this@toUnitUpdatedEvent.unitOrganization.id,
-        mainEmail = this@toUnitUpdatedEvent.mainEmail,
-        mainPhone = this@toUnitUpdatedEvent.mainPhone,
-        addressZipcode = this@toUnitUpdatedEvent.addressZipcode,
-        addressStreet = this@toUnitUpdatedEvent.addressStreet,
-        addressNumber = this@toUnitUpdatedEvent.addressNumber,
-        addressComplement = this@toUnitUpdatedEvent.addressComplement,
-        addressNeighborhood = this@toUnitUpdatedEvent.addressNeighborhood,
-        addressCity = this@toUnitUpdatedEvent.addressCity,
-        addressState = this@toUnitUpdatedEvent.addressState.toAddressStateEvent(),
-        isActive = this@toUnitUpdatedEvent.isActive,
-        createdAt = this@toUnitUpdatedEvent.createdAt,
-        updatedAt = this@toUnitUpdatedEvent.updatedAt,
+suspend fun UnitEntity.toUnitDataEvent() = coroutineScope {
+    UnitDataEvent(
+        id = this@toUnitDataEvent.id,
+        unitName = this@toUnitDataEvent.unitName,
+        fantasyName = this@toUnitDataEvent.fantasyName,
+        documentNumber = this@toUnitDataEvent.documentNumber,
+        unitType = this@toUnitDataEvent.unitType.toUnitTypeEvent(),
+        unitOrganization = this@toUnitDataEvent.unitOrganization.id,
+        mainEmail = this@toUnitDataEvent.mainEmail,
+        mainPhone = this@toUnitDataEvent.mainPhone,
+        addressZipcode = this@toUnitDataEvent.addressZipcode,
+        addressStreet = this@toUnitDataEvent.addressStreet,
+        addressNumber = this@toUnitDataEvent.addressNumber,
+        addressComplement = this@toUnitDataEvent.addressComplement,
+        addressNeighborhood = this@toUnitDataEvent.addressNeighborhood,
+        addressCity = this@toUnitDataEvent.addressCity,
+        addressState = this@toUnitDataEvent.addressState.toAddressStateEvent(),
+        isActive = this@toUnitDataEvent.isActive,
+        createdAt = this@toUnitDataEvent.createdAt,
+        updatedAt = this@toUnitDataEvent.updatedAt,
     )
 }
 
-suspend fun UUID.toUnitDeletedEvent() = coroutineScope {
-    UnitDeletedEvent(
-        id = this@toUnitDeletedEvent,
-        deletedAt = now(UTC),
+suspend fun UUID.toUnitManagementEvent() = coroutineScope {
+    UnitManagementEvent(
+        eventType = DELETE,
+        eventTimestamp = now(UTC),
+        eventKey = this@toUnitManagementEvent,
+        eventData = null,
     )
 }
 

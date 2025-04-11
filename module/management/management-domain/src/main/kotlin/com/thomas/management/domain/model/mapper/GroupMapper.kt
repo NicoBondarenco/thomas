@@ -1,8 +1,9 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.group.GroupCreatedEvent
-import com.thomas.contract.messaging.management.group.GroupDeletedEvent
-import com.thomas.contract.messaging.management.group.GroupUpdatedEvent
+import com.thomas.contract.messaging.management.ManagementEventType
+import com.thomas.contract.messaging.management.ManagementEventType.DELETE
+import com.thomas.contract.messaging.management.group.GroupDataEvent
+import com.thomas.contract.messaging.management.group.GroupManagementEvent
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.GroupSimpleEntity
 import com.thomas.management.data.entity.OrganizationEntity
@@ -69,38 +70,36 @@ suspend fun GroupCompleteEntity.updateFromRequest(
     )
 }
 
-suspend fun GroupCompleteEntity.toGroupCreatedEvent() = coroutineScope {
-    GroupCreatedEvent(
-        id = this@toGroupCreatedEvent.id,
-        groupName = this@toGroupCreatedEvent.groupName,
-        groupDescription = this@toGroupCreatedEvent.groupDescription,
-        groupOrganization = this@toGroupCreatedEvent.groupOrganization.id,
-        organizationRoles = this@toGroupCreatedEvent.organizationRoles,
-        groupUnits = this@toGroupCreatedEvent.groupUnits.toGroupUnitsEvent(),
-        isActive = this@toGroupCreatedEvent.isActive,
-        createdAt = this@toGroupCreatedEvent.createdAt,
-        updatedAt = this@toGroupCreatedEvent.updatedAt,
+suspend fun GroupCompleteEntity.toGroupManagementEvent(type: ManagementEventType) = coroutineScope {
+    GroupManagementEvent(
+        eventType = type,
+        eventTimestamp = now(UTC),
+        eventKey = this@toGroupManagementEvent.id,
+        eventData = this@toGroupManagementEvent.toGroupDataEvent(),
     )
 }
 
-suspend fun GroupCompleteEntity.toGroupUpdatedEvent() = coroutineScope {
-    GroupUpdatedEvent(
-        id = this@toGroupUpdatedEvent.id,
-        groupName = this@toGroupUpdatedEvent.groupName,
-        groupDescription = this@toGroupUpdatedEvent.groupDescription,
-        groupOrganization = this@toGroupUpdatedEvent.groupOrganization.id,
-        organizationRoles = this@toGroupUpdatedEvent.organizationRoles,
-        groupUnits = this@toGroupUpdatedEvent.groupUnits.toGroupUnitsEvent(),
-        isActive = this@toGroupUpdatedEvent.isActive,
-        createdAt = this@toGroupUpdatedEvent.createdAt,
-        updatedAt = this@toGroupUpdatedEvent.updatedAt,
+suspend fun GroupCompleteEntity.toGroupDataEvent() = coroutineScope {
+    GroupDataEvent(
+        id = this@toGroupDataEvent.id,
+        groupName = this@toGroupDataEvent.groupName,
+        groupDescription = this@toGroupDataEvent.groupDescription,
+        groupOrganization = this@toGroupDataEvent.groupOrganization.id,
+        organizationRoles = this@toGroupDataEvent.organizationRoles,
+        groupUnits = this@toGroupDataEvent.groupUnits.toGroupUnitsEvent(),
+        isActive = this@toGroupDataEvent.isActive,
+        createdAt = this@toGroupDataEvent.createdAt,
+        updatedAt = this@toGroupDataEvent.updatedAt,
     )
 }
 
-suspend fun UUID.toGroupDeletedEvent() = coroutineScope {
-    GroupDeletedEvent(
-        id = this@toGroupDeletedEvent,
-        deletedAt = now(UTC),
+
+suspend fun UUID.toGroupManagementEvent() = coroutineScope {
+    GroupManagementEvent(
+        eventType = DELETE,
+        eventTimestamp = now(UTC),
+        eventKey = this@toGroupManagementEvent,
+        eventData = null,
     )
 }
 

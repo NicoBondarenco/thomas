@@ -1,7 +1,7 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.SignupEntity
+import com.thomas.management.domain.crypt.Hasher
 import com.thomas.management.domain.model.request.SignupRequest
 import com.thomas.management.domain.model.response.SignupResponse
 import kotlinx.coroutines.coroutineScope

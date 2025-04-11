@@ -1,21 +1,22 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.user.UserCreatedEvent
-import com.thomas.contract.messaging.management.user.UserUpdatedEvent
+import com.thomas.contract.messaging.management.ManagementEventType
+import com.thomas.contract.messaging.management.user.UserDataEvent
+import com.thomas.contract.messaging.management.user.UserManagementEvent
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
-import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserSimpleEntity
+import com.thomas.management.domain.crypt.Hasher
 import com.thomas.management.domain.model.request.SignupUserRequest
 import com.thomas.management.domain.model.request.UserCreateRequest
 import com.thomas.management.domain.model.request.UserUpdateRequest
 import com.thomas.management.domain.model.response.SignupUserResponse
 import com.thomas.management.domain.model.response.UserDetailResponse
 import com.thomas.management.domain.model.response.UserSimpleResponse
-import java.time.OffsetDateTime
+import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
 import kotlinx.coroutines.coroutineScope
 
@@ -103,7 +104,7 @@ suspend fun UserCompleteEntity.updateFromRequest(
         organizationRoles = request.organizationRoles,
         userGroups = userGroups,
         userUnits = userUnits,
-        updatedAt = OffsetDateTime.now(UTC),
+        updatedAt = now(UTC),
     )
 }
 
@@ -147,66 +148,63 @@ suspend fun UserCompleteEntity.toUserDetailResponse() = coroutineScope {
     )
 }
 
-suspend fun UserSimpleEntity.toUserCreatedEvent() = coroutineScope {
-    UserCreatedEvent(
-        id = this@toUserCreatedEvent.id,
-        firstName = this@toUserCreatedEvent.firstName,
-        lastName = this@toUserCreatedEvent.lastName,
-        documentNumber = this@toUserCreatedEvent.documentNumber,
-        profilePhoto = this@toUserCreatedEvent.profilePhoto,
-        userGender = this@toUserCreatedEvent.userGender,
-        birthDate = this@toUserCreatedEvent.birthDate,
-        userOrganization = this@toUserCreatedEvent.userOrganization.id,
-        organizationRoles = this@toUserCreatedEvent.organizationRoles,
-        mainEmail = this@toUserCreatedEvent.mainEmail,
-        mainPhone = this@toUserCreatedEvent.mainPhone,
-        isActive = this@toUserCreatedEvent.isActive,
+suspend fun UserSimpleEntity.toUserManagementEvent(type: ManagementEventType) = coroutineScope {
+    UserManagementEvent(
+        eventType = type,
+        eventTimestamp = now(UTC),
+        eventKey = this@toUserManagementEvent.id,
+        eventData = this@toUserManagementEvent.toUserDataEvent(),
+    )
+}
+
+suspend fun UserSimpleEntity.toUserDataEvent() = coroutineScope {
+    UserDataEvent(
+        id = this@toUserDataEvent.id,
+        firstName = this@toUserDataEvent.firstName,
+        lastName = this@toUserDataEvent.lastName,
+        documentNumber = this@toUserDataEvent.documentNumber,
+        profilePhoto = this@toUserDataEvent.profilePhoto,
+        userGender = this@toUserDataEvent.userGender,
+        birthDate = this@toUserDataEvent.birthDate,
+        userOrganization = this@toUserDataEvent.userOrganization.id,
+        organizationRoles = this@toUserDataEvent.organizationRoles,
+        mainEmail = this@toUserDataEvent.mainEmail,
+        mainPhone = this@toUserDataEvent.mainPhone,
+        isActive = this@toUserDataEvent.isActive,
         userGroups = setOf(),
         userUnits = mapOf(),
-        createdAt = this@toUserCreatedEvent.createdAt,
-        updatedAt = this@toUserCreatedEvent.updatedAt,
+        createdAt = this@toUserDataEvent.createdAt,
+        updatedAt = this@toUserDataEvent.updatedAt,
     )
 }
 
-suspend fun UserCompleteEntity.toUserCreatedEvent() = coroutineScope {
-    UserCreatedEvent(
-        id = this@toUserCreatedEvent.id,
-        firstName = this@toUserCreatedEvent.firstName,
-        lastName = this@toUserCreatedEvent.lastName,
-        documentNumber = this@toUserCreatedEvent.documentNumber,
-        profilePhoto = this@toUserCreatedEvent.profilePhoto,
-        userGender = this@toUserCreatedEvent.userGender,
-        birthDate = this@toUserCreatedEvent.birthDate,
-        userOrganization = this@toUserCreatedEvent.userOrganization.id,
-        organizationRoles = this@toUserCreatedEvent.organizationRoles,
-        mainEmail = this@toUserCreatedEvent.mainEmail,
-        mainPhone = this@toUserCreatedEvent.mainPhone,
-        isActive = this@toUserCreatedEvent.isActive,
-        userGroups = this@toUserCreatedEvent.userGroups.toUserGroupsEvent(),
-        userUnits = this@toUserCreatedEvent.userUnits.toUserUnitsEvent(),
-        createdAt = this@toUserCreatedEvent.createdAt,
-        updatedAt = this@toUserCreatedEvent.updatedAt,
+suspend fun UserCompleteEntity.toUserManagementEvent(type: ManagementEventType) = coroutineScope {
+    UserManagementEvent(
+        eventType = type,
+        eventTimestamp = now(UTC),
+        eventKey = this@toUserManagementEvent.id,
+        eventData = this@toUserManagementEvent.toUserDataEvent(),
     )
 }
 
-suspend fun UserCompleteEntity.toUserUpdatedEvent() = coroutineScope {
-    UserUpdatedEvent(
-        id = this@toUserUpdatedEvent.id,
-        firstName = this@toUserUpdatedEvent.firstName,
-        lastName = this@toUserUpdatedEvent.lastName,
-        documentNumber = this@toUserUpdatedEvent.documentNumber,
-        profilePhoto = this@toUserUpdatedEvent.profilePhoto,
-        userGender = this@toUserUpdatedEvent.userGender,
-        birthDate = this@toUserUpdatedEvent.birthDate,
-        userOrganization = this@toUserUpdatedEvent.userOrganization.id,
-        organizationRoles = this@toUserUpdatedEvent.organizationRoles,
-        mainEmail = this@toUserUpdatedEvent.mainEmail,
-        mainPhone = this@toUserUpdatedEvent.mainPhone,
-        isActive = this@toUserUpdatedEvent.isActive,
-        userGroups = this@toUserUpdatedEvent.userGroups.toUserGroupsEvent(),
-        userUnits = this@toUserUpdatedEvent.userUnits.toUserUnitsEvent(),
-        createdAt = this@toUserUpdatedEvent.createdAt,
-        updatedAt = this@toUserUpdatedEvent.updatedAt,
+suspend fun UserCompleteEntity.toUserDataEvent() = coroutineScope {
+    UserDataEvent(
+        id = this@toUserDataEvent.id,
+        firstName = this@toUserDataEvent.firstName,
+        lastName = this@toUserDataEvent.lastName,
+        documentNumber = this@toUserDataEvent.documentNumber,
+        profilePhoto = this@toUserDataEvent.profilePhoto,
+        userGender = this@toUserDataEvent.userGender,
+        birthDate = this@toUserDataEvent.birthDate,
+        userOrganization = this@toUserDataEvent.userOrganization.id,
+        organizationRoles = this@toUserDataEvent.organizationRoles,
+        mainEmail = this@toUserDataEvent.mainEmail,
+        mainPhone = this@toUserDataEvent.mainPhone,
+        isActive = this@toUserDataEvent.isActive,
+        userGroups = this@toUserDataEvent.userGroups.toUserGroupsEvent(),
+        userUnits = this@toUserDataEvent.userUnits.toUserUnitsEvent(),
+        createdAt = this@toUserDataEvent.createdAt,
+        updatedAt = this@toUserDataEvent.updatedAt,
     )
 }
 

@@ -1,12 +1,11 @@
 package com.thomas.management.domain.messaging.event
 
-import com.thomas.contract.messaging.management.user.UserCreatedEvent
-import com.thomas.contract.messaging.management.user.UserUpdatedEvent
+import com.thomas.contract.messaging.management.user.UserManagementEvent
 
 interface UserEventProducer {
 
-    suspend fun userCreated(event: UserCreatedEvent)
+    suspend fun userCreated(event: UserManagementEvent)
 
-    suspend fun userUpdated(event: UserUpdatedEvent)
+    suspend fun userUpdated(event: UserManagementEvent)
 
 }

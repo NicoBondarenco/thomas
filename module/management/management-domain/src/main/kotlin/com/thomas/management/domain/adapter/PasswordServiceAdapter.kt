@@ -3,12 +3,12 @@ package com.thomas.management.domain.adapter
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.validate
-import com.thomas.hasher.Hasher
 import com.thomas.management.data.entity.PasswordResetEntity
 import com.thomas.management.data.entity.UserSimpleEntity
 import com.thomas.management.data.repository.PasswordResetRepository
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.PasswordService
+import com.thomas.management.domain.crypt.Hasher
 import com.thomas.management.domain.exception.ResetPasswordException.Companion.expiredToken
 import com.thomas.management.domain.exception.ResetPasswordException.Companion.invalidToken
 import com.thomas.management.domain.exception.UserNotFoundException

@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+
+  management-neo4j:
+    image: neo4j:latest
+    container_name: "management-neo4j"
+    volumes:
+      - type: bind
+        source: ./config/neo4j/plugins
+        target: /plugins
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/logs
+        target: /logs
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/conf
+        target: /conf
+        read_only: false
+      - type: bind
+        source: ./config/neo4j/data
+        target: /data
+        read_only: false
+    environment:
+      - NEO4J_AUTH=neo4j/M4n@g3men7
+      - NEO4J_dbms_security_procedures_unrestricted=*
+      - NEO4J_dbms_security_procedures_allowlist=*
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]
+    ports:
+      - "7500:7474"
+      - "7600:7687"
+    networks:
+      - management-network
+
+  management-rabbit:
+    image: "rabbitmq:3-management"
+    container_name: "management-rabbit"
+    ports:
+      - "6600:5672"
+      - "16600:15672"
+    volumes:
+      - type: bind
+        source: ./config/rabbitmq/data
+        target: /var/lib/rabbitmq
+        read_only: false
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks:
+      - management-network
+
+networks:
+  management-network:
+    driver: bridge

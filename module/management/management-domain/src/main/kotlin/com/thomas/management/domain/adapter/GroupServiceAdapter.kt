@@ -1,5 +1,7 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.contract.messaging.management.ManagementEventType.CREATE
+import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentOrganization
@@ -20,11 +22,9 @@ import com.thomas.management.domain.groupUpdateRoles
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementGroupValidationGroupDataInvalidData
 import com.thomas.management.domain.messaging.event.GroupEventProducer
 import com.thomas.management.domain.model.mapper.toGroupCompleteEntity
-import com.thomas.management.domain.model.mapper.toGroupCreatedEvent
-import com.thomas.management.domain.model.mapper.toGroupDeletedEvent
 import com.thomas.management.domain.model.mapper.toGroupDetailResponse
+import com.thomas.management.domain.model.mapper.toGroupManagementEvent
 import com.thomas.management.domain.model.mapper.toGroupSimpleResponse
-import com.thomas.management.domain.model.mapper.toGroupUpdatedEvent
 import com.thomas.management.domain.model.mapper.toUnitRoleEntity
 import com.thomas.management.domain.model.mapper.updateFromRequest
 import com.thomas.management.domain.model.request.GroupUpsertRequest
@@ -111,7 +111,7 @@ class GroupServiceAdapter(
         request.toCompleteEntity().upsert(
             request,
             { groupRepository.create(it) },
-            { groupProducer.groupCreated(it.toGroupCreatedEvent()) }
+            { groupProducer.groupCreated(it.toGroupManagementEvent(CREATE)) }
         )
     }
 
@@ -123,7 +123,7 @@ class GroupServiceAdapter(
         request.updateEntity(id).upsert(
             request,
             { groupRepository.update(it) },
-            { groupProducer.groupUpdated(it.toGroupUpdatedEvent()) }
+            { groupProducer.groupUpdated(it.toGroupManagementEvent(UPDATE)) }
         )
     }
 
@@ -132,7 +132,7 @@ class GroupServiceAdapter(
         id: UUID,
     ) = authorized(groupDeleteRoles) {
         groupRepository.delete(id)
-        groupProducer.groupDeleted(id.toGroupDeletedEvent())
+        groupProducer.groupDeleted(id.toGroupManagementEvent())
     }
 
     private suspend fun GroupCompleteEntity.upsert(

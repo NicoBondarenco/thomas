@@ -10,5 +10,4 @@ data class JWTProperties(
     val jwtAudience: String = "",
     val jwtRealm: String = "",
     val jwtAlgorithm: String = "",
-    val validityMinutes: Long = 0L,
 )

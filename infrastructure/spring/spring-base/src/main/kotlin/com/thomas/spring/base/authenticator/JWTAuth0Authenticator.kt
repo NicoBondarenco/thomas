@@ -47,4 +47,5 @@ class JWTAuth0Authenticator internal constructor(
         mapper.readValue<SecurityUser>(content)
     }.takeIf { it.isActive }
         ?: throw UnauthorizedUserException(authenticationTokenRetrieveUserInactiveUser())
+
 }

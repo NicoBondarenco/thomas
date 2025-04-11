@@ -80,6 +80,7 @@ dependencyResolutionManagement {
 
             version("neo4j", "5.26.0")
             version("neo4j-driver", "5.27.0")
+            version("neo4j-ogm", "4.0.17")
 
             version("typedb", "2.28.0")
 
@@ -87,7 +88,7 @@ dependencyResolutionManagement {
 
             version("jackson", "2.17.0")
 
-            version("springCloud", "2023.0.1")
+            version("springCloud", "2024.0.1")
 
             version("springdocOpenapi", "2.8.6")
 
@@ -270,6 +271,9 @@ dependencyResolutionManagement {
                 ),
             )
 
+            library("neo4j-ogm-core", "org.neo4j", "neo4j-ogm-core").versionRef("neo4j-ogm")
+            library("neo4j-ogm-bolt", "org.neo4j", "neo4j-ogm-bolt-driver").versionRef("neo4j-ogm")
+
             //endregion DATABASES
 
             //region JWT
@@ -339,6 +343,8 @@ dependencyResolutionManagement {
             library("spring-boot-starter-aop", "org.springframework.boot", "spring-boot-starter-aop").withoutVersion()
             library("spring-boot-starter-actuator", "org.springframework.boot", "spring-boot-starter-actuator").withoutVersion()
 
+            library("spring-boot-data-neo4j", "org.springframework.boot", "spring-boot-starter-data-neo4j").withoutVersion()
+
             library("spring-cloud-dependencies", "org.springframework.cloud", "spring-cloud-dependencies").versionRef("springCloud")
 
             library("spring-cloud-stream-core-all", "org.springframework.cloud", "spring-cloud-stream").withoutVersion()
@@ -391,9 +397,6 @@ findProject(":infrastructure:contract:contract-messaging")?.name = "contract-mes
 
 include("infrastructure:database:neo4j")
 findProject(":infrastructure:database:neo4j")?.name = "neo4j"
-
-include("infrastructure:hasher:hasher")
-findProject(":infrastructure:hasher:hasher")?.name = "hasher"
 
 include("infrastructure:spring:spring-base")
 findProject(":infrastructure:spring:spring-base")?.name = "spring-base"

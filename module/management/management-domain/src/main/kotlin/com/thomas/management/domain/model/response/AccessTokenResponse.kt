@@ -1,7 +1,8 @@
 package com.thomas.management.domain.model.response
 
 data class AccessTokenResponse(
-    val idToken: String,
+    val accessToken: String,
     val refreshToken: String,
-    val durationSeconds: Long,
+    val accessDuration: Long,
+    val refreshDuration: Long,
 )

@@ -25,7 +25,7 @@ class TokenBuilder(
     @Suppress("LongParameterList")
     internal fun generateToken(
         user: SecurityUser,
-        validityMinutes: Long = jwtProperties.validityMinutes,
+        validityMinutes: Long = 5,
         idProperty: String = SecurityUser::userId.name,
         idValue: String = user.userId.toString(),
         issuerName: String = jwtProperties.issuerName,

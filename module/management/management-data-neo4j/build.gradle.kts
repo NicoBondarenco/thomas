@@ -16,8 +16,8 @@ dependencies {
     implementation(project(":module:management:management-data"))
     implementation(project(":infrastructure:database:neo4j"))
 
-    implementation("org.neo4j:neo4j-ogm-core:4.0.15")
-    implementation("org.neo4j:neo4j-ogm-bolt-driver:4.0.15")
+    implementation(libs.neo4j.ogm.core)
+    implementation(libs.neo4j.ogm.bolt)
 
     testImplementation(libs.bundles.jackson.all.bundle)
 

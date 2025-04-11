@@ -17,7 +17,6 @@ import com.thomas.management.domain.mock.userNotFound
 import com.thomas.management.domain.mock.userRepositoryMock
 import com.thomas.management.domain.model.request.LoginRequest
 import com.thomas.management.domain.model.request.RefreshTokenRequest
-import com.thomas.management.domain.properties.AuthenticationProperties
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -27,16 +26,10 @@ import org.junit.jupiter.api.assertThrows
 
 class AuthenticationServiceAdapterTest {
 
-    private val authenticationProperties = AuthenticationProperties(
-        accessDurationSeconds = 3600,
-        refreshDurationSeconds = 86400,
-    )
-
     private val service: AuthenticationService = AuthenticationServiceAdapter(
         hasher = hasherMock,
         tokenizer = tokenizerMock,
         userRepository = userRepositoryMock,
-        authenticationProperties = authenticationProperties,
     )
 
     @BeforeEach

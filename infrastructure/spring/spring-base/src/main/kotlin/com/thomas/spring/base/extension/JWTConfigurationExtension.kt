@@ -25,6 +25,6 @@ private fun JWTProperties.rsaPublicKey(): RSAPublicKey =
 private fun JWTProperties.rsaPrivateKey(): RSAPrivateKey =
     KeyFactory.getInstance(jwtAlgorithm).generatePrivate(privateKeySpec()) as RSAPrivateKey
 
-internal fun JWTProperties.algorithm() = Algorithm.RSA256(rsaPublicKey(), rsaPrivateKey())
+fun JWTProperties.algorithm(): Algorithm = Algorithm.RSA256(rsaPublicKey(), rsaPrivateKey())
 
-internal fun JWTProperties.verifier(): JWTVerifier = JWT.require(algorithm()).withIssuer(issuerName).build()
+fun JWTProperties.verifier(): JWTVerifier = JWT.require(algorithm()).withIssuer(issuerName).build()

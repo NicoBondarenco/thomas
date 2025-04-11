@@ -51,3 +51,19 @@ CREATE INDEX idx_group_is_active IF NOT EXISTS FOR (g:Group) ON (g.is_active);
 
 CREATE INDEX idx_group_created_at IF NOT EXISTS FOR (g:Group) ON (g.created_at);
 CREATE INDEX idx_group_updated_at IF NOT EXISTS FOR (g:Group) ON (g.updated_at);
+
+// --------------------------------------------------------------------------------------
+// USER NODE DEFINITION
+// --------------------------------------------------------------------------------------
+
+CREATE CONSTRAINT upk_user IF NOT EXISTS FOR (u:User) REQUIRE u.id IS UNIQUE;
+
+CREATE TEXT INDEX txi_user_first_name IF NOT EXISTS FOR (u:User) ON (u.first_name);
+CREATE TEXT INDEX txi_user_last_name IF NOT EXISTS FOR (u:User) ON (u.last_name);
+CREATE TEXT INDEX txi_user_document_number IF NOT EXISTS FOR (u:User) ON (u.document_number);
+CREATE TEXT INDEX txi_user_main_email IF NOT EXISTS FOR (u:User) ON (u.main_email);
+
+CREATE INDEX idx_user_is_active IF NOT EXISTS FOR (u:User) ON (u.is_active);
+
+CREATE INDEX idx_user_created_at IF NOT EXISTS FOR (u:User) ON (u.created_at);
+CREATE INDEX idx_user_updated_at IF NOT EXISTS FOR (u:User) ON (u.updated_at);
