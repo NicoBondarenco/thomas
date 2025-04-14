@@ -4,15 +4,20 @@ import com.thomas.management.data.entity.SignupEntity
 import com.thomas.management.domain.crypt.Hasher
 import com.thomas.management.domain.model.request.SignupRequest
 import com.thomas.management.domain.model.response.SignupResponse
+import com.thomas.management.domain.properties.SignupProperties
 import kotlinx.coroutines.coroutineScope
 
 suspend fun SignupRequest.toSignupEntity(
-    hasher: Hasher
+    hasher: Hasher,
+    signupProperties: SignupProperties
 ): SignupEntity = coroutineScope {
-    organizationData.toOrganizationEntity().let {
+    organizationData.toOrganizationEntity(
+        maxUnits = signupProperties.maxUnits,
+        maxUsers = signupProperties.maxUsers,
+    ).let {
         SignupEntity(
             organizationData = it,
-            userData = userData.toUserEntity(it, hasher),
+            userData = userData.toUserEntity(it, hasher, signupProperties.defaultRoles),
         )
     }
 }

@@ -11,13 +11,16 @@ import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
 import kotlinx.coroutines.coroutineScope
 
-suspend fun SignupOrganizationRequest.toOrganizationEntity() = coroutineScope {
+suspend fun SignupOrganizationRequest.toOrganizationEntity(
+    maxUnits: Int,
+    maxUsers: Int,
+) = coroutineScope {
     OrganizationEntity(
         organizationName = this@toOrganizationEntity.organizationName,
         fantasyName = this@toOrganizationEntity.fantasyName,
         registrationNumber = this@toOrganizationEntity.registrationNumber,
-        maximumUsers = this@toOrganizationEntity.maximumUsers,
-        maximumUnits = this@toOrganizationEntity.maximumUnits,
+        maximumUnits = maxUnits,
+        maximumUsers = maxUsers,
         mainEmail = this@toOrganizationEntity.mainEmail,
         mainPhone = this@toOrganizationEntity.mainPhone,
         addressZipcode = this@toOrganizationEntity.addressZipcode,

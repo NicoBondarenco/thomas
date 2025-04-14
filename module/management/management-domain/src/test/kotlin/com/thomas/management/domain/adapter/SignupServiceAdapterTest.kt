@@ -2,6 +2,7 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.EntityValidationException
+import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.core.util.StringUtils.randomEmail
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
@@ -42,7 +43,12 @@ class SignupServiceAdapterTest : DomainValidationTest() {
     }
 
     private val signupProperties: SignupProperties
-        get() = SignupProperties(SIGNUP_ENABLED)
+        get() = SignupProperties(
+            SIGNUP_ENABLED,
+            maxUnits = 10,
+            maxUsers = 10,
+            defaultRoles = setOf(ORGANIZATION_ALL),
+        )
 
     private val signupService: SignupService
         get() = SignupServiceAdapter(

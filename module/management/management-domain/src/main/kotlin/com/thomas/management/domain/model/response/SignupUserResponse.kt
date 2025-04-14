@@ -13,8 +13,6 @@ data class SignupUserResponse(
     val profilePhoto: String?,
     val userGender: Gender?,
     val birthDate: LocalDate?,
-    val passwordSalt: String,
-    val passwordHash: String,
     val mainEmail: String,
     val mainPhone: String,
     val isActive: Boolean,

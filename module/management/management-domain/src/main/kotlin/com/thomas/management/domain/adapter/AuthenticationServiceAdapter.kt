@@ -1,5 +1,6 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.core.aspect.AspectClass
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.AuthenticationService
@@ -16,6 +17,7 @@ import com.thomas.management.domain.model.request.RefreshTokenRequest
 import com.thomas.management.domain.model.response.AccessTokenResponse
 import kotlinx.coroutines.coroutineScope
 
+@AspectClass
 class AuthenticationServiceAdapter(
     private val hasher: Hasher,
     private val tokenizer: Tokenizer,

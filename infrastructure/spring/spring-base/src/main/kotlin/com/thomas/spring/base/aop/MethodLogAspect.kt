@@ -7,6 +7,7 @@ import com.thomas.core.context.SessionContextHolder.currentUser
 import java.lang.System.lineSeparator
 import java.lang.reflect.Parameter
 import java.util.UUID
+import kotlin.coroutines.Continuation
 import kotlin.reflect.KClass
 import org.apache.logging.log4j.kotlin.KotlinLogger
 import org.apache.logging.log4j.kotlin.cachedLoggerOf
@@ -67,7 +68,7 @@ class MethodLogAspect(
 
     private fun JoinPoint.parametersLog(methodLog: MethodLog): String = if (methodLog.logParameters) {
         val method = this.methodSignature()
-        this.args.mapIndexed { index, arg ->
+        this.args.filter { it !is Continuation<*> }.mapIndexed { index, arg ->
             val argumentLog = arg.argumentLog(method.method.parameters[index].maskValue())
             "${lineSeparator()}\tparameter[$index] -> ${method.parameterNames[index]}: ${method.parameterTypes[index].simpleName} = $argumentLog"
         }.joinToString("")

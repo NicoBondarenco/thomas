@@ -3,7 +3,9 @@ package com.thomas.management.domain.model.mapper
 import com.thomas.contract.messaging.management.ManagementEventType
 import com.thomas.contract.messaging.management.user.UserDataEvent
 import com.thomas.contract.messaging.management.user.UserManagementEvent
+import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
+import com.thomas.core.model.security.SecurityRole
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitRoleEntity
@@ -23,6 +25,7 @@ import kotlinx.coroutines.coroutineScope
 suspend fun SignupUserRequest.toUserEntity(
     userOrganization: OrganizationEntity,
     hasher: Hasher,
+    defaultRoles: Set<SecurityOrganizationRole>,
 ): UserSimpleEntity = coroutineScope {
     hasher.let {
         val salt = it.generateSalt()
@@ -36,7 +39,7 @@ suspend fun SignupUserRequest.toUserEntity(
             passwordSalt = salt,
             passwordHash = password,
             userOrganization = userOrganization,
-            organizationRoles = setOf(ORGANIZATION_ALL),
+            organizationRoles = defaultRoles,
             mainEmail = this@toUserEntity.mainEmail,
             mainPhone = this@toUserEntity.mainPhone,
         )
@@ -52,8 +55,6 @@ suspend fun UserSimpleEntity.toSignupUserResponse() = coroutineScope {
         profilePhoto = this@toSignupUserResponse.profilePhoto,
         userGender = this@toSignupUserResponse.userGender,
         birthDate = this@toSignupUserResponse.birthDate,
-        passwordSalt = this@toSignupUserResponse.passwordSalt,
-        passwordHash = this@toSignupUserResponse.passwordHash,
         mainEmail = this@toSignupUserResponse.mainEmail,
         mainPhone = this@toSignupUserResponse.mainPhone,
         isActive = this@toSignupUserResponse.isActive,

@@ -1,7 +1,17 @@
+server:
+  port: ${MANAGEMENT_SERVER_PORT:8100}
+  shutdown: graceful
+
 spring:
 
   application:
-    name: thomas-management
+    name: "T.H.O.M.A.S. Management Service"
+
+  banner:
+    location: banner.txt
+
+  main:
+    allow-bean-definition-overriding: true
 
   threads:
     virtual:
@@ -10,7 +20,7 @@ spring:
   rabbitmq:
     username: ${MANAGEMENT_RABBITMQ_USERNAME}
     password: ${MANAGEMENT_RABBITMQ_PASSWORD}
-    virtual-host: '/thomas-management'
+    virtual-host: '/thomas'
     addresses: ${MANAGEMENT_RABBITMQ_URL}
 
   cloud:
@@ -82,6 +92,31 @@ spring:
               exchange-type: topic
               routing-key-expression: '"notification.email.command"'
 
+  neo4j:
+    uri: ${MANAGEMENT_NEO4J_URI}
+    authentication:
+      username: ${MANAGEMENT_NEO4J_USERNAME}
+      password: ${MANAGEMENT_NEO4J_PASSWORD}
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+        exclude: autoconfig,beans,env,configprops,dump,mappings,shutdown,trace
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ} %-5p %c:%M{1}:%L - %m%n"
+  level:
+    root: INFO
+    com.thomas: INFO
+
 neo4j:
   connectionUri: ${MANAGEMENT_NEO4J_URI}
   databaseName: ${MANAGEMENT_NEO4J_DATABASE}
@@ -99,12 +134,14 @@ bcrypt:
 
 security:
   jwt:
-    issuerName: "test-application"
-    jwtAudience: "test-audience"
-    jwtRealm: "test-realm"
+    issuerName: "thomas-application"
+    jwtAudience: "thomas-audience"
+    jwtRealm: "thomas-realm"
     jwtAlgorithm: "RSA"
-    privateKey: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJMiW6O3XOwALyk+DsYRop+zp0HeNgbMpfKuJx4A5Hqcqdz0pmIAEyZMZCnwmG2GDE5D3oVQoST52V9BtENZxX+yGnzd+FsKWND8/azDOPGtCC25GXHeppy1Swpd5Vsbe5w4itEsKABJY068zZmLtaGZA0jsSWnOZFFWqGxDSVVAa8fukr8cpKNIFf5psGgWG3LyIPcjrU2R9nkx5mZ+DOJ/rlwX6Fg8+h2NJA7j7QDLjbzjzBAIe7nU3b5hn2rFdJfdPBbdgz+rLgeeSWqFH0IYKhAFdfVCrwcX1TcmeL+Y6yIzlHp9dnwsYwXHj/+FunAeuIqP84TnXodrHMM00zAgMBAAECggEACS5DH3TgIs+LMuOBk3e42GqQ18SXYAqGz4Hm9FhLfoSmbL4NQIy8UT7c9yRHrIIKJGHf206qF3zPjYymg93IZRFeD0irJvARFdc/XlYMEj8gfaAkTBd+31X6ZtcixplF73GXNoKRIoNTEVYjMliwT+Ozu1o6aT7+mO9pvX2NgrTOm9+1ZRpb4dZ2tGT2hqeni/HJE3yS4KlwMPVIssHnjJ1JdugrVGb19GYgsTO/LMHSdmzlGYlsTuYg35X6dMI0uk4pj2zJ35bqWASQywuLCJMNwYEsrJkkXwyJRa5rFDIKOZo6CcxTkQ+19nJbF3qn8QNs1Y3K8II8ykufXdsBnQKBgQDxHXJ+I2QCke1T6nPXxrYHZdBkPTccNi43gbottPcxixHyPF11rF48ImrpAqodTvv+IzdPb9mo47UQ0ZyUyorIw8eYvyIjSpfi07FNjgyYqZQFF/oRq3ArHZWjLtdXWE5L6DHqa39YXvS504SMDdKd9vLfx/1kVoszvOkAyTmmdwKBgQDVndKnqFAPhm05oHM9hmcMy2neSOiby8wBKPahrTycYnle+iWmyEICUx87m/cj5peqelMVV8jC/pAg0LAoA7ZAtPmR49VgN263qIxtHuwZgCIzI9iWRqHfXP1Lw6R1HqSXLr716jV6FDWVs5OGPBajenBkJBbIROuYaex8Bj0yJQKBgG0aTQ+ExiFflMtvAII3+XA5guWIyaIrZhhZzDwYce5qJnG9HPE9UNrXHBdZzE48ykwB9Woti4kfmHQG1VqCl/Amnu+gNTtQ6o+KCOW2DD8cJM11PwO11qi711UiwfBVFgDFDaksgVAkj4pyiryxGIfAEcBvB1raylxb8/cWFs8bAoGBALRGeNzdApPXkp4rdpXZs2Xs1O+u//9bQlNISruvA5PG1z78RII4RtzHYXhg63T0ydIpYayFZPyK8P+AnulmGI0LLgOdDxogLeP47mm4yu/KXxJhkgtgmIN0ap9iAIyGy8h6vtWyTmc0XvRzlHCYjVJxpiAdBM0GvPznh5gze7mxAoGAcCBUEmCaRRxEuMaU/jJ3IgX0q7R90uk4+sQUjgKoT2j2cBdTSq8hRRiZ/TJ6nj4SkqgxkoAf8d3tfwf3ED/8e10oM02zEYQvT8b2R7fjIyIEOutizbedtiwWs9PgTu9lzey0kBpqTSlJp0ADpTQVfZLVTjzCYlwq897R98GWlKs="
-    publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyTIlujt1zsAC8pPg7GEaKfs6dB3jYGzKXyriceAOR6nKnc9KZiABMmTGQp8JhthgxOQ96FUKEk+dlfQbRDWcV/shp83fhbCljQ/P2swzjxrQgtuRlx3qactUsKXeVbG3ucOIrRLCgASWNOvM2Zi7WhmQNI7ElpzmRRVqhsQ0lVQGvH7pK/HKSjSBX+abBoFhty8iD3I61NkfZ5MeZmfgzif65cF+hYPPodjSQO4+0Ay42848wQCHu51N2+YZ9qxXSX3TwW3YM/qy4HnklqhR9CGCoQBXX1Qq8HF9U3Jni/mOsiM5R6fXZ8LGMFx4//hbpwHriKj/OE516HaxzDNNMwIDAQAB"
+#    privateKey: ${MANAGEMENT_PRIVATE_KEY}
+#    publicKey: ${MANAGEMENT_PUBLIC_KEY}
+    privateKey: "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJMdy8jmZmgFzf1GkAXc4i4f67WTCEbfc5xyG81eCta1d8zC1SlJn1yIQRxxhm3GIX8XBgdMHj3mEz2i2w4LlykHthqfQqWzNYUvyBU0yzrMN/lnSVDRUTB8TLA44DbU+lAaE99Ng+6ubq2IBgVEwJRtnP31W5bEzg5GuvYfKH7NAgMBAAECgYAY71/u+T46O2GioCchF0Mu1jI5YGZyvMT3q0+TC3GC2tcnWY6PpO7h3CZND+DdEkvzIo/fBMPLcgeo1sWSJ9zC0Mqi5LsdNqUqi3FYCC97nh7SojwP9Dfw7kLAA7Q+z84OHI9zpbBej6oIkpSiZgpCtMirFQU2cYdsTyPU1qnj8QJBAOanPKKi3Se0zw5lVhNG90zY1l57h8WmBMaocW4pKzqHcuU7aecNvBXv+Mv1II6N0HMmVUUhMHfu8i5TgkKNEw8CQQCjSH2TNaH4gPXosat1ySGJRX3nvTvPeUWQIRrIZ4Xux1q0BqOPHYJV7E85UZXUye7d5nvBRpSbR1Rcnk27Q+BjAkBhftNck6cTv5O+LAuEPn0OGKIUcfbkDtb5+f1oaTKCnPpt9v0+00lrpHHwFH9cgolYAx4MCIlqSLBJ8Lag1uz1AkAx9XgWlo5cTnjvHY1smIGeUpjXUtr9/AkAtGBRePtNt8lU08MvgsPiLk9/JitF1BM16dNrq4DEkeqJ/BWkenwpAkEAiT86OR+X15rMo/DbAZWOMqdyvmyn+DbJ9aveFafnHjCw7ZxgDay0xqACY0Z35GybinNd39tUxkyjr+lIoQelYA=="
+    publicKey: "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTHcvI5mZoBc39RpAF3OIuH+u1kwhG33OcchvNXgrWtXfMwtUpSZ9ciEEccYZtxiF/FwYHTB495hM9otsOC5cpB7Yan0KlszWFL8gVNMs6zDf5Z0lQ0VEwfEywOOA21PpQGhPfTYPurm6tiAYFRMCUbZz99VuWxM4ORrr2Hyh+zQIDAQAB"
 
 passwordReset:
   tokenValidityMinutes: 60
@@ -115,6 +152,12 @@ passwordReset:
 token:
   accessDuration: 30
   refreshDuration: 1440
+
+signup:
+  enabled: true
+  maxUnits: 10
+  maxUsers: 10
+  defaultRoles: ORGANIZATION_ALL,MASTER_ROLE
 
 pageable:
   default:

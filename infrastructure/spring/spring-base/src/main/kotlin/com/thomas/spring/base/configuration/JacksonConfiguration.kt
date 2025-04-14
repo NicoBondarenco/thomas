@@ -22,6 +22,7 @@ import com.thomas.spring.base.serialization.AspectAnnotationIntrospector
 import java.nio.charset.StandardCharsets.UTF_8
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 
 @Configuration
@@ -32,6 +33,7 @@ open class JacksonConfiguration {
     }
 
     @Bean
+    @Primary
     open fun objectMapper(): ObjectMapper = ObjectMapper().configureDefaults(SNAKE_CASE)
 
     @Bean("aspect-mapper")

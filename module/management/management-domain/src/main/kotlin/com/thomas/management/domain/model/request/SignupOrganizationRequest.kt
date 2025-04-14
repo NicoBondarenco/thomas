@@ -6,8 +6,6 @@ data class SignupOrganizationRequest(
     val organizationName: String,
     val fantasyName: String? = null,
     val registrationNumber: String,
-    val maximumUsers: Int,
-    val maximumUnits: Int,
     val mainEmail: String,
     val mainPhone: String,
     val addressZipcode: String,

@@ -24,7 +24,8 @@ dependencyResolutionManagement {
 
             //region PLUGINS
 
-            version("kotlin", "2.0.0")
+            version("kotlin", "2.1.20")
+            version("kotlin-spring", "2.1.20")
             version("kotlinx-coroutines", "1.8.1")
             version("jvm", "JVM_21")
             version("target", "VERSION_21")
@@ -103,7 +104,7 @@ dependencyResolutionManagement {
             //region PLUGINS
 
             plugin("kotlin-lang", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
-            plugin("kotlin-spring", "org.jetbrains.kotlin.plugin.spring").versionRef("kotlin")
+            plugin("kotlin-spring", "org.jetbrains.kotlin.plugin.spring").versionRef("kotlin-spring")
 
             plugin("kotlinx-serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
 

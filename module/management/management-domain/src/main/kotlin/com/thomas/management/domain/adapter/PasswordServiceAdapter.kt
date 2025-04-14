@@ -1,5 +1,6 @@
 package com.thomas.management.domain.adapter
 
+import com.thomas.core.aspect.AspectClass
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.validate
@@ -27,6 +28,7 @@ import java.time.ZoneOffset.UTC
 import java.util.UUID
 import kotlinx.coroutines.coroutineScope
 
+@AspectClass
 class PasswordServiceAdapter(
     private val userRepository: UserRepository,
     private val passwordRepository: PasswordResetRepository,

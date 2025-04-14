@@ -2,6 +2,7 @@ package com.thomas.management.domain.adapter
 
 import com.thomas.contract.messaging.management.ManagementEventType.CREATE
 import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
+import com.thomas.core.aspect.AspectClass
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentOrganization
@@ -31,6 +32,7 @@ import com.thomas.management.domain.validation.sameName
 import com.thomas.management.domain.validation.sameRegistration
 import java.util.UUID
 
+@AspectClass
 class UnitServiceAdapter(
     private val organizationRepository: OrganizationRepository,
     private val unitRepository: UnitRepository,

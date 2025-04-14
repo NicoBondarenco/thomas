@@ -1,6 +1,7 @@
 package com.thomas.management.domain.adapter
 
 import com.thomas.contract.messaging.management.ManagementEventType.CREATE
+import com.thomas.core.aspect.AspectClass
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.extension.asyncSessionContext
 import com.thomas.core.extension.throws
@@ -33,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
+@AspectClass
 class SignupServiceAdapter(
     private val signupRepository: SignupRepository,
     private val signupProperties: SignupProperties,
@@ -56,7 +58,7 @@ class SignupServiceAdapter(
     override suspend fun signup(
         request: SignupRequest
     ) = signupProperties.signupEnabled.takeIf { it }?.let {
-        request.toSignupEntity(hasher).let {
+        request.toSignupEntity(hasher, signupProperties).let {
             validateEntity(it)
             signupRepository.signup(it)
         }.apply {
