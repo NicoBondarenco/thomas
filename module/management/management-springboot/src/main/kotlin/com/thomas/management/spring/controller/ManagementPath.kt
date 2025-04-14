@@ -7,11 +7,10 @@ object ManagementPath {
 
     const val PUBLIC_API_V1_SIGNUP = "$PUBLIC_API_V1_PREFIX/signup"
 
+    const val PUBLIC_API_V1_AUTHENTICATION = "$PUBLIC_API_V1_PREFIX/authentication"
+    const val PUBLIC_API_V1_AUTHENTICATION_LOGIN = "/login"
+    const val PUBLIC_API_V1_AUTHENTICATION_REFRESH = "/refresh"
 
-
-    const val PUBLIC_API_V1_USERS = "$PUBLIC_API_V1_PREFIX/users"
-    const val PRIVATE_API_V1_USERS = "$PRIVATE_API_V1_PREFIX/users"
-
-    const val PRIVATE_API_V1_GROUPS = "$PRIVATE_API_V1_PREFIX/groups"
+    const val PRIVATE_API_V1_ORGANIZATION = "$PRIVATE_API_V1_PREFIX/organizations"
 
 }

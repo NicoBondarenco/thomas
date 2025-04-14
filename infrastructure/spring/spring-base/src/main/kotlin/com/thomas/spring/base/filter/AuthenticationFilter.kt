@@ -18,6 +18,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.web.filter.OncePerRequestFilter
 
@@ -58,6 +59,9 @@ class AuthenticationFilter(
         val authentication = UsernamePasswordAuthenticationToken(this, this, this.grantedAuthorities())
         authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authentication
+        SecurityContextHolder.setDeferredContext {
+            SecurityContextImpl(authentication)
+        }
     }
 
     private fun SecurityUser.grantedAuthorities() = mutableListOf<GrantedAuthority>().also { roles ->

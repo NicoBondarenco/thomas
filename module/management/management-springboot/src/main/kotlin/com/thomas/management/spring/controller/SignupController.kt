@@ -2,6 +2,7 @@ package com.thomas.management.spring.controller
 
 import com.thomas.management.domain.SignupService
 import com.thomas.management.domain.model.request.SignupRequest
+import com.thomas.management.domain.model.response.SignupResponse
 import com.thomas.management.spring.controller.ManagementPath.PUBLIC_API_V1_SIGNUP
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,6 +19,6 @@ class SignupController(
     @PostMapping
     suspend fun signup(
         @RequestBody signupRequest: SignupRequest
-    ) = ResponseEntity.ok(signupService.signup(signupRequest))
+    ): ResponseEntity<SignupResponse> = ResponseEntity.ok(signupService.signup(signupRequest))
 
 }
