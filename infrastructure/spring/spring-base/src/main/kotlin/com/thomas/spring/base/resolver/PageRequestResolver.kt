@@ -1,14 +1,19 @@
 package com.thomas.spring.base.resolver
 
+import com.thomas.core.extension.ISO_OFFSET_DATE_TIME_FORMATTER
 import com.thomas.core.model.pagination.PageRequest
 import com.thomas.core.model.pagination.PageRequestData
+import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection
 import com.thomas.spring.base.exception.RequestException
+import com.thomas.spring.base.i18n.SpringMessageI18N.requestPageRequestParameterValidationInvalidDate
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestPageRequestParameterValidationInvalidField
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestPageRequestParameterValidationInvalidNumber
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestPageRequestParameterValidationInvalidSize
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestPageRequestParameterValidationInvalidSort
+import java.time.OffsetDateTime
+import kotlin.reflect.KClass
 import org.springframework.core.MethodParameter
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
@@ -24,10 +29,50 @@ internal class PageRequestResolver(
         private const val PAGE_NUMBER_PARAM = "p"
         private const val PAGE_SIZE_PARAM = "s"
         private const val SORT_ORDER_PARAM = "o"
+        private const val CREATED_START_PARAM = "cs"
+        private const val CREATED_END_PARAM = "ce"
+        private const val UPDATED_START_PARAM = "us"
+        private const val UPDATED_END_PARAM = "ue"
+
+        private val FORMATTER = ISO_OFFSET_DATE_TIME_FORMATTER
     }
 
+    private abstract class PageRequestDataResolver<T : PageRequestData>(
+        private val klass: KClass<T>
+    ) {
+        fun supports(parameter: MethodParameter) = parameter.parameterType == klass.java
+
+        abstract fun resolve(request: NativeWebRequest): T
+    }
+
+    private val resolvers = listOf(
+        object : PageRequestDataResolver<PageRequest>(PageRequest::class) {
+            override fun resolve(
+                request: NativeWebRequest
+            ): PageRequest = PageRequest(
+                request.pageNumber(),
+                request.pageSize(),
+                request.sortList(),
+            )
+        },
+        object : PageRequestDataResolver<PageRequestPeriod>(PageRequestPeriod::class) {
+            override fun resolve(
+                request: NativeWebRequest
+            ): PageRequestPeriod = PageRequestPeriod(
+                request.dateParameter(CREATED_START_PARAM),
+                request.dateParameter(CREATED_END_PARAM),
+                request.dateParameter(UPDATED_START_PARAM),
+                request.dateParameter(UPDATED_END_PARAM),
+                request.pageNumber(),
+                request.pageSize(),
+                request.sortList(),
+            )
+
+        },
+    )
+
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.parameterType == PageRequestData::class.java
+        return resolvers.any { it.supports(parameter) }
     }
 
     override fun resolveArgument(
@@ -35,11 +80,19 @@ internal class PageRequestResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): PageRequestData = PageRequest(
-        webRequest.pageNumber(),
-        webRequest.pageSize(),
-        webRequest.sortList(),
-    )
+    ): PageRequestData = resolvers.first {
+        it.supports(parameter)
+    }.resolve(webRequest)
+
+    private fun NativeWebRequest.dateParameter(
+        attr: String,
+    ): OffsetDateTime? = this.getParameter(attr)?.let {
+        try {
+            OffsetDateTime.parse(it, FORMATTER)
+        } catch (e: Exception) {
+            throw RequestException(requestPageRequestParameterValidationInvalidDate(it))
+        }
+    }
 
     private fun NativeWebRequest.pageNumber() = this.parameterValue(
         PAGE_NUMBER_PARAM,

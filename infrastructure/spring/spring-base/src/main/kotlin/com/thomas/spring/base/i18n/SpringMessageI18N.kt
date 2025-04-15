@@ -16,6 +16,8 @@ internal object SpringMessageI18N : BundleResolver("strings/spring-strings") {
 
     fun requestPageRequestParameterValidationInvalidSort(value: Any): String = formattedMessage("request.page-request.parameter-validation.invalid-sort", value)
 
+    fun requestPageRequestParameterValidationInvalidDate(value: String): String = formattedMessage("request.page-request.parameter-validation.invalid-date", value)
+
     fun requestRequestParameterValidationConvertError(field: Any, value: Any): String = formattedMessage("request.request.parameter-validation.convert-error", field, value)
 
     fun requestFilterChainAuthenticationEntrypointAccessDenied(): String = formattedMessage("request.filter-chain.authentication-entrypoint.access-denied")

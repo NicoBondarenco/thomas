@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 
 const val UNIT_HEADER = "Unit-ID"
 
-internal  fun HttpServletRequest.handleLocale() = this.requestLocale().apply {
+internal fun HttpServletRequest.handleLocale() = this.requestLocale().apply {
     currentLocale = this
     LocaleContextHolder.setLocale(this)
 }

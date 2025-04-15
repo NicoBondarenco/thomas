@@ -3,10 +3,10 @@ package com.thomas.spring.base.configuration
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.spring.base.authentication.ApplicationAuthorizationManager
+import com.thomas.spring.base.authentication.AuthenticationFilter
 import com.thomas.spring.base.authentication.Authenticator
 import com.thomas.spring.base.authentication.JWTAuth0Authenticator
 import com.thomas.spring.base.extension.toExceptionResponse
-import com.thomas.spring.base.authentication.AuthenticationFilter
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestFilterChainAuthenticationEntrypointAccessDenied
 import com.thomas.spring.base.properties.JWTProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -14,14 +14,11 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
-import org.springframework.security.authorization.AuthorizationDecision
-import org.springframework.security.authorization.AuthorizationManager
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
