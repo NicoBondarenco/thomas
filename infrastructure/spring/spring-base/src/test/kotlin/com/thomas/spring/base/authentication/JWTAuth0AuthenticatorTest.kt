@@ -1,4 +1,4 @@
-package com.thomas.spring.base.authenticator
+package com.thomas.spring.base.authentication
 
 import com.thomas.core.authorization.UnauthorizedUserException
 import com.thomas.core.data.securityUserRoles

@@ -1,4 +1,4 @@
-package com.thomas.spring.base.authenticator
+package com.thomas.spring.base.authentication
 
 import com.auth0.jwt.exceptions.IncorrectClaimException
 import com.auth0.jwt.exceptions.JWTDecodeException

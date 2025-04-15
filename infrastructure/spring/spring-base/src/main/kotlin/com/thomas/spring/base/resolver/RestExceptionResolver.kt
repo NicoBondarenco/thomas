@@ -20,7 +20,7 @@ class RestExceptionResolver(
         response: HttpServletResponse,
         handler: Any?,
         ex: Exception
-    ): ModelAndView? {
+    ): ModelAndView {
         val body = ex.toExceptionResponse(request.requestURI)
         logger.logByStatus(ex, body.status)
         response.contentType = APPLICATION_JSON_VALUE

@@ -2,13 +2,13 @@ package com.thomas.spring.base.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.thomas.core.authorization.UnauthorizedUserException
-import com.thomas.spring.base.authenticator.Authenticator
-import com.thomas.spring.base.authenticator.JWTAuth0Authenticator
+import com.thomas.spring.base.authentication.ApplicationAuthorizationManager
+import com.thomas.spring.base.authentication.Authenticator
+import com.thomas.spring.base.authentication.JWTAuth0Authenticator
 import com.thomas.spring.base.extension.toExceptionResponse
-import com.thomas.spring.base.filter.AuthenticationFilter
+import com.thomas.spring.base.authentication.AuthenticationFilter
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestFilterChainAuthenticationEntrypointAccessDenied
 import com.thomas.spring.base.properties.JWTProperties
-import java.util.function.Supplier
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,7 +19,6 @@ import org.springframework.security.authorization.AuthorizationManager
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.Authentication
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext
@@ -53,16 +52,11 @@ open class SecurityConfiguration {
     ): AuthenticationFilter = AuthenticationFilter(authenticator)
 
     @Bean
-    open fun authorizationManager(): AuthorizationManager<RequestAuthorizationContext> = AuthorizationManager { _, _ ->
-        AuthorizationDecision(true)
-    }
-
-    @Bean
     open fun filterChain(
         http: HttpSecurity,
         authenticationFilter: AuthenticationFilter,
         restAuthenticationEntryPoint: AuthenticationEntryPoint,
-        authorizationManager: AuthorizationManager<RequestAuthorizationContext>
+        authorizationManager: ApplicationAuthorizationManager
     ): SecurityFilterChain = http.cors {
         it.disable()
     }.sessionManagement {
