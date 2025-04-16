@@ -116,7 +116,7 @@ logging:
   level:
     root: INFO
     com.thomas: INFO
-    org.neo4j.ogm: DEBUG
+    org.neo4j.ogm: ERROR
 
 neo4j:
   connectionUri: ${MANAGEMENT_NEO4J_URI}
