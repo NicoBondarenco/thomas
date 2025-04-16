@@ -6,6 +6,7 @@ import com.thomas.core.aspect.AspectClass
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
 import com.thomas.core.context.SessionContextHolder.currentOrganization
+import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.validate
 import com.thomas.core.model.entity.DeferredEntityValidation
 import com.thomas.core.model.pagination.PageRequestPeriod
@@ -158,6 +159,7 @@ class UserServiceAdapter(
         userRepository.page(
             keywordText = keywordText,
             isActive = isActive,
+            listMaster = currentUser.isMaster,
             organizationId = currentOrganization,
             pageable = pageable,
         ).map { it.toUserSimpleResponse() }
@@ -200,7 +202,7 @@ class UserServiceAdapter(
 
     private suspend fun findCompleteByIdOrThrows(
         id: UUID,
-    ): UserCompleteEntity = userRepository.one(id, currentOrganization)
+    ): UserCompleteEntity = userRepository.one(id, currentOrganization, currentUser.isMaster)
         ?: throw UserNotFoundException(id)
 
 }

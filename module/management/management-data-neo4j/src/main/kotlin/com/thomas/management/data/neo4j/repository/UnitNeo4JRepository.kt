@@ -109,7 +109,7 @@ class UnitNeo4JRepository(
                 "organization_id" to organizationId.toString(),
             )
         )
-        val available: Long = (result.queryResults().firstOrNull()?.get("available") ?: 0L) as Long
+        val available: Long = (result.queryResults().firstOrNull()?.get("available") ?: 1L) as Long
         available < 1L
     }
 

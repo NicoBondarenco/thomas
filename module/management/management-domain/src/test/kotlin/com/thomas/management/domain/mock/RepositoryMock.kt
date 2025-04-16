@@ -129,11 +129,11 @@ internal val unitRepositoryMock: UnitRepository
 
 internal val userRepositoryMock: UserRepository
     get() = mockk<UserRepository>().apply {
-        coEvery { page(any<String>(), any<Boolean>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
+        coEvery { page(any<String>(), any<Boolean>(), any<Boolean>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
             val users = (1..10).map { userEntity }
             PageResponse.of(users, it.fourthArg(), 10L)
         }
-        coEvery { one(any(), any()) } answers {
+        coEvery { one(any(), any(), any()) } answers {
             userCompleteEntity.let {
                 it.copy(
                     id = firstArg(),

@@ -22,7 +22,11 @@ class GenericValueTransformer(
     override fun transformPropertyValue(
         propertyValue: Any?
     ): Any? = propertyValue?.let { value ->
-        CONVERTABLE_VALUES[value::class.java]?.invoke(value) ?: defaultTransformer.transformPropertyValue(value)
+        if (value is Collection<*>) {
+            value.map { transformPropertyValue(it) }
+        } else {
+            CONVERTABLE_VALUES[value::class.java]?.invoke(value) ?: defaultTransformer.transformPropertyValue(value)
+        }
     }
 
 }

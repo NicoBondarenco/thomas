@@ -8,6 +8,7 @@ import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThanEquals
 import com.thomas.database.neo4j.filter.isEquals
+import com.thomas.database.neo4j.filter.isFalse
 import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
@@ -36,11 +37,15 @@ class UserNeo4JRepository(
     override suspend fun page(
         keywordText: String?,
         isActive: Boolean?,
+        listMaster: Boolean,
         organizationId: UUID,
         pageable: PageRequestPeriod
     ): PageResponse<UserSimpleEntity> = sessionFactory.page<UserNode>(
         listOfNotNull(
             isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId),
+            listMaster.takeIf { !it }?.let {
+                isFalse(UserNode::isMaster)
+            },
             keywordText?.let {
                 or(
                     likeUnaccentedLower(UserNode::firstName, it.unaccentedLower()),
@@ -73,12 +78,19 @@ class UserNeo4JRepository(
 
     override suspend fun one(
         id: UUID,
-        organizationId: UUID
-    ): UserCompleteEntity? = sessionFactory.openSession().loadAll(
-        UserNode::class.java,
-        isEquals(UserNode::id, id).and(isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId)),
-        defaultDepth
-    ).firstOrNull()?.toUserCompleteEntity()
+        organizationId: UUID,
+        listMaster: Boolean
+    ): UserCompleteEntity? = sessionFactory.openSession().let {
+        var filters: Filters = isEquals(UserNode::id, id).and(isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId))
+        if (!listMaster) {
+            filters = filters.and(isFalse(UserNode::isMaster))
+        }
+        it.loadAll(
+            UserNode::class.java,
+            filters,
+            defaultDepth
+        ).firstOrNull()?.toUserCompleteEntity()
+    }
 
     override suspend fun create(
         entity: UserCompleteEntity

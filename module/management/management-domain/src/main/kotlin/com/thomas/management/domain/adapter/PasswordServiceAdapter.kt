@@ -68,6 +68,7 @@ class PasswordServiceAdapter(
             now(UTC).isBefore(it.expiresOn)
         }?.run {
             updatePassword(this.userId, request.newPassword)
+            passwordRepository.deleteToken(this.resetToken)
         } ?: throw expiredToken()
     }
 

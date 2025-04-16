@@ -17,6 +17,7 @@ fun SignupEntity.toUserNode() = UserNode(
     mainEmail = this.userData.mainEmail,
     mainPhone = this.userData.mainPhone,
     isActive = this.userData.isActive,
+    isMaster = false,
     createdAt = this.userData.createdAt.toZonedDateTime(),
     updatedAt = this.userData.updatedAt.toZonedDateTime(),
     userOrganization = UserOrganizationNode(

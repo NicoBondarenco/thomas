@@ -8,9 +8,15 @@ import java.util.UUID
 
 interface UserRepository {
 
-    suspend fun page(keywordText: String? = null, isActive: Boolean? = null, organizationId: UUID, pageable: PageRequestPeriod): PageResponse<UserSimpleEntity>
+    suspend fun page(
+        keywordText: String? = null,
+        isActive: Boolean? = null,
+        listMaster: Boolean,
+        organizationId: UUID,
+        pageable: PageRequestPeriod
+    ): PageResponse<UserSimpleEntity>
 
-    suspend fun one(id: UUID, organizationId: UUID): UserCompleteEntity?
+    suspend fun one(id: UUID, organizationId: UUID, listMaster: Boolean): UserCompleteEntity?
 
     suspend fun create(entity: UserCompleteEntity): UserCompleteEntity
 

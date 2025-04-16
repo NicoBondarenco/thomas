@@ -27,6 +27,7 @@ import com.thomas.management.data.neo4j.model.node.GroupUnitNode
 import com.thomas.management.data.neo4j.model.node.UserGroupNode
 import com.thomas.management.data.repository.GroupRepository
 import java.util.UUID
+import java.util.UUID.randomUUID
 import org.neo4j.ogm.cypher.Filters
 import org.neo4j.ogm.session.SessionFactory
 

@@ -1,5 +1,7 @@
 package com.thomas.management.data.neo4j.model.mapper
 
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
+import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.UserCompleteEntity
 import com.thomas.management.data.entity.UserSimpleEntity
@@ -68,6 +70,7 @@ fun UserCompleteEntity.toUserNode(): UserNode = UserNode(
     mainEmail = this.mainEmail,
     mainPhone = this.mainPhone,
     isActive = this.isActive,
+    isMaster = this.isMaster(),
     createdAt = this.createdAt.toZonedDateTime(),
     updatedAt = this.updatedAt.toZonedDateTime(),
     userOrganization = UserOrganizationNode(
@@ -117,3 +120,9 @@ fun UserNode.updateFrom(entity: UserSimpleEntity) {
     this.createdAt = entity.createdAt.toZonedDateTime()
     this.updatedAt = entity.updatedAt.toZonedDateTime()
 }
+
+private fun UserCompleteEntity.isMaster() = this.organizationRoles.contains(MASTER_ROLE) || this.userGroups.hasMaster()
+
+private fun Set<GroupCompleteEntity>.hasMaster() = this.any { group -> group.isMaster() }
+
+private fun GroupCompleteEntity.isMaster() = this.organizationRoles.contains(MASTER_ROLE)

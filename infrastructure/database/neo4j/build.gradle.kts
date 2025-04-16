@@ -27,6 +27,8 @@ dependencies {
     testFixturesImplementation(libs.bundles.test.standard.bundle)
     testFixturesImplementation(libs.bundles.neo4j.test.bundle)
 
+    testFixturesImplementation("org.neo4j:neo4j-ogm-core:4.0.15")
+    testFixturesImplementation("org.neo4j:neo4j-ogm-bolt-driver:4.0.15")
     testFixturesImplementation("io.kotest:kotest-assertions-core:5.9.1")
     testFixturesImplementation("io.kotest:kotest-runner-junit5:5.9.1")
     testFixturesImplementation("io.kotest:kotest-property:5.9.1")

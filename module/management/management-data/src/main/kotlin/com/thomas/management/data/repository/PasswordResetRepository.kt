@@ -8,4 +8,6 @@ interface PasswordResetRepository {
 
     suspend fun findByToken(resetToken: String): PasswordResetEntity?
 
+    suspend fun deleteToken(resetToken: String)
+
 }

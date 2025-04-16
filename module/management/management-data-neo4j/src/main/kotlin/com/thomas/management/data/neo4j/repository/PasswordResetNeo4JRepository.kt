@@ -28,4 +28,10 @@ class PasswordResetNeo4JRepository(
         .loadAll(PasswordResetNode::class.java, Filters(isEquals(PasswordResetNode::resetToken, resetToken)))
         .firstOrNull()?.toPasswordResetEntity()
 
+    override suspend fun deleteToken(
+        resetToken: String
+    ): Unit = transaction { session ->
+        session.delete(PasswordResetNode::class.java, Filters(isEquals(PasswordResetNode::resetToken, resetToken)), false)
+    }
+
 }

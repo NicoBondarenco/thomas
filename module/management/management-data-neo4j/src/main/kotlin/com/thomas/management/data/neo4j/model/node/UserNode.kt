@@ -57,6 +57,9 @@ data class UserNode(
     @Property(name = "is_active")
     var isActive: Boolean,
 
+    @Property(name = "is_master")
+    var isMaster: Boolean,
+
     @Property(name = "created_at")
     var createdAt: ZonedDateTime,
 

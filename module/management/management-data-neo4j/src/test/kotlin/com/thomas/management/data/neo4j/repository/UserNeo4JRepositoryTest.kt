@@ -72,7 +72,7 @@ class UserNeo4JRepositoryTest : ManagementFunSpec<UserNeo4JRepository>(
             }
 
             withData(data) {
-                val result = repository.one(it.field, it.organizationId)
+                val result = repository.one(it.field, it.organizationId, false)
                 result shouldBe it.entity
             }
         }
@@ -94,7 +94,7 @@ class UserNeo4JRepositoryTest : ManagementFunSpec<UserNeo4JRepository>(
 
             withData(data) {
                 val page = it.page(users.toList()).map { u -> u.toUserSimpleEntity() }
-                val result = repository.page(it.keyword, it.isActive, it.organizationId, it.pageable)
+                val result = repository.page(it.keyword, it.isActive, false, it.organizationId, it.pageable)
                 result.contentList.size shouldBe page.contentList.size
                 result.totalItems shouldBe page.totalItems
                 result.totalPages shouldBe page.totalPages
