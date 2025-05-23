@@ -5,13 +5,17 @@ import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityOrgan
 import com.thomas.core.generator.OrganizationUnitGenerator.generateSecurityUnitSet
 import com.thomas.core.generator.PersonGenerator.generatePerson
 import com.thomas.core.generator.RoleGenerator.generateOrganizationRoles
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.MASTER
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityUser
 
 object UserGenerator {
 
-    fun generateSecurityUser(): SecurityUser = generatePerson().let {
+    fun generateSecurityUser(
+        userType: UserType = MASTER,
+    ): SecurityUser = generatePerson().let {
         val organization = generateSecurityOrganization()
         SecurityUser(
             userId = it.id,
@@ -22,6 +26,8 @@ object UserGenerator {
             profilePhoto = null,
             birthDate = it.birthDate,
             userGender = it.userGender,
+            userRace = it.userRace,
+            userType = userType,
             isActive = listOf(true, false).random(),
             userOrganization = organization,
             userGroups = generateSecurityGroupSet().map { group ->

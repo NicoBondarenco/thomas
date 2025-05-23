@@ -1,7 +1,13 @@
 package com.thomas.management.domain.adapter
 
 import com.thomas.core.aspect.AspectClass
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
+import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
+import com.thomas.core.model.security.SecurityUnitRole.UNIT_ALL
+import com.thomas.management.data.entity.GroupCompleteEntity
+import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.data.entity.UserCompleteEntity
+import com.thomas.management.data.repository.UnitRepository
 import com.thomas.management.data.repository.UserRepository
 import com.thomas.management.domain.AuthenticationService
 import com.thomas.management.domain.crypt.Hasher
@@ -22,12 +28,14 @@ class AuthenticationServiceAdapter(
     private val hasher: Hasher,
     private val tokenizer: Tokenizer,
     private val userRepository: UserRepository,
+    private val unitRepository: UnitRepository,
 ) : AuthenticationService {
 
     override suspend fun login(
         request: LoginRequest,
     ): AccessTokenResponse = userRepository.findByUsername(request.username)
         ?.isValidUser(request.password)
+        ?.loadActiveUnits()
         ?.toAccessTokenResponse()
         ?: throw InvalidCredentialException()
 
@@ -37,6 +45,7 @@ class AuthenticationServiceAdapter(
         tokenizer.refreshTokenData(it)
     }.toUserCompleteEntity()
         ?.isValidUser()
+        ?.loadActiveUnits()
         ?.toAccessTokenResponse()
         ?: throw InvalidRefreshTokenException()
 
@@ -77,6 +86,30 @@ class AuthenticationServiceAdapter(
         this.userOrganization.isActive.takeIf { !it }?.let {
             throw InactiveOrganizationException()
         }
+    }
+
+    private suspend fun UserCompleteEntity.loadActiveUnits(): UserCompleteEntity = this.takeIf {
+        shouldLoadAllUnits()
+    }?.let { user ->
+        user.copy(
+            userUnits = unitRepository.allByOrganization(user.userOrganization.id).filter {
+                it.isActive
+            }.map {
+                UnitRoleEntity(roleUnit = it, roleList = setOf(UNIT_ALL))
+            }.toSet()
+        )
+    } ?: this
+
+    private fun UserCompleteEntity.shouldLoadAllUnits(): Boolean = this.organizationRoles.any {
+        it == MASTER_ROLE || it == ORGANIZATION_ALL
+    } || this.userGroups.shouldLoadAllUnits()
+
+    private fun Set<GroupCompleteEntity>.shouldLoadAllUnits(): Boolean = this.any {
+        it.shouldLoadAllUnits()
+    }
+
+    private fun GroupCompleteEntity.shouldLoadAllUnits(): Boolean = this.organizationRoles.any {
+        it == MASTER_ROLE || it == ORGANIZATION_ALL
     }
 
 }

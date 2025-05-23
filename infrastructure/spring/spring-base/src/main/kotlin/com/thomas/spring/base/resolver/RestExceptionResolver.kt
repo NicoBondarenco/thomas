@@ -1,6 +1,7 @@
 package com.thomas.spring.base.resolver
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.thomas.core.extension.logger
 import com.thomas.spring.base.extension.logByStatus
 import com.thomas.spring.base.extension.toExceptionResponse
 import jakarta.servlet.http.HttpServletRequest
@@ -22,7 +23,7 @@ class RestExceptionResolver(
         ex: Exception
     ): ModelAndView {
         val body = ex.toExceptionResponse(request.requestURI)
-        logger.logByStatus(ex, body.status)
+        logger().logByStatus(ex, body.status)
         response.contentType = APPLICATION_JSON_VALUE
         response.status = body.code
         response.writer.write(objectMapper.writeValueAsString(body))

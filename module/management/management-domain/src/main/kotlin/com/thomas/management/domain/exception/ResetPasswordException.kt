@@ -1,6 +1,6 @@
 package com.thomas.management.domain.exception
 
-import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ApplicationException
 import com.thomas.core.exception.ErrorType
 import com.thomas.core.exception.ErrorType.INVALID_PARAMETER
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementResetPasswordResetTokenExpiredToken
@@ -9,7 +9,7 @@ import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementR
 class ResetPasswordException(
     message: String,
     type: ErrorType,
-) : DetailedException(
+) : ApplicationException(
     message = message,
     type = type,
 ) {

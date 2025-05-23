@@ -9,6 +9,8 @@ import com.thomas.core.model.security.SecurityUser
 import com.thomas.spring.base.authentication.Authenticator
 import com.thomas.spring.base.authority.OrganizationGrantedAuthority
 import com.thomas.spring.base.authority.UnitGrantedAuthority
+import com.thomas.spring.base.exception.JWTTokenException
+import com.thomas.spring.base.i18n.SpringMessageI18N.authenticationTokenValidateTokenInvalidToken
 import jakarta.servlet.http.HttpServletRequest
 import java.util.Locale
 import org.springframework.context.i18n.LocaleContextHolder
@@ -21,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 
 const val UNIT_HEADER = "Unit-ID"
+const val BEARER_PREFIX = "Bearer"
 
 internal fun HttpServletRequest.handleLocale() = this.requestLocale().apply {
     currentLocale = this
@@ -70,7 +73,12 @@ internal fun HttpServletRequest.requestLocale() =
     } ?: Locale.ROOT
 
 internal fun HttpServletRequest.bearerToken() =
-    this.getHeader(AUTHORIZATION)?.replaceFirst("Bearer", "")?.trim()
+    this.getHeader(AUTHORIZATION)?.let {
+        if (!it.startsWith(BEARER_PREFIX)) {
+            throw JWTTokenException(authenticationTokenValidateTokenInvalidToken())
+        }
+        it.replaceFirst(BEARER_PREFIX, "").trim()
+    }
 
 internal fun HttpServletRequest.unitId() =
     this.getHeader(UNIT_HEADER)?.toUUIDOrNull()

@@ -1,6 +1,6 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.ManagementEventType
+import com.thomas.contract.messaging.ApplicationEventType
 import com.thomas.contract.messaging.management.organization.OrganizationDataEvent
 import com.thomas.contract.messaging.management.organization.OrganizationManagementEvent
 import com.thomas.management.data.entity.OrganizationEntity
@@ -96,7 +96,7 @@ suspend fun OrganizationEntity.updateFromRequest(request: OrganizationUpsertRequ
     )
 }
 
-suspend fun OrganizationEntity.toOrganizationManagementEvent(type: ManagementEventType) = coroutineScope {
+suspend fun OrganizationEntity.toOrganizationManagementEvent(type: ApplicationEventType) = coroutineScope {
     OrganizationManagementEvent(
         eventType = type,
         eventTimestamp = now(UTC),

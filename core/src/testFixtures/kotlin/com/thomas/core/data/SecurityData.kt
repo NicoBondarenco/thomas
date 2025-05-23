@@ -1,6 +1,8 @@
 package com.thomas.core.data
 
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.security.SecurityGroup
 import com.thomas.core.model.security.SecurityOrganization
 import com.thomas.core.model.security.SecurityOrganizationRole
@@ -49,6 +51,8 @@ val securityUser: SecurityUser
         profilePhoto = null,
         birthDate = LocalDate.now(),
         userGender = Gender.entries.random(),
+        userRace = Race.entries.random(),
+        userType = UserType.entries.random(),
         isActive = true,
         userOrganization = securityOrganization,
         userGroups = setOf(),

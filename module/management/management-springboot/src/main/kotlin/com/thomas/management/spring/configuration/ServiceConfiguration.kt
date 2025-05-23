@@ -10,6 +10,7 @@ import com.thomas.management.domain.AuthenticationService
 import com.thomas.management.domain.GroupService
 import com.thomas.management.domain.OrganizationService
 import com.thomas.management.domain.PasswordService
+import com.thomas.management.domain.RoleService
 import com.thomas.management.domain.SignupService
 import com.thomas.management.domain.UnitService
 import com.thomas.management.domain.UserService
@@ -17,6 +18,7 @@ import com.thomas.management.domain.adapter.AuthenticationServiceAdapter
 import com.thomas.management.domain.adapter.GroupServiceAdapter
 import com.thomas.management.domain.adapter.OrganizationServiceAdapter
 import com.thomas.management.domain.adapter.PasswordServiceAdapter
+import com.thomas.management.domain.adapter.RoleServiceAdapter
 import com.thomas.management.domain.adapter.SignupServiceAdapter
 import com.thomas.management.domain.adapter.UnitServiceAdapter
 import com.thomas.management.domain.adapter.UserServiceAdapter
@@ -40,10 +42,12 @@ class ServiceConfiguration {
         hasher: Hasher,
         tokenizer: Tokenizer,
         userRepository: UserRepository,
+        unitRepository: UnitRepository,
     ): AuthenticationService = AuthenticationServiceAdapter(
         hasher = hasher,
         tokenizer = tokenizer,
         userRepository = userRepository,
+        unitRepository = unitRepository,
     )
 
     @Bean
@@ -128,6 +132,13 @@ class ServiceConfiguration {
         unitRepository = unitRepository,
         userProducer = userProducer,
         hasher = hasher,
+    )
+
+    @Bean
+    fun roleService(
+        unitRepository: UnitRepository,
+    ): RoleService = RoleServiceAdapter(
+        unitRepository = unitRepository,
     )
 
 }

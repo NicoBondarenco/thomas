@@ -6,6 +6,7 @@ spring:
 
   application:
     name: "T.H.O.M.A.S. Management Service"
+    label: "management-service"
 
   banner:
     location: banner.txt
@@ -17,80 +18,104 @@ spring:
     virtual:
       enabled: true
 
-  rabbitmq:
-    username: ${MANAGEMENT_RABBITMQ_USERNAME}
-    password: ${MANAGEMENT_RABBITMQ_PASSWORD}
-    virtual-host: '/thomas'
-    addresses: ${MANAGEMENT_RABBITMQ_URL}
-
   cloud:
+
+    function:
+      definition: organizationManagementConsumer;unitManagementConsumer;groupManagementConsumer;userManagementConsumer
 
     stream:
 
+      key-header: kafka_messageKey
+
       binders:
-        rabbit:
-          type: 'rabbit'
+        kafka:
+          type: 'kafka'
 
       bindings:
 
         organizationManagementProducer-out-0:
-          binder: 'rabbit'
+          binder: 'kafka'
           destination: 'management-organization-event'
-          group: 'management-organization-event'
           content-type: 'application/json'
 
         unitManagementProducer-out-0:
-          binder: 'rabbit'
+          binder: 'kafka'
           destination: 'management-unit-event'
-          group: 'management-unit-event'
           content-type: 'application/json'
 
         groupManagementProducer-out-0:
-          binder: 'rabbit'
+          binder: 'kafka'
           destination: 'management-group-event'
-          group: 'management-group-event'
           content-type: 'application/json'
 
         userManagementProducer-out-0:
-          binder: 'rabbit'
+          binder: 'kafka'
           destination: 'management-user-event'
-          group: 'management-user-event'
           content-type: 'application/json'
 
         emailNotificationProducer-out-0:
-          binder: 'rabbit'
+          binder: 'kafka'
           destination: 'notification-email-command'
-          group: 'notification-email-command'
           content-type: 'application/json'
 
-      rabbit:
+        organizationManagementConsumer-in-0:
+          binder: kafka
+          destination: management-organization-event
+          content-type: application/json
+          group: ${spring.application.label}
 
+        unitManagementConsumer-in-0:
+          binder: kafka
+          destination: management-unit-event
+          content-type: application/json
+          group: ${spring.application.label}
+
+        groupManagementConsumer-in-0:
+          binder: kafka
+          destination: management-group-event
+          content-type: application/json
+          group: ${spring.application.label}
+
+        userManagementConsumer-in-0:
+          binder: kafka
+          destination: management-user-event
+          content-type: application/json
+          group: ${spring.application.label}
+
+      kafka:
+        binder:
+          brokers: "kafka-broker:29092"
+          auto-add-partitions: false
+          auto-create-topics: false
+          auto-alter-topics: false
+          required-acks: 1
+          producer-properties:
+            use-native-encoding: true
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+            value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            ack: all
+          consumer-properties:
+            use-native-encoding: true
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            group.id: ${spring.application.label}
+            auto.offset.reset: earliest
+            enable.auto.commit: false
+            ack-mode: manual
+            spring.json.trusted.packages: "*"
         bindings:
-
-          organizationManagementProducer-out-0:
-            producer:
-              exchange-type: topic
-              routing-key-expression: '"management.organization.event"'
-
-          unitManagementProducer-out-0:
-            producer:
-              exchange-type: topic
-              routing-key-expression: '"management.unit.event"'
-
-          groupManagementProducer-out-0:
-            producer:
-              exchange-type: topic
-              routing-key-expression: '"management.group.event"'
-
-          userManagementProducer-out-0:
-            producer:
-              exchange-type: topic
-              routing-key-expression: '"management.user.event"'
-
-          emailNotificationProducer-out-0:
-            producer:
-              exchange-type: topic
-              routing-key-expression: '"notification.email.command"'
+          organizationManagementConsumer-in-0:
+            consumer:
+              ack-mode: manual
+          unitManagementConsumer-in-0:
+            consumer:
+              ack-mode: manual
+          groupManagementConsumer-in-0:
+            consumer:
+              ack-mode: manual
+          userManagementConsumer-in-0:
+            consumer:
+              ack-mode: manual
 
   neo4j:
     uri: ${MANAGEMENT_NEO4J_URI}
@@ -107,10 +132,21 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
         exclude: autoconfig,beans,env,configprops,dump,mappings,shutdown,trace
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+loki:
+  url: ${LOKI_URL}
+  labels:
+    app: ${spring.application.label}
 
 logging:
+  loki:
+    url: ${LOKI_URL}
   pattern:
     console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ} %-5p %c:%M{1}:%L - %m%n"
   level:
@@ -158,6 +194,7 @@ signup:
   enabled: true
   maxUnits: 10
   maxUsers: 10
+  defaultType: ADMINISTRATOR
   defaultRoles: ORGANIZATION_ALL,MASTER_ROLE
 
 pageable:

@@ -1,12 +1,15 @@
 package com.thomas.management.domain.mock
 
+import com.thomas.core.extension.toUUIDOrNull
 import com.thomas.management.domain.crypt.Hasher
+import com.thomas.management.domain.crypt.Tokenizer
 import com.thomas.management.domain.model.data.RefreshTokenData
 import com.thomas.management.domain.model.request.RefreshTokenRequest
-import com.thomas.management.domain.crypt.Tokenizer
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.mockk
+import java.time.OffsetDateTime
+import java.time.ZoneOffset.UTC
 import java.util.UUID
 
 internal val hasherMock: Hasher
@@ -33,8 +36,10 @@ internal val tokenizerMock: Tokenizer
         coEvery { refreshTokenData(any()) } answers {
             firstArg<RefreshTokenRequest>().refreshToken.split("_").let {
                 RefreshTokenData(
-                    username = it[0],
-                    organization = it[1],
+                    securityUsername = it[0],
+                    organizationId = it[1].toUUIDOrNull()!!,
+                    refreshDuration = 300000L,
+                    validUntil = OffsetDateTime.now(UTC).plusDays(1),
                 )
             }
         }

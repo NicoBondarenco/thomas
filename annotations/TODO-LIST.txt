@@ -3,3 +3,17 @@ Nos campos de endereço
 - Bairro
 - Complemento
 Aceitar os caracteres ()-/ºª
+
+
+Ajustar no management
+- Quando o usuário tiver permissões MASTER ou ORGANIZATION_ALL retornar todas as units
+- Criar a permissão UNIT_ALL
+- Criar o tipo de usuário, MASTER, ADMINISTRATOR e COMMON
+- Ajustar a busca de usuários para filtrar por tipo, trazendo só  COMMON
+- Nos campos de endereço, aceitar os caracteres ()-/ºª
+-- Rua
+-- Bairro
+-- Complemento
+
+Subir container de postgres
+Subir container de garage s3

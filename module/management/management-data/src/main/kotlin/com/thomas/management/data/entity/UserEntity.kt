@@ -5,7 +5,13 @@ import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.ADMINISTRATOR
+import com.thomas.core.model.general.UserType.MASTER
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
+import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import com.thomas.management.data.entity.info.BasicInfo
 import com.thomas.management.data.entity.info.ContactInfo
 import com.thomas.management.data.extension.NATURAL_NAME_REGEX
@@ -16,6 +22,8 @@ import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserV
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationInvalidEntityErrorMessage
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationLastNameInvalidValue
+import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationUserTypeAdministratorUser
+import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUserValidationUserTypeMasterUser
 import java.time.LocalDate
 
 abstract class UserEntity : BaseEntity<UserEntity>(), ContactInfo, BasicInfo {
@@ -25,6 +33,8 @@ abstract class UserEntity : BaseEntity<UserEntity>(), ContactInfo, BasicInfo {
     abstract val documentNumber: String
     abstract val profilePhoto: String?
     abstract val userGender: Gender?
+    abstract val userRace: Race?
+    abstract val userType: UserType
     abstract val birthDate: LocalDate?
     abstract val passwordSalt: String
     abstract val passwordHash: String
@@ -63,6 +73,16 @@ abstract class UserEntity : BaseEntity<UserEntity>(), ContactInfo, BasicInfo {
             UserEntity::documentNumber.name.toSnakeCase(),
             { managementUserValidationDocumentNumberInvalidValue() },
             { it.documentNumber.isValidDocumentNumber() }
+        ),
+        EntityValidation(
+            UserEntity::userType.name.toSnakeCase(),
+            { managementUserValidationUserTypeMasterUser() },
+            { it.userType != MASTER || (it.userType == MASTER && it.organizationRoles.contains(MASTER_ROLE)) }
+        ),
+        EntityValidation(
+            UserEntity::userType.name.toSnakeCase(),
+            { managementUserValidationUserTypeAdministratorUser() },
+            { it.userType != ADMINISTRATOR || (it.userType == ADMINISTRATOR && it.organizationRoles.contains(ORGANIZATION_ALL)) }
         ),
     ) + contactInfoValidations()
 

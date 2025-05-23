@@ -30,7 +30,9 @@ allprojects {
     dependencies {
         implementation(libs.bundles.kotlin.standard.bundle)
 
-        implementation(libs.bundles.log4j.kotlin.bundle)
+//        implementation(libs.bundles.log4j.kotlin.bundle)
+        implementation("ch.qos.logback:logback-classic:1.5.18")
+        implementation("io.github.oshai:kotlin-logging-jvm:7.0.7")
 
         testImplementation(libs.bundles.test.standard.bundle)
 

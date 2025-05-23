@@ -2,7 +2,7 @@ package com.thomas.spring.base.resource
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
 import com.thomas.core.context.SessionContextHolder.currentUnit
-import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ApplicationException
 import com.thomas.core.exception.ErrorType
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -26,7 +26,7 @@ open class SpringTestController(
     @GetMapping("/typed/{type}")
     open fun typed(
         @PathVariable("type") type: ErrorType
-    ): ResponseEntity<Any> = throw object : DetailedException(
+    ): ResponseEntity<Any> = throw object : ApplicationException(
         type = type
     ) {}
 

@@ -20,6 +20,8 @@ G : Enum<G> {
 
     val roleSubgroup: S
 
+    val roleDisplayable: Boolean
+
     val roleName: String
         get() = coreRolesName(
             this.roleSubgroup.subgroupGroup.groupCategory.name.lowercase(),

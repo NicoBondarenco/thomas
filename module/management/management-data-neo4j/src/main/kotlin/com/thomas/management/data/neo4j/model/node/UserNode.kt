@@ -2,6 +2,8 @@ package com.thomas.management.data.neo4j.model.node
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
+import com.thomas.core.model.general.UserType
 import com.thomas.database.neo4j.converter.UUIDConverter
 import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.node.NoArgsConstructor
@@ -38,6 +40,12 @@ data class UserNode(
 
     @Property(name = "user_gender")
     var userGender: Gender?,
+
+    @Property(name = "user_race")
+    var userRace: Race?,
+
+    @Property(name = "user_type")
+    var userType: UserType,
 
     @Property(name = "birth_date")
     var birthDate: LocalDate?,

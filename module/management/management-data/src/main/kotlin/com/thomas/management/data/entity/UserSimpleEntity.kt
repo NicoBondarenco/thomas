@@ -2,6 +2,9 @@ package com.thomas.management.data.entity
 
 import com.thomas.core.aspect.MaskField
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.COMMON
 import com.thomas.core.model.security.SecurityOrganizationRole
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -17,6 +20,8 @@ data class UserSimpleEntity(
     @MaskField override val documentNumber: String,
     override val profilePhoto: String? = null,
     override val userGender: Gender? = null,
+    override val userRace: Race? = null,
+    override val userType: UserType = COMMON,
     override val birthDate: LocalDate? = null,
     @MaskField override val passwordSalt: String,
     @MaskField override val passwordHash: String,

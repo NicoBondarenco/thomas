@@ -1,6 +1,6 @@
 package com.thomas.spring.base.extension
 
-import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ApplicationException
 import com.thomas.core.exception.ErrorType
 import com.thomas.core.exception.ErrorType.APPLICATION_ERROR
 import com.thomas.core.exception.ErrorType.INVALID_ENTITY
@@ -33,12 +33,12 @@ internal fun Throwable.toExceptionResponse(
 }
 
 private fun Throwable.httpStatus() = when (this) {
-    is DetailedException -> this.type.toHttpStatus()
+    is ApplicationException -> this.type.toHttpStatus()
     else -> INTERNAL_SERVER_ERROR
 }
 
 private fun Throwable.details() = when (this) {
-    is DetailedException -> this.detail
+    is ApplicationException -> this.detail
     else -> null
 }
 

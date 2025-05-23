@@ -4,3 +4,9 @@ Armazenamento
 
 Monitoramento
 - SigNoz (Alternativa self hosted datadog) - https://signoz.io/docs/install/docker/
+
+SQL Reativo
+- R2DBC (https://r2dbc.io/)
+- JOOQ (https://www.jooq.org/)
+- Kotlin Coroutines
+- Exemplo: https://github.com/arjunbalussery/kotlin-async/blob/main/kotlin/src/main/kotlin/com/example/kotlin/repository/ProductRepository.kt

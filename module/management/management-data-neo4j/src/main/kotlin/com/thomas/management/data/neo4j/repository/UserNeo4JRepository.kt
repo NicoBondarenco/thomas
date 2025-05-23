@@ -2,13 +2,14 @@ package com.thomas.management.data.neo4j.repository
 
 import com.thomas.core.extension.isHigher
 import com.thomas.core.extension.unaccentedLower
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.database.neo4j.filter.count
 import com.thomas.database.neo4j.filter.equalsUnaccentedLower
 import com.thomas.database.neo4j.filter.greaterThanEquals
+import com.thomas.database.neo4j.filter.inValues
 import com.thomas.database.neo4j.filter.isEquals
-import com.thomas.database.neo4j.filter.isFalse
 import com.thomas.database.neo4j.filter.isNotEquals
 import com.thomas.database.neo4j.filter.isTrue
 import com.thomas.database.neo4j.filter.lessThanEquals
@@ -37,15 +38,13 @@ class UserNeo4JRepository(
     override suspend fun page(
         keywordText: String?,
         isActive: Boolean?,
-        listMaster: Boolean,
+        userTypes: List<UserType>,
         organizationId: UUID,
         pageable: PageRequestPeriod
     ): PageResponse<UserSimpleEntity> = sessionFactory.page<UserNode>(
         listOfNotNull(
             isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId),
-            listMaster.takeIf { !it }?.let {
-                isFalse(UserNode::isMaster)
-            },
+            inValues(UserNode::userType, userTypes),
             keywordText?.let {
                 or(
                     likeUnaccentedLower(UserNode::firstName, it.unaccentedLower()),
@@ -79,12 +78,11 @@ class UserNeo4JRepository(
     override suspend fun one(
         id: UUID,
         organizationId: UUID,
-        listMaster: Boolean
+        userTypes: List<UserType>,
     ): UserCompleteEntity? = sessionFactory.openSession().let {
-        var filters: Filters = isEquals(UserNode::id, id).and(isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId))
-        if (!listMaster) {
-            filters = filters.and(isFalse(UserNode::isMaster))
-        }
+        var filters: Filters = isEquals(UserNode::id, id)
+            .and(isEquals(UserOrganizationNode::organizationId, UserNode::userOrganization, organizationId))
+            .and(inValues(UserNode::userType, userTypes))
         it.loadAll(
             UserNode::class.java,
             filters,

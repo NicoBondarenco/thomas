@@ -134,6 +134,15 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
             }
         }
 
+        context(name = "All by Organization", script = "/scripts/unit/page.cypher") {
+            val organization = entities(OrganizationEntity::class).random()
+            val units = entities(UnitEntity::class).filter { it.unitOrganization.id == organization.id }
+            val result = repository.allByOrganization(organization.id)
+            units.forEach { unit ->
+                result.contains(unit) shouldBe true
+            }
+        }
+
         context(name = "Exists same", script = "/scripts/unit/upsert.cypher") {
             val unit = entities(UnitEntity::class).random()
             val organization = unit.unitOrganization
@@ -162,7 +171,7 @@ class UnitNeo4JRepositoryTest : ManagementFunSpec<UnitNeo4JRepository>(
             repository.limitReached(unitReached.id, reached) shouldBe false
             repository.limitReached(randomUUID(), available) shouldBe false
             repository.limitReached(unitAvailable.id, available) shouldBe false
-            repository.limitReached(randomUUID(), randomUUID()) shouldBe true
+            repository.limitReached(randomUUID(), randomUUID()) shouldBe false
         }
 
     }

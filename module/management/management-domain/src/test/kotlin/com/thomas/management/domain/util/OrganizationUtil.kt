@@ -15,8 +15,6 @@ internal val signupOrganizationRequest: SignupOrganizationRequest
         registrationNumber = randomRegistrationNumber(),
         mainEmail = randomEmail(),
         mainPhone = randomPhone(),
-        maximumUsers = 10,
-        maximumUnits = 10,
         addressZipcode = randomZipcode(),
         addressStreet = randomString(),
         addressNumber = randomString(),

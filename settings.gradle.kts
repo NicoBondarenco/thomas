@@ -5,6 +5,15 @@ plugins {
 }
 
 dependencyResolutionManagement {
+    pluginManagement {
+        repositories {
+            gradlePluginPortal()
+            mavenCentral()
+            mavenLocal()
+            maven(url = "https://plugins.gradle.org/m2/")
+            google()
+        }
+    }
     repositories {
         mavenCentral()
         mavenLocal()
@@ -42,6 +51,9 @@ dependencyResolutionManagement {
             version("jacoco", "0.8.12")
 
             version("sonarqube", "5.1.0.4882")
+
+            version("avro-gradle", "1.9.1")
+            version("avro-androa", "0.0.12")
 
             //endregion PLUGINS
 
@@ -120,6 +132,10 @@ dependencyResolutionManagement {
             plugin("jacoco-plugin", "jacoco").versionRef("jacoco")
 
             plugin("sonarqube-plugin", "org.sonarqube").versionRef("sonarqube")
+
+            plugin("avro-gradle-plugin", "com.github.davidmc24.gradle.avro").versionRef("avro-gradle")
+
+            plugin("avro-androa-plugin", "io.github.androa.gradle.plugin.avro").versionRef("avro-androa")
 
             //endregion PLUGINS
 
@@ -353,6 +369,9 @@ dependencyResolutionManagement {
             library("spring-cloud-stream-binder-rabbit", "org.springframework.cloud", "spring-cloud-stream-binder-rabbit").withoutVersion()
             library("spring-cloud-stream-starter-rabbit", "org.springframework.cloud", "spring-cloud-starter-stream-rabbit").withoutVersion()
 
+            library("spring-cloud-stream-binder-kafka", "org.springframework.cloud", "spring-cloud-stream-binder-kafka").withoutVersion()
+            library("spring-cloud-stream-starter-kafka", "org.springframework.cloud", "spring-cloud-starter-stream-kafka").withoutVersion()
+
             library("spring-boot-test-starter-core", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
             library("spring-boot-test-container-testcontainers", "org.springframework.boot", "spring-boot-testcontainers").withoutVersion()
             library("spring-cloud-test-stream-binder", "org.springframework.cloud", "spring-cloud-stream-test-binder").withoutVersion()
@@ -365,6 +384,14 @@ dependencyResolutionManagement {
                 listOf(
                     "spring-cloud-stream-binder-rabbit",
                     "spring-cloud-stream-starter-rabbit",
+                ),
+            )
+
+            bundle(
+                "spring-cloud-stream-kafka-bundle",
+                listOf(
+                    "spring-cloud-stream-binder-kafka",
+                    "spring-cloud-stream-starter-kafka",
                 ),
             )
 

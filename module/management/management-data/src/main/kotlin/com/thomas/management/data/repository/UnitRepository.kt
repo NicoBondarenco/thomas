@@ -25,4 +25,6 @@ interface UnitRepository {
 
     suspend fun allByIds(ids: Set<UUID>, organizationId: UUID): Set<UnitEntity>
 
+    suspend fun allByOrganization(organizationId: UUID): Set<UnitEntity>
+
 }

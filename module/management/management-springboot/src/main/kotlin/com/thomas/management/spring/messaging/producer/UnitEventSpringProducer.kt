@@ -3,14 +3,17 @@ package com.thomas.management.spring.messaging.producer
 import com.thomas.contract.messaging.management.unit.UnitManagementEvent
 import com.thomas.core.extension.withSessionContextVT
 import com.thomas.management.domain.messaging.event.UnitEventProducer
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.stereotype.Component
 
 @Component
 class UnitEventSpringProducer(
     streamBridge: StreamBridge,
+    @Value("\${spring.cloud.stream.key-header}") keyHeader: String,
 ) : SpringMessagingProducer<UnitManagementEvent>(
-    streamBridge
+    streamBridge,
+    keyHeader
 ), UnitEventProducer {
 
     companion object {
@@ -32,7 +35,7 @@ class UnitEventSpringProducer(
     private suspend fun sendEvent(
         event: UnitManagementEvent
     ) = withSessionContextVT {
-        sendMessage(OUTPUT_CHANNEL, event)
+        sendMessage(OUTPUT_CHANNEL, event.eventKey.toString(), event)
     }
 
 }

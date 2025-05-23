@@ -1,5 +1,6 @@
 package com.thomas.management.domain.mock
 
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.util.StringUtils.randomPassword
@@ -129,9 +130,9 @@ internal val unitRepositoryMock: UnitRepository
 
 internal val userRepositoryMock: UserRepository
     get() = mockk<UserRepository>().apply {
-        coEvery { page(any<String>(), any<Boolean>(), any<Boolean>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
+        coEvery { page(any<String>(), any<Boolean>(), any<List<UserType>>(), any<UUID>(), any<PageRequestPeriod>()) } answers {
             val users = (1..10).map { userEntity }
-            PageResponse.of(users, it.fourthArg(), 10L)
+            PageResponse.of(users, it.fifthArg(), 10L)
         }
         coEvery { one(any(), any(), any()) } answers {
             userCompleteEntity.let {
@@ -251,10 +252,25 @@ internal val passwordRepositoryMock: PasswordResetRepository
                 }?.copy(expiresOn = now(UTC).minusHours(1)) ?: it
             }
         }
+
+        coEvery { deleteToken(any()) } answers {
+            passwordResetEntity.copy(
+                resetToken = firstArg()
+            ).takeIf {
+                !passwordTokens.contains(firstArg())
+            }?.let {
+                it.takeIf {
+                    expiredTokens.contains(firstArg())
+                }?.copy(expiresOn = now(UTC).minusHours(1)) ?: it
+            }
+        }
     }
 
 inline fun <reified T> Call.fourthArg() = invocation.fourthArg<T>()
 inline fun <reified T> Invocation.fourthArg() = args[3] as T
+
+inline fun <reified T> Call.fifthArg() = invocation.fifthArg<T>()
+inline fun <reified T> Invocation.fifthArg() = args[4] as T
 
 fun clearRepositoryMocks() {
     organizationNotFound.clear()

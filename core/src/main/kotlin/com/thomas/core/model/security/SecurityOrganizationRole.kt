@@ -10,7 +10,7 @@ enum class SecurityOrganizationRole(
     override val roleCode: Int,
     override val roleOrder: Int,
     override val roleSubgroup: SecurityOrganizationRoleSubgroup,
-    val roleDisplayable: Boolean,
+    override val roleDisplayable: Boolean,
 ) : SecurityRole<SecurityOrganizationRole, SecurityOrganizationRoleSubgroup, SecurityOrganizationRoleGroup> {
 
     MASTER_ROLE(0, 1, MASTER_SUBGROUP, false),

@@ -20,19 +20,19 @@ class DetailedExceptionTest {
     companion object {
         @JvmStatic
         fun errorParameters(): List<Arguments> = listOf(
-            Arguments.of("Message of UNAUTHENTICATED_USER", UNAUTHENTICATED_USER, IllegalArgumentException(), "Detail Message"),
-            Arguments.of("Message of UNAUTHORIZED_ACTION", UNAUTHORIZED_ACTION, NullPointerException(), mapOf("Message" to "Detail Message")),
-            Arguments.of("Message of INVALID_ENTITY", INVALID_ENTITY, ClassNotFoundException(), listOf("Detail Message")),
-            Arguments.of("Message of INVALID_PARAMETER", INVALID_PARAMETER, NoSuchMethodException(), INVALID_PARAMETER),
-            Arguments.of("Message of NOT_FOUND", NOT_FOUND, ArithmeticException(), ErrorDetail()),
+            Arguments.of("Message of UNAUTHENTICATED_USER", UNAUTHENTICATED_USER, IllegalArgumentException(), mapOf("Detail Message" to listOf<String>())),
+            Arguments.of("Message of UNAUTHORIZED_ACTION", UNAUTHORIZED_ACTION, NullPointerException(), mapOf("Message" to listOf("Detail Message"))),
+            Arguments.of("Message of INVALID_ENTITY", INVALID_ENTITY, ClassNotFoundException(), mapOf("Errors" to listOf("Detail Message", "Detail Message 02")) ),
+            Arguments.of("Message of INVALID_PARAMETER", INVALID_PARAMETER, NoSuchMethodException(), mapOf(INVALID_PARAMETER.name to listOf(INVALID_PARAMETER.name)) ),
+            Arguments.of("Message of NOT_FOUND", NOT_FOUND, ArithmeticException(), null),
             Arguments.of("Message of APPLICATION_ERROR", APPLICATION_ERROR, null, null),
         )
     }
 
     @Test
     fun `When DetailException is thrown without parameters then the defaults should be used`() {
-        val exception = assertThrows<DetailedException> {
-            throw object : DetailedException() {}
+        val exception = assertThrows<ApplicationException> {
+            throw object : ApplicationException() {}
         }
 
         assertEquals(exceptionDetailedExceptionMessageDefault(), exception.message)
@@ -44,8 +44,8 @@ class DetailedExceptionTest {
     @Test
     fun `When DetailException with type is thrown without parameters then the defaults should be used`() {
         ErrorType.entries.forEach {
-            val exception = assertThrows<DetailedException> {
-                throw object : DetailedException(type = it) {}
+            val exception = assertThrows<ApplicationException> {
+                throw object : ApplicationException(type = it) {}
             }
 
             assertEquals(exceptionDetailedExceptionMessageDefault(), exception.message)
@@ -61,10 +61,10 @@ class DetailedExceptionTest {
         message: String,
         type: ErrorType,
         cause: Throwable?,
-        detail: Any?,
+        detail: Map<String, List<String>>?,
     ) {
-        val exception = assertThrows<DetailedException> {
-            throw object : DetailedException(message, type, detail, cause) {}
+        val exception = assertThrows<ApplicationException> {
+            throw object : ApplicationException(message, type, detail, cause) {}
         }
 
         assertEquals(message, exception.message)

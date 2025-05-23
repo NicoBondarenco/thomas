@@ -1,6 +1,6 @@
 package com.thomas.spring.base.exception
 
-import com.thomas.core.exception.DetailedException
+import com.thomas.core.exception.ApplicationException
 import com.thomas.core.exception.ErrorType.INVALID_PARAMETER
 import com.thomas.spring.base.extension.errorDetails
 import com.thomas.spring.base.i18n.SpringMessageI18N.exceptionInvalidArgumentParameterErrorsMessage
@@ -9,11 +9,11 @@ import org.springframework.beans.TypeMismatchException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 
-class RequestException : DetailedException {
+class RequestException : ApplicationException {
 
     constructor(
         message: String,
-        detail: Any? = null,
+        detail: Map<String, List<String>>? = null,
         cause: Throwable? = null
     ) : super(
         message = message,
@@ -26,7 +26,7 @@ class RequestException : DetailedException {
         cause: MethodArgumentNotValidException,
     ) : this(
         message = exceptionInvalidArgumentParameterErrorsMessage(),
-        detail = cause.errorDetails(),
+        detail = cause.errorDetails().mapValues { it.value.filterNotNull() },
         cause = cause,
     )
 

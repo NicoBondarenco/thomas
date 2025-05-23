@@ -1,5 +1,7 @@
 package com.thomas.management.data.neo4j.repository
 
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.COMMON
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageSort
 import com.thomas.core.model.pagination.PageSortDirection.ASC
@@ -72,7 +74,7 @@ class UserNeo4JRepositoryTest : ManagementFunSpec<UserNeo4JRepository>(
             }
 
             withData(data) {
-                val result = repository.one(it.field, it.organizationId, false)
+                val result = repository.one(it.field, it.organizationId, listOf(COMMON))
                 result shouldBe it.entity
             }
         }
@@ -94,7 +96,7 @@ class UserNeo4JRepositoryTest : ManagementFunSpec<UserNeo4JRepository>(
 
             withData(data) {
                 val page = it.page(users.toList()).map { u -> u.toUserSimpleEntity() }
-                val result = repository.page(it.keyword, it.isActive, false, it.organizationId, it.pageable)
+                val result = repository.page(it.keyword, it.isActive, listOf(COMMON), it.organizationId, it.pageable)
                 result.contentList.size shouldBe page.contentList.size
                 result.totalItems shouldBe page.totalItems
                 result.totalPages shouldBe page.totalPages
@@ -382,6 +384,60 @@ class UserNeo4JRepositoryTest : ManagementFunSpec<UserNeo4JRepository>(
             withData(data) {
                 val result = repository.findByUsername(it.field)
                 result shouldBe it.entity
+            }
+        }
+
+        context(name = "Page Filter Type COMMON", script = "/scripts/user/type.cypher") {
+            val users = entities(UserCompleteEntity::class)
+            val organizations = entities(OrganizationEntity::class)
+
+            val data = mapOf(
+                "UserSearchData 01" to UserSearchData("josé", null, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 6, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.updatedAt }),
+                "UserSearchData 02" to UserSearchData("eira", null, organizations.random().id, PageRequestPeriod(pageNumber = 1, pageSize = 5, pageSort = listOf(PageSort("document_number", ASC))), compareBy { it.documentNumber }),
+                "UserSearchData 03" to UserSearchData("449", null, organizations.random().id, PageRequestPeriod(pageNumber = 1, pageSize = 5, pageSort = listOf(PageSort("first_name", ASC), PageSort("last_name", DESC))), compareBy<UserCompleteEntity> { it.firstName }.thenByDescending { it.lastName }),
+                "UserSearchData 04" to UserSearchData("hotmail", null, organizations.random().id, PageRequestPeriod(pageNumber = 3, pageSize = 3, pageSort = listOf(PageSort("last_name", ASC), PageSort("created_at", DESC))), compareBy<UserCompleteEntity> { it.lastName }.thenByDescending { it.createdAt }),
+                "UserSearchData 05" to UserSearchData(null, true, organizations.random().id, PageRequestPeriod(pageNumber = 4, pageSize = 4, pageSort = listOf(PageSort("first_name", ASC), PageSort("last_name", DESC))), compareBy<UserCompleteEntity> { it.firstName }.thenByDescending { it.lastName }),
+                "UserSearchData 06" to UserSearchData(null, null, organizations.random().id, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-01-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), createdEnd = OffsetDateTime.parse("2025-06-30T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.updatedAt }),
+                "UserSearchData 07" to UserSearchData(null, null, organizations.random().id, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("document_number", DESC))), compareByDescending { it.documentNumber }),
+                "UserSearchData 08" to UserSearchData("JOSÉ", true, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 5, updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("last_name", DESC), PageSort("updated_at", DESC))), compareByDescending<UserCompleteEntity> { it.lastName }.thenByDescending { it.updatedAt }),
+            )
+
+            withData(data) {
+                val page = it.page(users.filter { u -> u.userType == COMMON }.toList()).map { u -> u.toUserSimpleEntity() }
+                val result = repository.page(it.keyword, it.isActive, listOf(COMMON), it.organizationId, it.pageable)
+                result.contentList.size shouldBe page.contentList.size
+                result.totalItems shouldBe page.totalItems
+                result.totalPages shouldBe page.totalPages
+                page.contentList.map { user -> user.id }.forEach { entity ->
+                    result.contentList.map { user -> user.id }.contains(entity) shouldBe true
+                }
+            }
+        }
+
+        context(name = "Page Filter Type ADMINISTRATOR MASTER", script = "/scripts/user/type.cypher") {
+            val users = entities(UserCompleteEntity::class)
+            val organizations = entities(OrganizationEntity::class)
+
+            val data = mapOf(
+                "UserSearchData 01" to UserSearchData("josé", null, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 6, pageSort = listOf(PageSort("updated_at", DESC))), compareByDescending { it.updatedAt }),
+                "UserSearchData 02" to UserSearchData("eira", null, organizations.random().id, PageRequestPeriod(pageNumber = 1, pageSize = 5, pageSort = listOf(PageSort("document_number", ASC))), compareBy { it.documentNumber }),
+                "UserSearchData 03" to UserSearchData("449", null, organizations.random().id, PageRequestPeriod(pageNumber = 1, pageSize = 5, pageSort = listOf(PageSort("first_name", ASC), PageSort("last_name", DESC))), compareBy<UserCompleteEntity> { it.firstName }.thenByDescending { it.lastName }),
+                "UserSearchData 04" to UserSearchData("hotmail", null, organizations.random().id, PageRequestPeriod(pageNumber = 3, pageSize = 3, pageSort = listOf(PageSort("last_name", ASC), PageSort("created_at", DESC))), compareBy<UserCompleteEntity> { it.lastName }.thenByDescending { it.createdAt }),
+                "UserSearchData 05" to UserSearchData(null, true, organizations.random().id, PageRequestPeriod(pageNumber = 4, pageSize = 4, pageSort = listOf(PageSort("first_name", ASC), PageSort("last_name", DESC))), compareBy<UserCompleteEntity> { it.firstName }.thenByDescending { it.lastName }),
+                "UserSearchData 06" to UserSearchData(null, null, organizations.random().id, PageRequestPeriod(createdStart = OffsetDateTime.parse("2025-01-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), createdEnd = OffsetDateTime.parse("2025-06-30T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("updated_at", ASC))), compareBy { it.updatedAt }),
+                "UserSearchData 07" to UserSearchData(null, null, organizations.random().id, PageRequestPeriod(updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("document_number", DESC))), compareByDescending { it.documentNumber }),
+                "UserSearchData 08" to UserSearchData("JOSÉ", true, organizations.random().id, PageRequestPeriod(pageNumber = 2, pageSize = 5, updatedStart = OffsetDateTime.parse("2025-07-01T00:00:00.000000Z", ISO_OFFSET_DATE_TIME), updatedEnd = OffsetDateTime.parse("2025-12-31T23:59:59.999999Z", ISO_OFFSET_DATE_TIME), pageSort = listOf(PageSort("last_name", DESC), PageSort("updated_at", DESC))), compareByDescending<UserCompleteEntity> { it.lastName }.thenByDescending { it.updatedAt }),
+            )
+
+            withData(data) {
+                val page = it.page(users.toList()).map { u -> u.toUserSimpleEntity() }
+                val result = repository.page(it.keyword, it.isActive, UserType.entries, it.organizationId, it.pageable)
+                result.contentList.size shouldBe page.contentList.size
+                result.totalItems shouldBe page.totalItems
+                result.totalPages shouldBe page.totalPages
+                page.contentList.map { user -> user.id }.forEach { entity ->
+                    result.contentList.map { user -> user.id }.contains(entity) shouldBe true
+                }
             }
         }
 

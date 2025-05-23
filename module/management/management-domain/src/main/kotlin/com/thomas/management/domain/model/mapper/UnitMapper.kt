@@ -1,7 +1,7 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.ManagementEventType
-import com.thomas.contract.messaging.management.ManagementEventType.DELETE
+import com.thomas.contract.messaging.ApplicationEventType
+import com.thomas.contract.messaging.ApplicationEventType.DELETE
 import com.thomas.contract.messaging.management.unit.UnitDataEvent
 import com.thomas.contract.messaging.management.unit.UnitManagementEvent
 import com.thomas.core.model.security.SecurityUnitRole
@@ -9,7 +9,9 @@ import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitEntity
 import com.thomas.management.data.entity.UnitRoleEntity
 import com.thomas.management.domain.model.request.UnitUpsertRequest
+import com.thomas.management.domain.model.response.RoleGroupResponse
 import com.thomas.management.domain.model.response.UnitResponse
+import com.thomas.management.domain.model.response.UnitRoleResponse
 import java.time.OffsetDateTime.now
 import java.time.ZoneOffset.UTC
 import java.util.UUID
@@ -80,7 +82,7 @@ suspend fun UnitEntity.updateFromRequest(request: UnitUpsertRequest) = coroutine
     )
 }
 
-suspend fun UnitEntity.toUnitManagementEvent(type: ManagementEventType) = coroutineScope {
+suspend fun UnitEntity.toUnitManagementEvent(type: ApplicationEventType) = coroutineScope {
     UnitManagementEvent(
         eventType = type,
         eventTimestamp = now(UTC),
@@ -130,3 +132,15 @@ suspend fun Map<UnitEntity, Set<SecurityUnitRole>>.toUnitRoleEntity(): Set<UnitR
     }.toSet()
 }
 
+suspend fun Collection<UnitEntity>.toUnitRoleResponses(
+    unitRoles: Set<RoleGroupResponse>
+): Set<UnitRoleResponse> = coroutineScope {
+    this@toUnitRoleResponses.map {
+        UnitRoleResponse(
+            id = it.id,
+            unitName = it.unitName,
+            fantasyName = it.fantasyName,
+            unitRoles = unitRoles,
+        )
+    }.toSet()
+}

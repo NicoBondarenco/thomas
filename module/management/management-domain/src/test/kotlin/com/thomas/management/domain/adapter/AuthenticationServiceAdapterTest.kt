@@ -9,6 +9,7 @@ import com.thomas.management.domain.exception.InvalidCredentialException
 import com.thomas.management.domain.exception.InvalidRefreshTokenException
 import com.thomas.management.domain.mock.hasherMock
 import com.thomas.management.domain.mock.tokenizerMock
+import com.thomas.management.domain.mock.unitRepositoryMock
 import com.thomas.management.domain.mock.userInactiveOrganization
 import com.thomas.management.domain.mock.userInactiveStatus
 import com.thomas.management.domain.mock.userInvalidCredential
@@ -30,6 +31,7 @@ class AuthenticationServiceAdapterTest {
         hasher = hasherMock,
         tokenizer = tokenizerMock,
         userRepository = userRepositoryMock,
+        unitRepository = unitRepositoryMock,
     )
 
     @BeforeEach

@@ -17,7 +17,12 @@ suspend fun SignupRequest.toSignupEntity(
     ).let {
         SignupEntity(
             organizationData = it,
-            userData = userData.toUserEntity(it, hasher, signupProperties.defaultRoles),
+            userData = userData.toUserEntity(
+                it,
+                hasher,
+                signupProperties.defaultType,
+                signupProperties.defaultRoles,
+            ),
         )
     }
 }

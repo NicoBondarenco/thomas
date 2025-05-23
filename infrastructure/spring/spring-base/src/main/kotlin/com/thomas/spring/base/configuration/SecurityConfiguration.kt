@@ -45,8 +45,9 @@ open class SecurityConfiguration {
 
     @Bean
     open fun authenticationFilter(
-        authenticator: Authenticator
-    ): AuthenticationFilter = AuthenticationFilter(authenticator)
+        authenticator: Authenticator,
+        objectMapper: ObjectMapper,
+    ): AuthenticationFilter = AuthenticationFilter(authenticator, objectMapper)
 
     @Bean
     open fun filterChain(

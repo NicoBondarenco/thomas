@@ -1,11 +1,11 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.ManagementEventType
+import com.thomas.contract.messaging.ApplicationEventType
 import com.thomas.contract.messaging.management.user.UserDataEvent
 import com.thomas.contract.messaging.management.user.UserManagementEvent
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.COMMON
 import com.thomas.core.model.security.SecurityOrganizationRole
-import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
-import com.thomas.core.model.security.SecurityRole
 import com.thomas.management.data.entity.GroupCompleteEntity
 import com.thomas.management.data.entity.OrganizationEntity
 import com.thomas.management.data.entity.UnitRoleEntity
@@ -25,6 +25,7 @@ import kotlinx.coroutines.coroutineScope
 suspend fun SignupUserRequest.toUserEntity(
     userOrganization: OrganizationEntity,
     hasher: Hasher,
+    defaultType: UserType,
     defaultRoles: Set<SecurityOrganizationRole>,
 ): UserSimpleEntity = coroutineScope {
     hasher.let {
@@ -35,6 +36,8 @@ suspend fun SignupUserRequest.toUserEntity(
             lastName = this@toUserEntity.lastName,
             documentNumber = this@toUserEntity.documentNumber,
             userGender = this@toUserEntity.userGender,
+            userRace = this@toUserEntity.userRace,
+            userType = defaultType,
             birthDate = this@toUserEntity.birthDate,
             passwordSalt = salt,
             passwordHash = password,
@@ -54,6 +57,7 @@ suspend fun UserSimpleEntity.toSignupUserResponse() = coroutineScope {
         documentNumber = this@toSignupUserResponse.documentNumber,
         profilePhoto = this@toSignupUserResponse.profilePhoto,
         userGender = this@toSignupUserResponse.userGender,
+        userRace = this@toSignupUserResponse.userRace,
         birthDate = this@toSignupUserResponse.birthDate,
         mainEmail = this@toSignupUserResponse.mainEmail,
         mainPhone = this@toSignupUserResponse.mainPhone,
@@ -76,6 +80,8 @@ suspend fun UserCreateRequest.toUserCompleteEntity(
         lastName = this@toUserCompleteEntity.lastName,
         documentNumber = this@toUserCompleteEntity.documentNumber,
         userGender = this@toUserCompleteEntity.userGender,
+        userRace = this@toUserCompleteEntity.userRace,
+        userType = COMMON,
         birthDate = this@toUserCompleteEntity.birthDate,
         passwordSalt = passwordSalt,
         passwordHash = passwordHash,
@@ -99,6 +105,7 @@ suspend fun UserCompleteEntity.updateFromRequest(
         lastName = request.lastName,
         documentNumber = request.documentNumber,
         userGender = request.userGender,
+        userRace = request.userRace,
         birthDate = request.birthDate,
         mainPhone = request.mainPhone,
         isActive = request.isActive,
@@ -117,6 +124,7 @@ suspend fun UserSimpleEntity.toUserSimpleResponse() = coroutineScope {
         documentNumber = this@toUserSimpleResponse.documentNumber,
         profilePhoto = this@toUserSimpleResponse.profilePhoto,
         userGender = this@toUserSimpleResponse.userGender,
+        userRace = this@toUserSimpleResponse.userRace,
         birthDate = this@toUserSimpleResponse.birthDate,
         userOrganization = this@toUserSimpleResponse.userOrganization.toOrganizationResponse(),
         mainEmail = this@toUserSimpleResponse.mainEmail,
@@ -128,7 +136,6 @@ suspend fun UserSimpleEntity.toUserSimpleResponse() = coroutineScope {
 }
 
 suspend fun UserCompleteEntity.toUserDetailResponse() = coroutineScope {
-
     UserDetailResponse(
         id = this@toUserDetailResponse.id,
         firstName = this@toUserDetailResponse.firstName,
@@ -136,6 +143,7 @@ suspend fun UserCompleteEntity.toUserDetailResponse() = coroutineScope {
         documentNumber = this@toUserDetailResponse.documentNumber,
         profilePhoto = this@toUserDetailResponse.profilePhoto,
         userGender = this@toUserDetailResponse.userGender,
+        userRace = this@toUserDetailResponse.userRace,
         birthDate = this@toUserDetailResponse.birthDate,
         userOrganization = this@toUserDetailResponse.userOrganization.toOrganizationResponse(),
         organizationRoles = this@toUserDetailResponse.organizationRoles,
@@ -149,7 +157,7 @@ suspend fun UserCompleteEntity.toUserDetailResponse() = coroutineScope {
     )
 }
 
-suspend fun UserSimpleEntity.toUserManagementEvent(type: ManagementEventType) = coroutineScope {
+suspend fun UserSimpleEntity.toUserManagementEvent(type: ApplicationEventType) = coroutineScope {
     UserManagementEvent(
         eventType = type,
         eventTimestamp = now(UTC),
@@ -166,6 +174,8 @@ suspend fun UserSimpleEntity.toUserDataEvent() = coroutineScope {
         documentNumber = this@toUserDataEvent.documentNumber,
         profilePhoto = this@toUserDataEvent.profilePhoto,
         userGender = this@toUserDataEvent.userGender,
+        userRace = this@toUserDataEvent.userRace,
+        userType = this@toUserDataEvent.userType,
         birthDate = this@toUserDataEvent.birthDate,
         userOrganization = this@toUserDataEvent.userOrganization.id,
         organizationRoles = this@toUserDataEvent.organizationRoles,
@@ -179,7 +189,7 @@ suspend fun UserSimpleEntity.toUserDataEvent() = coroutineScope {
     )
 }
 
-suspend fun UserCompleteEntity.toUserManagementEvent(type: ManagementEventType) = coroutineScope {
+suspend fun UserCompleteEntity.toUserManagementEvent(type: ApplicationEventType) = coroutineScope {
     UserManagementEvent(
         eventType = type,
         eventTimestamp = now(UTC),
@@ -196,6 +206,8 @@ suspend fun UserCompleteEntity.toUserDataEvent() = coroutineScope {
         documentNumber = this@toUserDataEvent.documentNumber,
         profilePhoto = this@toUserDataEvent.profilePhoto,
         userGender = this@toUserDataEvent.userGender,
+        userRace = this@toUserDataEvent.userRace,
+        userType = this@toUserDataEvent.userType,
         birthDate = this@toUserDataEvent.birthDate,
         userOrganization = this@toUserDataEvent.userOrganization.id,
         organizationRoles = this@toUserDataEvent.organizationRoles,

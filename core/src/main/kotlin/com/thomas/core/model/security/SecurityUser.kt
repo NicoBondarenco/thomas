@@ -2,6 +2,8 @@ package com.thomas.core.model.security
 
 import com.thomas.core.context.SessionContextHolder.currentUnit
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import java.time.LocalDate
 import java.util.UUID
@@ -15,6 +17,8 @@ data class SecurityUser(
     val profilePhoto: String?,
     val birthDate: LocalDate?,
     val userGender: Gender?,
+    val userRace: Race?,
+    val userType: UserType,
     val isActive: Boolean,
     val userOrganization: SecurityOrganization,
     val userGroups: Set<SecurityGroup>,

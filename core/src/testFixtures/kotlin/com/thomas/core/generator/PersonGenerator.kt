@@ -2,6 +2,7 @@ package com.thomas.core.generator
 
 import com.thomas.core.data.PersonTestData
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
 import java.time.LocalDate
 import java.util.UUID
 
@@ -425,6 +426,7 @@ object PersonGenerator {
         phoneNumber = (1..11).map { (0..9).random() }.joinToString(""),
         birthDate = generateBirthDate(),
         userGender = Gender.entries.random(),
+        userRace = Race.entries.random(),
     )
 
     private fun generateDocumentNumber(): String {

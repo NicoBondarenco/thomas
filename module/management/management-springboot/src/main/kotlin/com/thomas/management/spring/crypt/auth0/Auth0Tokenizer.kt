@@ -112,6 +112,8 @@ class Auth0Tokenizer(
         .withClaim(SecurityUser::profilePhoto.name.toSnakeCase(), securityUser.profilePhoto)
         .withClaim(SecurityUser::birthDate.name.toSnakeCase(), securityUser.birthDate?.let { ISO_LOCAL_DATE_FORMATTER.format(it) })
         .withClaim(SecurityUser::userGender.name.toSnakeCase(), securityUser.userGender?.name)
+        .withClaim(SecurityUser::userRace.name.toSnakeCase(), securityUser.userRace?.name)
+        .withClaim(SecurityUser::userType.name.toSnakeCase(), securityUser.userType.name)
         .withClaim(SecurityUser::isActive.name.toSnakeCase(), securityUser.isActive)
         .withClaim(SecurityUser::userOrganization.name.toSnakeCase(), securityUser.userOrganization.toClaim())
         .withClaim(SecurityUser::userGroups.name.toSnakeCase(), securityUser.userGroups.toGroupClaims())

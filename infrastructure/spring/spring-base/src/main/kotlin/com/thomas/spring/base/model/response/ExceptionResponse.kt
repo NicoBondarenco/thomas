@@ -9,5 +9,5 @@ data class ExceptionResponse(
     val code: Int,
     val path: String,
     val message: String,
-    val detail: Any?
+    val detail: Map<String, List<String>>?
 )

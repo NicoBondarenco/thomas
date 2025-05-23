@@ -1,7 +1,7 @@
 package com.thomas.core.model.security
 
 import com.thomas.core.context.SessionContextHolder.currentLocale
-import com.thomas.core.model.security.SecurityUnitRole.COA_READ
+import com.thomas.core.model.security.SecurityUnitRole.UNIT_ALL
 import java.util.Locale
 import java.util.Locale.ROOT
 import java.util.Properties
@@ -99,7 +99,7 @@ class SecurityUnitRoleTest {
 
     @Test
     fun `Security Role by Code`() {
-        assertEquals(COA_READ, SecurityUnitRole.byCode(0))
+        assertEquals(UNIT_ALL, SecurityUnitRole.byCode(0))
     }
 
     @Test

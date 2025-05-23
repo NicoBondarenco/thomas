@@ -3,14 +3,18 @@ package com.thomas.management.spring.messaging.producer
 import com.thomas.contract.messaging.notification.email.SendEmailCommand
 import com.thomas.core.extension.withSessionContextVT
 import com.thomas.management.domain.messaging.command.NotificationCommandProducer
+import java.util.UUID.randomUUID
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.stereotype.Component
 
 @Component
 class NotificationCommandSpringProducer(
     streamBridge: StreamBridge,
+    @Value("\${spring.cloud.stream.key-header}") keyHeader: String,
 ) : SpringMessagingProducer<SendEmailCommand>(
-    streamBridge
+    streamBridge,
+    keyHeader
 ), NotificationCommandProducer {
 
     companion object {
@@ -24,7 +28,7 @@ class NotificationCommandSpringProducer(
     private suspend fun sendEvent(
         event: SendEmailCommand
     ) = withSessionContextVT {
-        sendMessage(OUTPUT_CHANNEL, event)
+        sendMessage(OUTPUT_CHANNEL, randomUUID().toString(), event)
     }
 
 }

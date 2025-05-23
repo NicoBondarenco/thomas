@@ -1,7 +1,7 @@
 package com.thomas.management.domain.adapter
 
-import com.thomas.contract.messaging.management.ManagementEventType.CREATE
-import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
+import com.thomas.contract.messaging.ApplicationEventType.CREATE
+import com.thomas.contract.messaging.ApplicationEventType.UPDATE
 import com.thomas.core.aspect.AspectClass
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
@@ -16,7 +16,6 @@ import com.thomas.management.domain.UnitService
 import com.thomas.management.domain.exception.UnitNotFoundException
 import com.thomas.management.domain.i18n.ManagementDomainMessageI18N.managementUnitValidationUnitDataInvalidData
 import com.thomas.management.domain.messaging.event.UnitEventProducer
-import com.thomas.management.domain.model.mapper.toUnitDataEvent
 import com.thomas.management.domain.model.mapper.toUnitEntity
 import com.thomas.management.domain.model.mapper.toUnitManagementEvent
 import com.thomas.management.domain.model.mapper.toUnitResponse

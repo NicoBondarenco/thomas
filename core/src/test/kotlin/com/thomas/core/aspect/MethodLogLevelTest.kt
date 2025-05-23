@@ -1,6 +1,6 @@
 package com.thomas.core.aspect
 
-import org.apache.logging.log4j.Level
+import ch.qos.logback.classic.Level
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -18,7 +18,8 @@ class MethodLogLevelTest {
     @Test
     fun `Validate log level names`() {
         MethodLogLevel.entries.forEach {
-            assertEquals(it.name, it.level.name())
+            assertEquals(it.name, it.level.levelStr)
+            assertEquals(it.name, it.klevel.name)
         }
     }
 

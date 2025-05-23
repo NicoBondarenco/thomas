@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.thomas.core.aspect.MaskField
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.context.SessionContextHolder.currentUser
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.lang.System.lineSeparator
 import java.lang.reflect.Parameter
 import java.util.UUID
 import kotlin.coroutines.Continuation
 import kotlin.reflect.KClass
-import org.apache.logging.log4j.kotlin.KotlinLogger
-import org.apache.logging.log4j.kotlin.cachedLoggerOf
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -44,11 +44,11 @@ class MethodLogAspect(
         val logger = point.logger()
         val annotation = point.logAnnotation()
         val result = point.proceed()
-        logger.log(annotation.logLevel.level, "${annotation.userIdLog()}${point.methodLog()}${point.parametersLog(annotation)}${annotation.resultLog(result)}")
+        logger.at(annotation.logLevel.klevel, null) { "${annotation.userIdLog()}${point.methodLog()}${point.parametersLog(annotation)}${annotation.resultLog(result)}" }
         return result
     }
 
-    private fun JoinPoint.logger(): KotlinLogger = cachedLoggerOf(this.target::class.java)
+    private fun JoinPoint.logger(): KLogger = KotlinLogging.logger {}
 
     private fun JoinPoint.logAnnotation() = (this.signature as MethodSignature).method.getAnnotation(MethodLog::class.java)
 

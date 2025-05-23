@@ -48,7 +48,10 @@ dependencies {
 
     implementation(libs.spring.cloud.stream.core.all)
 
-    implementation(libs.bundles.spring.cloud.stream.rabbit.bundle)
+    implementation(libs.bundles.spring.cloud.stream.kafka.bundle)
+    implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("io.micrometer:micrometer-registry-prometheus:1.15.0")
 
     implementation(libs.neo4j.ogm.core)
     implementation(libs.neo4j.ogm.bolt)
@@ -56,6 +59,7 @@ dependencies {
     implementation(libs.auth0.jwt) { removeJackson() }
 
     implementation("org.bouncycastle:bcpkix-jdk18on:1.80")
+    implementation("com.github.loki4j:loki-logback-appender:1.6.0")
 
     implementation(libs.bundles.jackson.all.bundle)
 

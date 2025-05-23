@@ -7,7 +7,8 @@ enum class SecurityUnitRoleGroup(
     override val groupOrder: Int
 ) : SecurityRoleGroup<SecurityUnitRole, SecurityUnitRoleSubgroup, SecurityUnitRoleGroup> {
 
-    ACCOUNTING(0);
+    UNITS(0),
+    ACCOUNTING(1);
 
     override val kclass: KClass<SecurityUnitRoleSubgroup> = SecurityUnitRoleSubgroup::class
 

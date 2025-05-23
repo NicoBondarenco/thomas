@@ -1,8 +1,11 @@
 package com.thomas.spring.base.configuration
 
+import com.thomas.core.exception.ApplicationException
+import com.thomas.core.extension.logger
 import com.thomas.spring.base.exception.RequestException
 import com.thomas.spring.base.extension.logByStatus
 import com.thomas.spring.base.extension.toExceptionResponse
+import com.thomas.spring.base.extension.toHttpStatus
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
@@ -10,11 +13,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
+open class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
+
+    @ExceptionHandler(ApplicationException::class)
+    fun handleApplicationException(
+        ex: Exception,
+        request: WebRequest,
+    ): ResponseEntity<Any>? = handleExceptionInternal(ex, null, HttpHeaders(), (ex as ApplicationException).type.toHttpStatus(), request)
 
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
@@ -44,7 +54,7 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? = exception.let {
-        logger.logByStatus(it, status)
+        logger().logByStatus(it, status)
         super.handleExceptionInternal(it, it.toExceptionResponse(request.contextPath), headers, status, request)
     }
 

@@ -1,6 +1,7 @@
 package com.thomas.management.domain.model.request
 
 import com.thomas.core.model.general.Gender
+import com.thomas.core.model.general.Race
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.core.model.security.SecurityUnitRole
 import java.time.LocalDate
@@ -11,6 +12,7 @@ data class UserCreateRequest(
     val lastName: String,
     val documentNumber: String,
     val userGender: Gender?,
+    val userRace: Race?,
     val birthDate: LocalDate?,
     val mainEmail: String,
     val mainPhone: String,

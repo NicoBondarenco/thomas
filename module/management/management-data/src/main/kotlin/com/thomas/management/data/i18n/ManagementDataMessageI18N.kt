@@ -115,6 +115,12 @@ object ManagementDataMessageI18N : BundleResolver("strings/management-data") {
     fun managementUserValidationDocumentNumberInvalidValue() =
         formattedMessage("management.user-validation.document-number.invalid-value")
 
+    fun managementUserValidationUserTypeMasterUser() =
+        formattedMessage("management.user-validation.user-type.master-user")
+
+    fun managementUserValidationUserTypeAdministratorUser() =
+        formattedMessage("management.user-validation.user-type.administrator-user")
+
     //endregion USER
 
     //region GROUP

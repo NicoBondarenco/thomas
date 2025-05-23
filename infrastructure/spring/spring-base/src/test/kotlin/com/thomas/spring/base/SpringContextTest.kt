@@ -4,6 +4,7 @@ import com.thomas.core.data.securityUser
 import com.thomas.core.data.securityUserRoles
 import com.thomas.core.exception.ErrorType
 import com.thomas.spring.base.extension.toHttpStatus
+import com.thomas.spring.base.i18n.SpringMessageI18N.authenticationTokenValidateTokenInvalidToken
 import com.thomas.spring.base.i18n.SpringMessageI18N.exceptionInvalidArgumentParameterErrorsMessage
 import com.thomas.spring.base.i18n.SpringMessageI18N.requestRequestParameterValidationConvertError
 import com.thomas.spring.base.model.response.ExceptionResponse
@@ -88,6 +89,7 @@ class SpringContextTest {
             .getForEntity("/test/common", ExceptionResponse::class.java)
 
         assertEquals(UNAUTHORIZED, response.statusCode)
+        assertEquals(authenticationTokenValidateTokenInvalidToken(), response.body?.message)
     }
 
     @Test

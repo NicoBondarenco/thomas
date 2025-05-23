@@ -32,6 +32,8 @@ internal object SpringMessageI18N : BundleResolver("strings/spring-strings") {
 
     fun authenticationTokenValidateTokenInvalidIssuer() = formattedMessage("authentication.token.validate-token.invalid-issuer")
 
+    fun authenticationTokenValidateTokenInvalidToken() = formattedMessage("authentication.token.validate-token.invalid-token")
+
     fun authenticationManagerValidateAuthenticationNoAuthentication() = formattedMessage("authentication.manager.validate-authentication.no-authentication")
 
     fun authorityRoleOrganizationRoleNotAuthorized(role: String) = formattedMessage("authority.role.organization-role.not-authorized", role)

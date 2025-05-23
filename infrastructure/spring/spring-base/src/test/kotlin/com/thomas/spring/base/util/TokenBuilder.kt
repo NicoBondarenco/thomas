@@ -49,6 +49,8 @@ class TokenBuilder(
         .withClaim(SecurityUser::profilePhoto.name.toSnakeCase(), user.profilePhoto)
         .withClaim(SecurityUser::birthDate.name.toSnakeCase(), user.birthDate?.let { formatter.format(it) })
         .withClaim(SecurityUser::userGender.name.toSnakeCase(), user.userGender?.name)
+        .withClaim(SecurityUser::userRace.name.toSnakeCase(), user.userRace?.name)
+        .withClaim(SecurityUser::userType.name.toSnakeCase(), user.userType.name)
         .withClaim(SecurityUser::isActive.name.toSnakeCase(), user.isActive)
         .withClaim(SecurityUser::userOrganization.name.toSnakeCase(), user.userOrganization.toClaim())
         .withClaim(SecurityUser::userGroups.name.toSnakeCase(), user.userGroups.toGroupClaims())

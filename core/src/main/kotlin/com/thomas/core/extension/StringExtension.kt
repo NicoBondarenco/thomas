@@ -10,7 +10,7 @@ const val ACCENTS_LOWER_REGEX_VALUE = "aàáâãäạảăắặằẳẵấậ�
 const val ACCENTS_UPPER_REGEX_VALUE = "AÀÁÂÃÄẠẢĂẮẶẰẲẴẤẬẦẨẪÅĀĄCÇČĆĈĊDĐÐĎEÈÉÊËẸẺẼẾỆỀỂỄĒĔĖĘĚGĜĞĠĢHĤĦIÌÍÎÏỊỈĨĪĬĮ̇IJĴKĶĸLĹĻĽĿŁNÑŃŅŇNŊOÒÓÔÕÖỌỎỐỘỒỔỖƠỚỢỜỞỠØŌŎŐŔŖŘSŠŚŜŞTŢŤŦUÙÚÛÜỤỦŨƯỨỰỪỬỮŬŪŮŰŲWŴYÝŸỴỲỶỸŶZŽŹŻ"
 const val LETTERS_ONLY_REGEX_VALUE = "A-Za-z$ACCENTS_LOWER_REGEX_VALUE$ACCENTS_UPPER_REGEX_VALUE"
 
-val EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$".toRegex()
+        val EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$".toRegex()
 
 val UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\$".toRegex()
 

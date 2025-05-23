@@ -146,6 +146,14 @@ class UnitNeo4JRepository(
             inValues(UnitNode::id, ids).and(isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId))
         ).map { it.toUnitEntity() }.toSet()
 
+    override suspend fun allByOrganization(
+        organizationId: UUID
+    ): Set<UnitEntity> = sessionFactory.openSession()
+        .loadAll(
+            UnitNode::class.java,
+            isEquals(OrganizationNode::id, UnitNode::unitOrganization, organizationId)
+        ).map { it.toUnitEntity() }.toSet()
+
     private suspend fun save(
         entity: UnitEntity
     ): UnitEntity = transaction { session ->

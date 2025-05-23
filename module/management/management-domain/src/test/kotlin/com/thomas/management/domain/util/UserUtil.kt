@@ -17,6 +17,7 @@ internal val signupUserRequest: SignupUserRequest
         mainEmail = randomEmail(),
         mainPhone = randomPhone(),
         userGender = null,
+        userRace = null,
         birthDate = null,
     )
 
@@ -26,6 +27,7 @@ internal val userCreateRequest: UserCreateRequest
         lastName = randomString(numbers = false),
         documentNumber = randomDocumentNumber(),
         userGender = null,
+        userRace = null,
         birthDate = null,
         mainEmail = randomEmail(),
         mainPhone = randomPhone(),
@@ -41,6 +43,7 @@ internal val userUpdateRequest: UserUpdateRequest
         lastName = randomString(numbers = false),
         documentNumber = randomDocumentNumber(),
         userGender = null,
+        userRace = null,
         birthDate = null,
         mainPhone = randomPhone(),
         isActive = true,

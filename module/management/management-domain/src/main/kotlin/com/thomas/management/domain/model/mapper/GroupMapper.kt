@@ -1,7 +1,7 @@
 package com.thomas.management.domain.model.mapper
 
-import com.thomas.contract.messaging.management.ManagementEventType
-import com.thomas.contract.messaging.management.ManagementEventType.DELETE
+import com.thomas.contract.messaging.ApplicationEventType
+import com.thomas.contract.messaging.ApplicationEventType.DELETE
 import com.thomas.contract.messaging.management.group.GroupDataEvent
 import com.thomas.contract.messaging.management.group.GroupManagementEvent
 import com.thomas.management.data.entity.GroupCompleteEntity
@@ -70,7 +70,7 @@ suspend fun GroupCompleteEntity.updateFromRequest(
     )
 }
 
-suspend fun GroupCompleteEntity.toGroupManagementEvent(type: ManagementEventType) = coroutineScope {
+suspend fun GroupCompleteEntity.toGroupManagementEvent(type: ApplicationEventType) = coroutineScope {
     GroupManagementEvent(
         eventType = type,
         eventTimestamp = now(UTC),

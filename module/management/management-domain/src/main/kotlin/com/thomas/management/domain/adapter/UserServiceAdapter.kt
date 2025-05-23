@@ -1,7 +1,7 @@
 package com.thomas.management.domain.adapter
 
-import com.thomas.contract.messaging.management.ManagementEventType.CREATE
-import com.thomas.contract.messaging.management.ManagementEventType.UPDATE
+import com.thomas.contract.messaging.ApplicationEventType.CREATE
+import com.thomas.contract.messaging.ApplicationEventType.UPDATE
 import com.thomas.core.aspect.AspectClass
 import com.thomas.core.aspect.MethodLog
 import com.thomas.core.authorization.authorized
@@ -9,6 +9,8 @@ import com.thomas.core.context.SessionContextHolder.currentOrganization
 import com.thomas.core.context.SessionContextHolder.currentUser
 import com.thomas.core.extension.validate
 import com.thomas.core.model.entity.DeferredEntityValidation
+import com.thomas.core.model.general.UserType
+import com.thomas.core.model.general.UserType.COMMON
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.core.model.security.SecurityUnitRole
@@ -57,6 +59,10 @@ class UserServiceAdapter(
     private val userProducer: UserEventProducer,
     private val hasher: Hasher,
 ) : UserService {
+
+    companion object {
+        private val USER_TYPE_ALLOWED = listOf(COMMON)
+    }
 
     private fun userCreateValidations(
         userGroups: Set<UUID>,
@@ -159,7 +165,7 @@ class UserServiceAdapter(
         userRepository.page(
             keywordText = keywordText,
             isActive = isActive,
-            listMaster = currentUser.isMaster,
+            userTypes = UserType.entries.takeIf { currentUser.isMaster } ?: USER_TYPE_ALLOWED,
             organizationId = currentOrganization,
             pageable = pageable,
         ).map { it.toUserSimpleResponse() }
@@ -202,7 +208,10 @@ class UserServiceAdapter(
 
     private suspend fun findCompleteByIdOrThrows(
         id: UUID,
-    ): UserCompleteEntity = userRepository.one(id, currentOrganization, currentUser.isMaster)
-        ?: throw UserNotFoundException(id)
+    ): UserCompleteEntity = userRepository.one(
+        id,
+        currentOrganization,
+        UserType.entries.takeIf { currentUser.isMaster } ?: USER_TYPE_ALLOWED
+    ) ?: throw UserNotFoundException(id)
 
 }

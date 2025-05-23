@@ -1,5 +1,6 @@
 package com.thomas.management.spring.configuration
 
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.security.SecurityOrganizationRole
 import com.thomas.management.domain.properties.PasswordProperties
 import com.thomas.management.domain.properties.SignupProperties
@@ -15,11 +16,13 @@ class PropertiesConfiguration {
         @Value("\${signup.enabled}") signupEnabled: Boolean,
         @Value("\${signup.maxUnits}") maxUnits: Int,
         @Value("\${signup.maxUsers}") maxUsers: Int,
+        @Value("\${signup.defaultType}") defaultType: UserType,
         @Value("\${signup.defaultRoles}") defaultRoles: Set<SecurityOrganizationRole>,
     ): SignupProperties = SignupProperties(
         signupEnabled,
         maxUnits,
         maxUsers,
+        defaultType,
         defaultRoles,
     )
 

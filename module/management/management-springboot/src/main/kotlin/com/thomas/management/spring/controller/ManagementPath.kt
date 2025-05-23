@@ -25,4 +25,8 @@ object ManagementPath {
 
     const val PRIVATE_API_V1_USER_PASSWORD = "/change-password"
 
+    const val PRIVATE_API_V1_ROLE = "$PRIVATE_API_V1_PREFIX/roles"
+    const val PUBLIC_API_V1_ROLE_ORGANIZATION = "/organization-roles"
+    const val PUBLIC_API_V1_ROLE_UNIT = "/unit-roles"
+
 }

@@ -1,5 +1,6 @@
 package com.thomas.management.data.repository
 
+import com.thomas.core.model.general.UserType
 import com.thomas.core.model.pagination.PageRequestPeriod
 import com.thomas.core.model.pagination.PageResponse
 import com.thomas.management.data.entity.UserCompleteEntity
@@ -11,12 +12,12 @@ interface UserRepository {
     suspend fun page(
         keywordText: String? = null,
         isActive: Boolean? = null,
-        listMaster: Boolean,
+        userTypes: List<UserType>,
         organizationId: UUID,
         pageable: PageRequestPeriod
     ): PageResponse<UserSimpleEntity>
 
-    suspend fun one(id: UUID, organizationId: UUID, listMaster: Boolean): UserCompleteEntity?
+    suspend fun one(id: UUID, organizationId: UUID, userTypes: List<UserType>): UserCompleteEntity?
 
     suspend fun create(entity: UserCompleteEntity): UserCompleteEntity
 
