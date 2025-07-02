@@ -5,7 +5,7 @@ import com.thomas.core.extension.isBetween
 import com.thomas.core.extension.toSnakeCase
 import com.thomas.core.model.entity.BaseEntity
 import com.thomas.core.model.entity.EntityValidation
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressCityInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressCityInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressComplementInvalidLength
@@ -31,7 +31,7 @@ interface AddressInfo {
         private const val MAX_NEIGHBORHOOD_SIZE = 250
         private const val MIN_CITY_SIZE = 3
         private const val MAX_CITY_SIZE = 250
-        private val ADDRESS_MANES_REGEX = "[${LETTERS_ONLY_REGEX_VALUE}0-9\\-.,' ]+".toRegex()
+        private val ADDRESS_NAMES_REGEX = "[${LETTERS_ONLY_REGEX_VALUE}0-9\\-.,' ]+".toRegex()
         private val ADDRESS_CITY_REGEX = "[${LETTERS_ONLY_REGEX_VALUE}\\- ]+".toRegex()
         private val ZIPCODE_NUMBER_REGEX = "[0-9]{8}".toRegex()
     }
@@ -53,7 +53,7 @@ interface AddressInfo {
         EntityValidation(
             AddressInfo::addressStreet.name.toSnakeCase(),
             { managementAddressValidationAddressStreetInvalidValue() },
-            { ADDRESS_MANES_REGEX.matches(it.addressStreet) }
+            { ADDRESS_NAMES_REGEX.matches(it.addressStreet) }
         ),
         EntityValidation(
             AddressInfo::addressStreet.name.toSnakeCase(),
@@ -63,7 +63,7 @@ interface AddressInfo {
         EntityValidation(
             AddressInfo::addressNumber.name.toSnakeCase(),
             { managementAddressValidationAddressNumberInvalidValue() },
-            { it.addressNumber.isEmpty() || ADDRESS_MANES_REGEX.matches(it.addressNumber) }
+            { it.addressNumber.isEmpty() || ADDRESS_NAMES_REGEX.matches(it.addressNumber) }
         ),
         EntityValidation(
             AddressInfo::addressNumber.name.toSnakeCase(),
@@ -73,7 +73,7 @@ interface AddressInfo {
         EntityValidation(
             AddressInfo::addressComplement.name.toSnakeCase(),
             { managementAddressValidationAddressComplementInvalidValue() },
-            { it.addressComplement == null || ADDRESS_MANES_REGEX.matches(it.addressComplement!!) }
+            { it.addressComplement == null || ADDRESS_NAMES_REGEX.matches(it.addressComplement!!) }
         ),
         EntityValidation(
             AddressInfo::addressComplement.name.toSnakeCase(),
@@ -83,7 +83,7 @@ interface AddressInfo {
         EntityValidation(
             AddressInfo::addressNeighborhood.name.toSnakeCase(),
             { managementAddressValidationAddressNeighborhoodInvalidValue() },
-            { ADDRESS_MANES_REGEX.matches(it.addressNeighborhood) }
+            { ADDRESS_NAMES_REGEX.matches(it.addressNeighborhood) }
         ),
         EntityValidation(
             AddressInfo::addressNeighborhood.name.toSnakeCase(),

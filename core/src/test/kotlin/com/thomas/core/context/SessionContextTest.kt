@@ -47,7 +47,7 @@ internal class SessionContextTest {
         assertEquals(user, context.currentUser)
         assertEquals(FRENCH, context.currentLocale)
         assertEquals(unitId, context.currentUnit)
-        assertEquals(user.userOrganization.organizationId, context.currentOrganization)
+        assertEquals(user.securityOrganization.organizationId, context.currentOrganization)
         assertNull(getSessionProperty(propOne))
         assertEquals(propValue, getSessionProperty(propTwo))
 

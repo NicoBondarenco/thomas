@@ -26,9 +26,9 @@ suspend fun UserCompleteEntity.toSecurityUser() = coroutineScope {
             userRace = user.userRace,
             userType = user.userType,
             isActive = user.isActive,
-            userOrganization = user.userOrganization.toSecurityOrganization(user.organizationRoles),
+            securityOrganization = user.userOrganization.toSecurityOrganization(user.organizationRoles),
             userGroups = this@toSecurityUser.userGroups.map { it.toSecurityGroup() }.toSet(),
-            userUnits = this@toSecurityUser.userUnits.toSecurityUnit(),
+            securityUnits = this@toSecurityUser.userUnits.toSecurityUnit(),
         )
     }
 }
@@ -47,8 +47,8 @@ private suspend fun GroupCompleteEntity.toSecurityGroup() = coroutineScope {
     SecurityGroup(
         groupId = this@toSecurityGroup.id,
         groupName = this@toSecurityGroup.groupName,
-        groupOrganization = this@toSecurityGroup.groupOrganization.toSecurityOrganization(this@toSecurityGroup.organizationRoles),
-        groupUnits = this@toSecurityGroup.groupUnits.toSecurityUnit(),
+        securityOrganization = this@toSecurityGroup.groupOrganization.toSecurityOrganization(this@toSecurityGroup.organizationRoles),
+        securityUnits = this@toSecurityGroup.groupUnits.toSecurityUnit(),
     )
 }
 

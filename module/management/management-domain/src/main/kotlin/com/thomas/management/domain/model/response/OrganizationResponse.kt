@@ -1,6 +1,7 @@
 package com.thomas.management.domain.model.response
 
-import com.thomas.management.data.entity.value.AddressState
+
+import com.thomas.core.model.general.AddressState
 import java.time.OffsetDateTime
 import java.util.UUID
 

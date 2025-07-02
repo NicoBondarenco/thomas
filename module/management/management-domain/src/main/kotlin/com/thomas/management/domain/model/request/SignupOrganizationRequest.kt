@@ -1,6 +1,6 @@
 package com.thomas.management.domain.model.request
 
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 
 data class SignupOrganizationRequest(
     val organizationName: String,

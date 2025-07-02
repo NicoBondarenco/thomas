@@ -58,7 +58,7 @@ internal fun SecurityUser.applySpringAuthentication(request: HttpServletRequest)
 
 internal fun SecurityUser.grantedAuthorities() = mutableListOf<GrantedAuthority>().also { roles ->
     roles.addAll(this.organizationRoles.map { role ->
-        OrganizationGrantedAuthority(this.userOrganization.organizationId, role)
+        OrganizationGrantedAuthority(this.securityOrganization.organizationId, role)
     })
     roles.addAll(this.unitsRoles.map { unitRole ->
         unitRole.value.map { UnitGrantedAuthority(unitRole.key, it) }

@@ -29,15 +29,15 @@ object UserGenerator {
             userRace = it.userRace,
             userType = userType,
             isActive = listOf(true, false).random(),
-            userOrganization = organization,
+            securityOrganization = organization,
             userGroups = generateSecurityGroupSet().map { group ->
                 group.copy(
-                    groupOrganization = organization.copy(
+                    securityOrganization = organization.copy(
                         organizationRoles = generateOrganizationRoles()
                     )
                 )
             }.toSet(),
-            userUnits = generateSecurityUnitSet(),
+            securityUnits = generateSecurityUnitSet(),
         )
     }
 
@@ -48,20 +48,20 @@ object UserGenerator {
         groupUnitRoles: Set<SecurityUnitRole> = setOf(),
     ): SecurityUser = generateSecurityUser().let { user ->
         user.copy(
-            userOrganization = user.userOrganization.copy(
+            securityOrganization = user.securityOrganization.copy(
                 organizationRoles = userOrganizationRoles
             ),
-            userUnits = user.userUnits.map { unit ->
+            securityUnits = user.securityUnits.map { unit ->
                 unit.copy(
                     unitRoles = userUnitRoles
                 )
             }.toSet(),
             userGroups = user.userGroups.map { group ->
                 group.copy(
-                    groupOrganization = group.groupOrganization.copy(
+                    securityOrganization = group.securityOrganization.copy(
                         organizationRoles = groupOrganizationRoles
                     ),
-                    groupUnits = group.groupUnits.map { unit ->
+                    securityUnits = group.securityUnits.map { unit ->
                         unit.copy(
                             unitRoles = groupUnitRoles
                         )

@@ -17,7 +17,7 @@ class OrganizationGrantedAuthorityTest {
         val user = securityUser
         currentUser = user
 
-        val organizationId = user.userOrganization.organizationId
+        val organizationId = user.securityOrganization.organizationId
         val organizationRole = ORGANIZATION_ALL
         val authority = OrganizationGrantedAuthority(organizationId, organizationRole)
 

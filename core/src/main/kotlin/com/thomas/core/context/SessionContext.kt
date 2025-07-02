@@ -23,7 +23,7 @@ data class SessionContext(
             _currentUser = value
         }
     internal val currentOrganization: UUID
-        get() = _currentUser?.userOrganization?.organizationId ?: throw UnresolvedOrganizationException()
+        get() = _currentUser?.securityOrganization?.organizationId ?: throw UnresolvedOrganizationException()
 
     internal fun getProperty(property: String): String? = sessionProperties[property]
 

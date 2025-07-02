@@ -91,7 +91,7 @@ class AuthorizationTest {
         currentUser = generateSecurityUserWithRoles(
             userUnitRoles = setOf(role),
         )
-        currentUnit = currentUser.userUnits.random().unitId
+        currentUnit = currentUser.securityUnits.random().unitId
         assertDoesNotThrow {
             assertTrue(authorized(roles = arrayOf(role)) { true })
         }
@@ -105,7 +105,7 @@ class AuthorizationTest {
         currentUser = generateSecurityUserWithRoles(
             groupUnitRoles = setOf(role),
         )
-        currentUnit = currentUser.userGroups.random().groupUnits.random().unitId
+        currentUnit = currentUser.userGroups.random().securityUnits.random().unitId
         assertDoesNotThrow {
             assertTrue(authorized(roles = arrayOf(role)) { true })
         }

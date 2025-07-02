@@ -6,7 +6,7 @@ import com.thomas.core.model.entity.EntityValidationException
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.util.StringUtils.randomZipcode
 import com.thomas.management.data.entity.EntityValidationTest
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressCityInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressCityInvalidValue
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementAddressValidationAddressComplementInvalidLength

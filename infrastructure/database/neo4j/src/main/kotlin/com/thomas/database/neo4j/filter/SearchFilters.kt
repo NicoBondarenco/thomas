@@ -51,7 +51,7 @@ suspend inline fun <reified T : Neo4JNode<*>> SessionFactory.page(
 }
 
 fun PageRequestData.toPagination(): Pagination = Pagination(
-    this.pageNumber.toInt().minus(1),
+    this.pageNumber.toInt(),
     this.pageSize.toInt()
 )
 

@@ -5,7 +5,7 @@ import com.thomas.core.util.StringUtils.randomPhone
 import com.thomas.core.util.StringUtils.randomRegistrationNumber
 import com.thomas.core.util.StringUtils.randomString
 import com.thomas.core.util.StringUtils.randomZipcode
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 
 val organizationEntity: OrganizationEntity
     get() = OrganizationEntity(

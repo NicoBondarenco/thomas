@@ -14,9 +14,9 @@ object StringUtils {
         length: Int = 10,
         numbers: Boolean = true,
         spaces: Boolean = true,
-    ): String = (1..length).map {
-        ((NUMBERS.takeIf { numbers } ?: listOf()) + (listOf(" ").takeIf { spaces } ?: listOf()) + CHARS).shuffled().first()
-    }.joinToString("")
+    ): String = ((NUMBERS.takeIf { numbers } ?: listOf()) + (listOf(" ").takeIf { spaces } ?: listOf()) + CHARS).let { chars ->
+        (1..length).map { chars.shuffled().first() }.joinToString("")
+    }
 
     fun randomZipcode(): String = (1000000..99999999).random().toString().padStart(8, '0')
 

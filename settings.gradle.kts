@@ -39,9 +39,9 @@ dependencyResolutionManagement {
             version("jvm", "JVM_21")
             version("target", "VERSION_21")
 
-            version("ksp", "2.0.0-1.0.23")
+            version("ksp", "2.1.21-2.0.2")
 
-            version("flywayPlugin", "10.11.0")
+            version("flywayPlugin", "11.10.0")
 
             version("springFrameworkBoot", "3.4.4")
             version("springDependencyManagement", "1.1.7")
@@ -420,14 +420,41 @@ dependencyResolutionManagement {
 
 include("core")
 
+include("infrastructure:cache:cache-handler")
+findProject(":infrastructure:cache:cache-handler")?.name = "cache-handler"
+
+include("infrastructure:cache:cache-handler-caffeine")
+findProject(":infrastructure:cache:cache-handler-caffeine")?.name = "cache-handler-caffeine"
+
 include("infrastructure:contract:contract-messaging")
 findProject(":infrastructure:contract:contract-messaging")?.name = "contract-messaging"
 
 include("infrastructure:database:neo4j")
 findProject(":infrastructure:database:neo4j")?.name = "neo4j"
 
+include("infrastructure:database:komapper")
+findProject(":infrastructure:database:komapper")?.name = "komapper"
+
 include("infrastructure:spring:spring-base")
 findProject(":infrastructure:spring:spring-base")?.name = "spring-base"
+
+include("module:locality:locality-data")
+findProject(":module:locality:locality-data")?.name = "locality-data"
+
+include("module:locality:locality-data-komapper")
+findProject(":module:locality:locality-data-komapper")?.name = "locality-data-komapper"
+
+include("module:locality:locality-domain")
+findProject(":module:locality:locality-domain")?.name = "locality-domain"
+
+include("module:locality:locality-port-address")
+findProject(":module:locality:locality-port-address")?.name = "locality-port-address"
+
+include("module:locality:locality-port-address-viacep")
+findProject(":module:locality:locality-port-address-viacep")?.name = "locality-port-address-viacep"
+
+include("module:locality:locality-springboot")
+findProject(":module:locality:locality-springboot")?.name = "locality-springboot"
 
 include("module:management:management-data")
 findProject(":module:management:management-data")?.name = "management-data"

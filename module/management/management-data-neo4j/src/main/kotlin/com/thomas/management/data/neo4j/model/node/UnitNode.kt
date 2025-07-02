@@ -3,7 +3,7 @@ package com.thomas.management.data.neo4j.model.node
 import com.thomas.database.neo4j.converter.UUIDConverter
 import com.thomas.database.neo4j.node.Neo4JNode
 import com.thomas.database.neo4j.node.NoArgsConstructor
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import java.time.ZonedDateTime
 import java.util.UUID

@@ -1,0 +1,90 @@
+server:
+  port: ${LOCALITY_SERVER_PORT:8200}
+  shutdown: graceful
+
+spring:
+
+  application:
+    name: "T.H.O.M.A.S. Locality Service"
+    label: "locality-service"
+
+  banner:
+    location: banner.txt
+
+  main:
+    allow-bean-definition-overriding: true
+
+  threads:
+    virtual:
+      enabled: true
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+        exclude: autoconfig,beans,env,configprops,dump,mappings,shutdown,trace
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+loki:
+  url: ${LOKI_URL}
+  labels:
+    app: ${spring.application.label}
+
+logging:
+  loki:
+    url: ${LOKI_URL}
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ} %-5p %c:%M{1}:%L - %m%n"
+  level:
+    root: INFO
+    com.thomas: INFO
+
+locality:
+  database:
+    host: ${LOCALITY_DATABASE_HOST}
+    port: ${LOCALITY_DATABASE_PORT}
+    database: ${LOCALITY_DATABASE_DATABASE}
+    username: ${LOCALITY_DATABASE_USERNAME}
+    password: ${LOCALITY_DATABASE_PASSWORD}
+    schema: "address"
+    pool:
+      initialSize: 3
+      maxSize: 10
+      idleTime: 300
+      creationTimeout: 10
+      acquireTimeout: 10
+      maxLifetime: 3600
+      validationQuery: "SELECT 1"
+  cache:
+    initialCacheCapacity: 100
+    maximumCacheSize: 1000
+    expireWriteSeconds: 86400
+    expireAccessSeconds: 86400
+  port:
+    search:
+      baseUrl: ${LOCALITY_SEARCH_URL}
+      requestTimeout: 5000
+      connectTimeout: 5000
+
+security:
+  jwt:
+    issuerName: ${SECURITY_ISSUER_NAME}
+    jwtAudience: ${SECURITY_JWT_AUDIENCE}
+    jwtRealm: ${SECURITY_JWT_REALM}
+    jwtAlgorithm: ${SECURITY_JWT_ALGORITHM}
+    privateKey: ${SECURITY_PRIVATE_KEY}
+    publicKey: ${SECURITY_PUBLIC_KEY}
+
+pageable:
+  default:
+    pageNumber: 1
+    pageSize: 20

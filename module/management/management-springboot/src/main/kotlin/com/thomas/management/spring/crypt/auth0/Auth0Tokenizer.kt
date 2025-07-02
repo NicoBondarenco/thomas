@@ -61,7 +61,7 @@ class Auth0Tokenizer(
         .refreshClaims(
             RefreshTokenData(
                 securityUsername = securityUser.mainEmail,
-                organizationId = securityUser.userOrganization.organizationId,
+                organizationId = securityUser.securityOrganization.organizationId,
                 refreshDuration = tokenProperties.refreshDuration,
                 validUntil = now(UTC).plusMinutes(tokenProperties.refreshDuration),
             )
@@ -115,9 +115,9 @@ class Auth0Tokenizer(
         .withClaim(SecurityUser::userRace.name.toSnakeCase(), securityUser.userRace?.name)
         .withClaim(SecurityUser::userType.name.toSnakeCase(), securityUser.userType.name)
         .withClaim(SecurityUser::isActive.name.toSnakeCase(), securityUser.isActive)
-        .withClaim(SecurityUser::userOrganization.name.toSnakeCase(), securityUser.userOrganization.toClaim())
+        .withClaim(SecurityUser::securityOrganization.name.toSnakeCase(), securityUser.securityOrganization.toClaim())
         .withClaim(SecurityUser::userGroups.name.toSnakeCase(), securityUser.userGroups.toGroupClaims())
-        .withClaim(SecurityUser::userUnits.name.toSnakeCase(), securityUser.userUnits.toUnitClaims())
+        .withClaim(SecurityUser::securityUnits.name.toSnakeCase(), securityUser.securityUnits.toUnitClaims())
 
     private fun JWTCreator.Builder.refreshClaims(
         refreshData: RefreshTokenData
@@ -146,8 +146,8 @@ class Auth0Tokenizer(
     private fun SecurityGroup.toClaim() = mapOf(
         SecurityGroup::groupId.name.toSnakeCase() to this.groupId.toString(),
         SecurityGroup::groupName.name.toSnakeCase() to this.groupName,
-        SecurityGroup::groupOrganization.name.toSnakeCase() to this.groupOrganization.toClaim(),
-        SecurityGroup::groupUnits.name.toSnakeCase() to this.groupUnits.toUnitClaims(),
+        SecurityGroup::securityOrganization.name.toSnakeCase() to this.securityOrganization.toClaim(),
+        SecurityGroup::securityUnits.name.toSnakeCase() to this.securityUnits.toUnitClaims(),
     )
 
     private fun Set<SecurityGroup>.toGroupClaims() = this.map { it.toClaim() }

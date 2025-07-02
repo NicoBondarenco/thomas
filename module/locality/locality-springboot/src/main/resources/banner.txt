@@ -1,0 +1,10 @@
+${AnsiColor.BRIGHT_CYAN}--------------------------------------------------------------------------${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN} _      ____   _____          _      _____ _________     __${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN}| |    / __ \ / ____|   /\   | |    |_   _|__   __\ \   / /${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN}| |   | |  | | |       /  \  | |      | |    | |   \ \_/ / ${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN}| |   | |  | | |      / /\ \ | |      | |    | |    \   /  ${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN}| |___| |__| | |____ / ____ \| |____ _| |_   | |     | |   ${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--- ${AnsiColor.BRIGHT_GREEN}|______\____/ \_____/_/    \_\______|_____|  |_|     |_|   ${AnsiColor.BRIGHT_CYAN} ---${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN}--------------------------------------------------------------------------${AnsiColor.DEFAULT}
+${AnsiStyle.BOLD}${spring.application.name} ${AnsiStyle.ITALIC}${AnsiStyle.UNDERLINE}${application.version}${AnsiStyle.NORMAL}
+${AnsiColor.BRIGHT_YELLOW}Powered by Spring Boot ${AnsiStyle.ITALIC}${AnsiStyle.UNDERLINE}${AnsiColor.DEFAULT}${spring-boot.version}${AnsiStyle.NORMAL}

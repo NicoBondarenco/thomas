@@ -7,7 +7,7 @@ import com.thomas.core.model.entity.EntityValidation
 import com.thomas.management.data.entity.info.AddressInfo
 import com.thomas.management.data.entity.info.BasicInfo
 import com.thomas.management.data.entity.info.ContactInfo
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import com.thomas.management.data.extension.LEGAL_NAME_REGEX
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementUnitValidationDocumentNumberInvalidValue

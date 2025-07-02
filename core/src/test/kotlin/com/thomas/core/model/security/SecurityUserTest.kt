@@ -51,47 +51,47 @@ class SecurityUserTest {
     @Test
     fun `Security User is master`() {
         val user = generateSecurityUser().copy(
-            userOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf(ORGANIZATION_ALL)
             ),
             userGroups = setOf()
         )
 
-        assertTrue(user.isMaster)
+        assertTrue(user.isAdministrator)
     }
 
     @Test
     fun `Security User is master by group`() {
         val user = generateSecurityUser().copy(
-            userOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf()
             ),
             userGroups = setOf(
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(ORGANIZATION_ALL)
                     )
                 )
             )
         )
 
-        assertTrue(user.isMaster)
+        assertTrue(user.isAdministrator)
     }
 
     @Test
     fun `Security User Organization roles`() {
         val user = generateSecurityUser().copy(
-            userOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf(USER_READ, USER_CREATE, USER_UPDATE)
             ),
             userGroups = setOf(
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(GROUP_READ, GROUP_CREATE, GROUP_UPDATE)
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(USER_READ, GROUP_READ, UNIT_READ)
                     )
                 ),
@@ -121,7 +121,7 @@ class SecurityUserTest {
         val unitId = UUID.randomUUID()
         currentUnit = unitId
         val user = generateSecurityUser().copy(
-            userUnits = setOf(
+            securityUnits = setOf(
                 generateSecurityUnit().copy(
                     unitRoles = setOf()
                 ),
@@ -132,10 +132,10 @@ class SecurityUserTest {
             ),
             userGroups = setOf(
                 generateSecurityGroup().copy(
-                    groupUnits = setOf()
+                    securityUnits = setOf()
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitId = unitId,
                             unitRoles = setOf(COA_READ)
@@ -143,7 +143,7 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_READ)
                         ),
@@ -154,7 +154,7 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_UPDATE)
                         ),
@@ -176,7 +176,7 @@ class SecurityUserTest {
         val unitId = UUID.randomUUID()
         currentUnit = unitId
         val user = generateSecurityUser().copy(
-            userUnits = setOf(
+            securityUnits = setOf(
                 generateSecurityUnit().copy(
                     unitRoles = setOf()
                 ),
@@ -187,10 +187,10 @@ class SecurityUserTest {
             ),
             userGroups = setOf(
                 generateSecurityGroup().copy(
-                    groupUnits = setOf()
+                    securityUnits = setOf()
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitId = unitId,
                             unitRoles = setOf(COA_READ)
@@ -198,7 +198,7 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_READ)
                         ),
@@ -209,7 +209,7 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_UPDATE)
                         ),
@@ -230,10 +230,10 @@ class SecurityUserTest {
         val unitId = UUID.randomUUID()
         currentUnit = unitId
         val user = generateSecurityUser().copy(
-            userOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf(USER_READ, USER_CREATE, USER_UPDATE)
             ),
-            userUnits = setOf(
+            securityUnits = setOf(
                 generateSecurityUnit().copy(
                     unitRoles = setOf()
                 ),
@@ -244,16 +244,16 @@ class SecurityUserTest {
             ),
             userGroups = setOf(
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(GROUP_READ, GROUP_CREATE, GROUP_UPDATE)
                     ),
-                    groupUnits = setOf()
+                    securityUnits = setOf()
                 ),
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf()
                     ),
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitId = unitId,
                             unitRoles = setOf(COA_READ)
@@ -261,10 +261,10 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(USER_READ, GROUP_READ, UNIT_READ)
                     ),
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_READ)
                         ),
@@ -275,10 +275,10 @@ class SecurityUserTest {
                     )
                 ),
                 generateSecurityGroup().copy(
-                    groupOrganization = generateSecurityOrganization().copy(
+                    securityOrganization = generateSecurityOrganization().copy(
                         organizationRoles = setOf(USER_READ, GROUP_READ, UNIT_READ)
                     ),
-                    groupUnits = setOf(
+                    securityUnits = setOf(
                         generateSecurityUnit().copy(
                             unitRoles = setOf(COA_UPDATE)
                         ),

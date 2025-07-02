@@ -71,8 +71,8 @@ object GroupGenerator {
         SecurityGroup(
             groupId = it.id,
             groupName = it.groupName,
-            groupOrganization = generateSecurityOrganization(),
-            groupUnits = generateSecurityUnitSet(),
+            securityOrganization = generateSecurityOrganization(),
+            securityUnits = generateSecurityUnitSet(),
         )
     }
 

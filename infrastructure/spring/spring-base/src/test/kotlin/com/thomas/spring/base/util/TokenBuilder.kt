@@ -52,9 +52,9 @@ class TokenBuilder(
         .withClaim(SecurityUser::userRace.name.toSnakeCase(), user.userRace?.name)
         .withClaim(SecurityUser::userType.name.toSnakeCase(), user.userType.name)
         .withClaim(SecurityUser::isActive.name.toSnakeCase(), user.isActive)
-        .withClaim(SecurityUser::userOrganization.name.toSnakeCase(), user.userOrganization.toClaim())
+        .withClaim(SecurityUser::securityOrganization.name.toSnakeCase(), user.securityOrganization.toClaim())
         .withClaim(SecurityUser::userGroups.name.toSnakeCase(), user.userGroups.toGroupClaims())
-        .withClaim(SecurityUser::userUnits.name.toSnakeCase(), user.userUnits.toUnitClaims())
+        .withClaim(SecurityUser::securityUnits.name.toSnakeCase(), user.securityUnits.toUnitClaims())
         .sign(algorithm)
 
     private fun SecurityOrganization.toClaim() = mapOf(
@@ -74,8 +74,8 @@ class TokenBuilder(
     private fun SecurityGroup.toClaim() = mapOf(
         SecurityGroup::groupId.name.toSnakeCase() to this.groupId.toString(),
         SecurityGroup::groupName.name.toSnakeCase() to this.groupName,
-        SecurityGroup::groupOrganization.name.toSnakeCase() to this.groupOrganization.toClaim(),
-        SecurityGroup::groupUnits.name.toSnakeCase() to this.groupUnits.toUnitClaims(),
+        SecurityGroup::securityOrganization.name.toSnakeCase() to this.securityOrganization.toClaim(),
+        SecurityGroup::securityUnits.name.toSnakeCase() to this.securityUnits.toUnitClaims(),
     )
 
     private fun Set<SecurityGroup>.toGroupClaims() = this.map { it.toClaim() }

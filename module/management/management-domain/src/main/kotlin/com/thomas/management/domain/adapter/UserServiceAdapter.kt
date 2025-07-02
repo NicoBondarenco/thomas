@@ -165,7 +165,7 @@ class UserServiceAdapter(
         userRepository.page(
             keywordText = keywordText,
             isActive = isActive,
-            userTypes = UserType.entries.takeIf { currentUser.isMaster } ?: USER_TYPE_ALLOWED,
+            userTypes = UserType.entries.takeIf { currentUser.isAdministrator } ?: USER_TYPE_ALLOWED,
             organizationId = currentOrganization,
             pageable = pageable,
         ).map { it.toUserSimpleResponse() }
@@ -211,7 +211,7 @@ class UserServiceAdapter(
     ): UserCompleteEntity = userRepository.one(
         id,
         currentOrganization,
-        UserType.entries.takeIf { currentUser.isMaster } ?: USER_TYPE_ALLOWED
+        UserType.entries.takeIf { currentUser.isAdministrator } ?: USER_TYPE_ALLOWED
     ) ?: throw UserNotFoundException(id)
 
 }

@@ -8,7 +8,7 @@ import com.thomas.core.model.entity.EntityValidation
 import com.thomas.management.data.entity.info.AddressInfo
 import com.thomas.management.data.entity.info.BasicInfo
 import com.thomas.management.data.entity.info.ContactInfo
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.extension.isValidRegistrationNumber
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationFantasyNameInvalidLength
 import com.thomas.management.data.i18n.ManagementDataMessageI18N.managementOrganizationValidationFantasyNameInvalidValue

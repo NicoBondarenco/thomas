@@ -1,10 +1,9 @@
 package com.thomas.core.model.security
 
-import com.thomas.core.context.SessionContextHolder.currentUnit
+import com.thomas.core.extension.merge
 import com.thomas.core.model.general.Gender
 import com.thomas.core.model.general.Race
 import com.thomas.core.model.general.UserType
-import com.thomas.core.model.security.SecurityOrganizationRole.ORGANIZATION_ALL
 import java.time.LocalDate
 import java.util.UUID
 
@@ -20,10 +19,10 @@ data class SecurityUser(
     val userRace: Race?,
     val userType: UserType,
     val isActive: Boolean,
-    val userOrganization: SecurityOrganization,
+    override val securityOrganization: SecurityOrganization,
     val userGroups: Set<SecurityGroup>,
-    val userUnits: Set<SecurityUnit>,
-) {
+    override val securityUnits: Set<SecurityUnit>,
+) : SecurityInfo {
 
     val fullName: String
         get() = "$firstName $lastName"
@@ -34,37 +33,30 @@ data class SecurityUser(
     val alternativeName: String
         get() = "${firstName[0]}. $lastName"
 
-    val isMaster: Boolean
-        get() = userOrganization.organizationRoles.contains(ORGANIZATION_ALL) || groupsHasMasterRole()
+    override val isMaster: Boolean
+        get() = super.isMaster || anyMasterGroup()
 
-    val organizationRoles: Set<SecurityOrganizationRole>
-        get() = (userOrganization.organizationRoles + userGroups.organizationRoles()).distinct().toSet()
+    override val isAdministrator: Boolean
+        get() = super.isAdministrator || anyAdministratorGroup()
 
-    val unitRoles: Set<SecurityUnitRole>
-        get() = currentUnit?.let {
-            (userUnits.unitRoles(it) + userGroups.unitRoles(it)).distinct().toSet()
-        } ?: emptySet()
+    override val isUnitAdministrator: Boolean
+        get() = super.isUnitAdministrator || anyUnitAdministratorGroup()
 
-    val unitsRoles: Map<UUID, Set<SecurityUnitRole>>
-        get() = (userUnits.map { it.unitId } + userGroups.unitIds()).distinct().associateWith {
-            (userUnits.unitRoles(it) + userGroups.unitRoles(it)).distinct().toSet()
-        }
+    override val organizationRoles: Set<SecurityOrganizationRole>
+        get() = (super.organizationRoles + userGroups.organizationRoles()).distinct().toSet()
 
-    val currentRoles: Set<SecurityRole<*, *, *>>
-        get() = (organizationRoles + unitRoles).distinct().toSet()
+    override val unitRoles: Set<SecurityUnitRole>
+        get() = (super.unitRoles + userGroups.map { it.unitRoles }.flatten()).distinct().toSet()
 
-    private fun groupsHasMasterRole() = userGroups.any { group -> group.isMaster }
+    override val unitsRoles: Map<UUID, Set<SecurityUnitRole>>
+        get() = (userGroups.map { it.unitsRoles } + super.unitsRoles).reduce { acc, map -> acc.merge(map) }
 
-    private fun Set<SecurityUnit>.unitRoles(
-        unitId: UUID
-    ): Set<SecurityUnitRole> = this.firstOrNull { it.unitId == unitId }?.unitRoles ?: setOf()
+    private fun anyMasterGroup(): Boolean = userGroups.any { group -> group.isMaster }
 
-    private fun Set<SecurityGroup>.organizationRoles() = this.map { it.groupOrganization.organizationRoles }.flatten()
+    private fun anyAdministratorGroup(): Boolean = userGroups.any { group -> group.isAdministrator }
 
-    private fun Set<SecurityGroup>.unitRoles(
-        unitId: UUID
-    ) = this.map { it.groupUnits.unitRoles(unitId) }.flatten()
+    private fun anyUnitAdministratorGroup(): Boolean = userGroups.any { group -> group.isUnitAdministrator }
 
-    private fun Set<SecurityGroup>.unitIds(): List<UUID> = this.map { group -> group.groupUnits.map { it.unitId } }.flatten()
+    private fun Set<SecurityGroup>.organizationRoles() = this.map { it.organizationRoles }.flatten()
 
 }

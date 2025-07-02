@@ -6,6 +6,7 @@ import com.thomas.core.model.general.UserType
 import com.thomas.core.model.security.SecurityGroup
 import com.thomas.core.model.security.SecurityOrganization
 import com.thomas.core.model.security.SecurityOrganizationRole
+import com.thomas.core.model.security.SecurityOrganizationRole.MASTER_ROLE
 import com.thomas.core.model.security.SecurityUnit
 import com.thomas.core.model.security.SecurityUnitRole
 import com.thomas.core.model.security.SecurityUser
@@ -41,6 +42,15 @@ val securityUnitRoles: SecurityUnit
         },
     )
 
+val securityUserMaster: SecurityUser
+    get() = securityUser.copy(
+        userType = UserType.MASTER,
+        securityOrganization = securityOrganization.copy(
+            organizationRoles = setOf(MASTER_ROLE)
+        ),
+        isActive = true,
+    )
+
 val securityUser: SecurityUser
     get() = SecurityUser(
         userId = randomUUID(),
@@ -54,25 +64,25 @@ val securityUser: SecurityUser
         userRace = Race.entries.random(),
         userType = UserType.entries.random(),
         isActive = true,
-        userOrganization = securityOrganization,
+        securityOrganization = securityOrganization,
         userGroups = setOf(),
-        userUnits = setOf(),
+        securityUnits = setOf(),
     )
 
 val securityUserRoles: SecurityUser
     get() = securityOrganizationRoles.let { organization ->
         securityUser.copy(
-            userOrganization = organization,
+            securityOrganization = organization,
             userGroups = (1..3).map {
                 securityGroupRoles.copy(
-                    groupOrganization = organization.copy(
+                    securityOrganization = organization.copy(
                         organizationRoles = SecurityOrganizationRole.entries.let {
                             it.shuffled().take(randomInteger(1, it.size)).toSet()
                         }
                     )
                 )
             }.toSet(),
-            userUnits = (1..3).map { securityUnitRoles }.toSet(),
+            securityUnits = (1..3).map { securityUnitRoles }.toSet(),
         )
     }
 
@@ -80,8 +90,8 @@ val securityGroupRoles: SecurityGroup
     get() = SecurityGroup(
         groupId = randomUUID(),
         groupName = randomString(numbers = false),
-        groupOrganization = securityOrganization,
-        groupUnits = (1..3).map { securityUnitRoles }.toSet(),
+        securityOrganization = securityOrganization,
+        securityUnits = (1..3).map { securityUnitRoles }.toSet(),
     )
 
 

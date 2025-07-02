@@ -2,7 +2,7 @@ package com.thomas.management.domain.model.mapper
 
 import com.thomas.contract.messaging.management.value.AddressStateEvent
 import com.thomas.contract.messaging.management.value.UnitTypeEvent
-import com.thomas.management.data.entity.value.AddressState
+import com.thomas.core.model.general.AddressState
 import com.thomas.management.data.entity.value.UnitType
 import kotlinx.coroutines.coroutineScope
 

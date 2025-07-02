@@ -16,12 +16,12 @@ class SecurityGroupTest {
         SecurityGroup(
             groupId = randomUUID(),
             groupName = randomString(),
-            groupOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf(ORGANIZATION_ALL)
             ),
-            groupUnits = setOf(),
+            securityUnits = setOf(),
         ).apply {
-            assertTrue(this.isMaster)
+            assertTrue(this.isAdministrator)
         }
     }
 
@@ -30,12 +30,12 @@ class SecurityGroupTest {
         SecurityGroup(
             groupId = randomUUID(),
             groupName = randomString(),
-            groupOrganization = generateSecurityOrganization().copy(
+            securityOrganization = generateSecurityOrganization().copy(
                 organizationRoles = setOf(UNIT_CREATE)
             ),
-            groupUnits = setOf(),
+            securityUnits = setOf(),
         ).apply {
-            assertFalse(this.isMaster)
+            assertFalse(this.isAdministrator)
         }
     }
 
